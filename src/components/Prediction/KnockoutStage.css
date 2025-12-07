@@ -1,0 +1,149 @@
+.knockout-stage {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.knockout-bracket {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+  gap: 1rem;
+}
+
+.round-title {
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.round-progress {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 600;
+  padding: 0.5rem;
+  background: #f3f4f6;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.matches-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.match-card {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.match-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.match-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.match-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.match-team {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.match-team:hover:not(.disabled) {
+  border-color: #667eea;
+  background: #f9fafb;
+}
+
+.match-team.selected {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.match-team.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.team-flag-match {
+  font-weight: 700;
+  color: #667eea;
+  min-width: 40px;
+}
+
+.team-name-match {
+  flex: 1;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.winner-badge {
+  color: #10b981;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.final-round {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.final-round .match-card {
+  border: 3px solid #f59e0b;
+  background: white;
+}
+
+.completion-status {
+  text-align: center;
+  padding: 1rem;
+  background: #fef3c7;
+  border-radius: 8px;
+}
+
+.completion-status p {
+  margin: 0;
+  color: #92400e;
+  font-weight: 600;
+}
+
+@media (max-width: 1200px) {
+  .knockout-bracket {
+    justify-content: flex-start;
+  }
+}

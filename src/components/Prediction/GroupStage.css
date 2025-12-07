@@ -1,0 +1,152 @@
+.group-stage {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.stage-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.stage-header h2 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.stage-header p {
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.group-card {
+  height: fit-content;
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.group-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1f2937;
+}
+
+.saved-badge {
+  background: #10b981;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.teams-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sortable-team {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: grab;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.sortable-team:active {
+  cursor: grabbing;
+}
+
+.sortable-team:hover {
+  background: #f3f4f6;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sortable-team.position-1 {
+  border-left: 4px solid #fbbf24;
+}
+
+.sortable-team.position-2 {
+  border-left: 4px solid #9ca3af;
+}
+
+.sortable-team.position-3 {
+  border-left: 4px solid #cd7f32;
+}
+
+.sortable-team.position-4 {
+  border-left: 4px solid #e5e7eb;
+}
+
+.position-badge {
+  font-size: 0.875rem;
+  font-weight: 700;
+  min-width: 60px;
+}
+
+.team-flag {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 50px;
+}
+
+.team-name {
+  flex: 1;
+  font-weight: 600;
+  color: #374151;
+}
+
+.drag-handle {
+  color: #9ca3af;
+  font-size: 1.25rem;
+  cursor: grab;
+}
+
+.save-btn {
+  width: 100%;
+}
+
+.stage-footer {
+  text-align: center;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.help-text {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.25rem;
+  color: #6b7280;
+}
