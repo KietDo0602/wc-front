@@ -1,3 +1,5 @@
+import { data } from './third_place_matchup';
+
 // Format date helper
 export const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -88,6 +90,38 @@ export const validatePredictions = (predictions) => {
     errors
   };
 };
+
+// Get the correct matchups based on the third place teams
+export function findMatchingElement(teams) {
+  // Step 1: collect all groupIds from teams
+  const groupIds = teams.map(team => team.groupId);
+
+  // Step 2: turn groupIds into a Set for fast lookup
+  const groupSet = new Set(groupIds);
+
+  // Step 3: iterate over data and check if values match groupIds exactly
+  return data.find(obj => {
+    const values = Object.values(obj);
+
+    // Must have same length
+    if (values.length !== groupSet.size) return false;
+
+    // Must contain all groupIds
+    const valueSet = new Set(values);
+    if (valueSet.size !== groupSet.size) return false;
+
+    for (let id of groupSet) {
+      if (!valueSet.has(id)) return false;
+    }
+    return true;
+  });
+}
+
+export const getThirdPlaceMatchup = (thirdPlaceTeams, opp_group_id) => {
+  const matchup = findMatchingElement(thirdPlaceTeams);
+
+  return matchup[opp_group_id];
+}
 
 // Local storage helpers
 export const storage = {

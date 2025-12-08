@@ -14,7 +14,6 @@ export const PredictionPage = () => {
   const [savedPredictions, setSavedPredictions] = useState(null);
   const [completeness, setCompleteness] = useState(null);
   const [status, setStatus] = useState(null);
-  const [groupRankings, setGroupRankings] = useState({});
   const [thirdPlaceAdvancers, setThirdPlaceAdvancers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -30,31 +29,21 @@ export const PredictionPage = () => {
       const response = await predictionAPI.getMyPredictions();
       setSavedPredictions(response.data);
 
-      // Build group rankings from saved data
+      // Check if groups are complete
       if (response.data.groupRankings) {
-        const rankings = {};
-        response.data.groupRankings.forEach(ranking => {
-          if (!rankings[ranking.group_id]) {
-            rankings[ranking.group_id] = [];
+        const groupIds = [...new Set(response.data.groupRankings.map(r => r.group_id))];
+        if (groupIds.length === 12) {
+          // All groups completed, can move to third place
+          const hasThirdPlace = response.data.thirdPlaceSelections && 
+                                response.data.thirdPlaceSelections.length === 8;
+          
+          if (hasThirdPlace) {
+            setThirdPlaceAdvancers(response.data.thirdPlaceSelections);
+            setCurrentStage('knockout');
+          } else {
+            setCurrentStage('third');
           }
-          rankings[ranking.group_id][ranking.position - 1] = {
-            id: ranking.team_id,
-            name: ranking.team_name,
-            fifa_code: ranking.fifa_code
-          };
-        });
-        setGroupRankings(rankings);
-
-        // Check if all groups completed
-        if (Object.keys(rankings).length === 12) {
-          setCurrentStage('third');
         }
-      }
-
-      // Set third place advancers
-      if (response.data.thirdPlaceSelections && response.data.thirdPlaceSelections.length === 8) {
-        setThirdPlaceAdvancers(response.data.thirdPlaceSelections);
-        setCurrentStage('knockout');
       }
 
     } catch (error) {
@@ -83,14 +72,16 @@ export const PredictionPage = () => {
     }
   };
 
-  const handleGroupStageComplete = () => {
+  const handleGroupStageComplete = async () => {
+    await loadPredictions();
+    await loadStatus();
     setCurrentStage('third');
-    loadStatus();
   };
 
-  const handleThirdPlaceComplete = () => {
+  const handleThirdPlaceComplete = async () => {
+    await loadPredictions();
+    await loadStatus();
     setCurrentStage('knockout');
-    loadStatus();
   };
 
   const handleBackToGroups = () => {
@@ -168,7 +159,6 @@ export const PredictionPage = () => {
             onComplete={handleThirdPlaceComplete}
             onBack={handleBackToGroups}
             savedPredictions={savedPredictions}
-            groupRankings={groupRankings}
           />
         )}
 
@@ -177,7 +167,6 @@ export const PredictionPage = () => {
             onBack={handleBackToThird}
             onSubmit={handleSubmitAll}
             savedPredictions={savedPredictions}
-            groupRankings={groupRankings}
             thirdPlaceAdvancers={thirdPlaceAdvancers}
           />
         )}
