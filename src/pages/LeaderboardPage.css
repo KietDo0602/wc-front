@@ -212,3 +212,13 @@ tbody tr.highlight {
     padding: 0.75rem 0.5rem;
   }
 }
+
+.leaderboard-table table {
+  width: 100%;
+}
+
+.leaderboard-table th:last-child,
+.leaderboard-table td:last-child {
+  text-align: center;
+  width: 100px;
+}

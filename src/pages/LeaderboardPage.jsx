@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { leaderboardAPI } from '../api/api';
 import { Card } from '../components/UI/Card';
+import { PredictionPreviewModal } from '../components/Prediction/PredictionPreviewModal';
 import './LeaderboardPage.css';
 
 export const LeaderboardPage = () => {
@@ -9,6 +10,7 @@ export const LeaderboardPage = () => {
   const [myRank, setMyRank] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('all'); // 'all' or 'active'
+  const [previewUser, setPreviewUser] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -34,6 +36,16 @@ export const LeaderboardPage = () => {
       console.error('Failed to load leaderboard:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePreviewUser = async (userId, username) => {
+    try {
+      // This would require a new API endpoint to get other users' predictions
+      // For now, show modal with user info
+      setPreviewUser({ userId, username });
+    } catch (error) {
+      console.error('Failed to load user predictions:', error);
     }
   };
 
@@ -107,6 +119,7 @@ export const LeaderboardPage = () => {
                   <th>Correct Predictions</th>
                   <th>Total Predictions</th>
                   <th>Accuracy</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,6 +130,14 @@ export const LeaderboardPage = () => {
                     <td>{user.correct_match_predictions}</td>
                     <td>{user.total_predictions}</td>
                     <td>{user.accuracy_percentage}%</td>
+                    <td>
+                      <button 
+                        className="preview-btn"
+                        onClick={() => handlePreviewUser(user.user_id, user.username)}
+                      >
+                        👁️ View
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -153,6 +174,13 @@ export const LeaderboardPage = () => {
           )}
         </div>
       </Card>
+      {previewUser && (
+        <PredictionPreviewModal
+          userId={previewUser.userId}
+          username={previewUser.username}
+          onClose={() => setPreviewUser(null)}
+        />
+      )}
     </div>
   );
 };

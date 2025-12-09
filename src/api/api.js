@@ -27,6 +27,7 @@ export const authAPI = {
 
 // Prediction APIs
 export const predictionAPI = {
+  getUserPredictions: (userId) => api.get(`/predictions/user/${userId}`),
   getStatus: () => api.get('/predictions/status'),
   getCompleteness: () => api.get('/predictions/completeness'),
   getMyPredictions: () => api.get('/predictions/my-predictions'),

@@ -16,6 +16,7 @@ export const PredictionPage = () => {
   const [status, setStatus] = useState(null);
   const [thirdPlaceAdvancers, setThirdPlaceAdvancers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState(false); // NEW: View-only mode
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -29,11 +30,9 @@ export const PredictionPage = () => {
       const response = await predictionAPI.getMyPredictions();
       setSavedPredictions(response.data);
 
-      // Check if groups are complete
       if (response.data.groupRankings) {
         const groupIds = [...new Set(response.data.groupRankings.map(r => r.group_id))];
         if (groupIds.length === 12) {
-          // All groups completed, can move to third place
           const hasThirdPlace = response.data.thirdPlaceSelections && 
                                 response.data.thirdPlaceSelections.length === 8;
           
@@ -63,9 +62,9 @@ export const PredictionPage = () => {
       setStatus(statusRes.data);
       setCompleteness(completenessRes.data);
 
-      // If already submitted, redirect to leaderboard
+      // Set view mode if already submitted
       if (statusRes.data.predictions_submitted) {
-        navigate('/leaderboard');
+        setViewMode(true);
       }
     } catch (error) {
       console.error('Failed to load status:', error);
@@ -100,7 +99,8 @@ export const PredictionPage = () => {
     try {
       await predictionAPI.submitComplete();
       alert('✅ Predictions submitted successfully! Good luck!');
-      navigate('/leaderboard');
+      setViewMode(true); // Enable view mode
+      loadStatus(); // Reload status
     } catch (error) {
       throw error;
     }
@@ -117,16 +117,74 @@ export const PredictionPage = () => {
     );
   }
 
-  if (status?.predictions_submitted) {
+  // Show view mode if submitted
+  if (viewMode) {
     return (
-      <div className="prediction-page submitted">
-        <div className="submitted-message">
-          <div className="success-icon">✓</div>
-          <h2>Predictions Submitted!</h2>
-          <p>Your predictions have been locked in. Good luck!</p>
-          <Button onClick={() => navigate('/leaderboard')}>
-            View Leaderboard
-          </Button>
+      <div className="prediction-page view-mode">
+        <div className="prediction-header">
+          <div className="header-content">
+            <h1>My Predictions</h1>
+            <p className="welcome-text">Welcome, {user?.username}! 👋</p>
+            <div className="submitted-badge">
+              ✓ Submitted on {new Date(status?.predictions_submitted_at).toLocaleDateString()}
+            </div>
+          </div>
+        </div>
+
+        <div className="prediction-container">
+          <div className="view-mode-tabs">
+            <button 
+              className={`tab ${currentStage === 'groups' ? 'active' : ''}`}
+              onClick={() => setCurrentStage('groups')}
+            >
+              Group Stage
+            </button>
+            <button 
+              className={`tab ${currentStage === 'third' ? 'active' : ''}`}
+              onClick={() => setCurrentStage('third')}
+            >
+              Third Place
+            </button>
+            <button 
+              className={`tab ${currentStage === 'knockout' ? 'active' : ''}`}
+              onClick={() => setCurrentStage('knockout')}
+            >
+              Knockout Stage
+            </button>
+          </div>
+
+          {currentStage === 'groups' && (
+            <GroupStage
+              onComplete={handleGroupStageComplete}
+              savedPredictions={savedPredictions}
+              viewMode={true}
+            />
+          )}
+
+          {currentStage === 'third' && (
+            <ThirdPlaceStage
+              onComplete={handleThirdPlaceComplete}
+              onBack={handleBackToGroups}
+              savedPredictions={savedPredictions}
+              viewMode={true}
+            />
+          )}
+
+          {currentStage === 'knockout' && (
+            <KnockoutStage
+              onBack={handleBackToThird}
+              onSubmit={handleSubmitAll}
+              savedPredictions={savedPredictions}
+              thirdPlaceAdvancers={thirdPlaceAdvancers}
+              viewMode={true}
+            />
+          )}
+
+          <div className="view-mode-actions">
+            <Button onClick={() => navigate('/leaderboard')} variant="outline">
+              View Leaderboard
+            </Button>
+          </div>
         </div>
       </div>
     );

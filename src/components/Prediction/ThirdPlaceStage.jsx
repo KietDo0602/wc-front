@@ -4,7 +4,7 @@ import { Card } from '../UI/Card';
 import { Button } from '../UI/Button';
 import './ThirdPlaceStage.css';
 
-export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions }) => {
+export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode }) => {
   const [thirdPlaceTeams, setThirdPlaceTeams] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -63,6 +63,8 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions }) => {
   };
 
   const toggleTeam = (teamId) => {
+    if (saved || viewMode) return;
+
     console.log('Toggle team clicked:', teamId, 'saved:', saved);
     
     if (saved) {
@@ -149,8 +151,9 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions }) => {
     <div className="third-place-stage">
       <div className="stage-header">
         <h2>Third Place Advancers</h2>
-        <p>Select 8 teams from the 12 third-place finishers that will advance to the knockout stage</p>
-        {saved && (
+        {!viewMode && (<p>Select 8 teams from the 12 third-place finishers that will advance to the knockout stage</p>)}
+        {viewMode && (<p>8 teams from the 12 third-place finishers selected here will advance to the knockout stage</p>)}
+        {!viewMode && saved && (
           <p className="saved-notice">✓ Selections saved. Click "Edit Selections" below to modify.</p>
         )}
       </div>
@@ -160,20 +163,23 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions }) => {
           <span className="counter-number">{selectedTeams.length}</span>
           <span className="counter-label">/ 8 teams selected</span>
         </div>
-        
-        {saved ? (
-          <Button onClick={handleUnsave} variant="outline">
-            Edit Selections
-          </Button>
-        ) : selectedTeams.length === 8 ? (
-          <Button onClick={handleSave} loading={saving} variant="success">
-            Save Selections
-          </Button>
-        ) : (
-          <div className="selection-hint">
-            Select {8 - selectedTeams.length} more team{8 - selectedTeams.length !== 1 ? 's' : ''}
-          </div>
+
+        {!viewMode && (
+          saved ? (
+            <Button onClick={handleUnsave} variant="outline">
+              Edit Selections
+            </Button>
+          ) : selectedTeams.length === 8 ? (
+            <Button onClick={handleSave} loading={saving} variant="success">
+              Save Selections
+            </Button>
+          ) : (
+            <div className="selection-hint">
+              Select {8 - selectedTeams.length} more team{8 - selectedTeams.length !== 1 ? 's' : ''}
+            </div>
+          )
         )}
+        
       </Card>
 
       <div className="third-place-grid">

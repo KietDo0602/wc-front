@@ -44,10 +44,18 @@ const SortableTeam = ({ team, position }) => {
   );
 };
 
-const GroupCard = ({ group, teams, onRankingChange, savedRanking }) => {
+const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) => {
   const [rankedTeams, setRankedTeams] = useState(savedRanking || teams);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(!!savedRanking);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (savedRanking) {
+      setRankedTeams(savedRanking);
+      setSaved(true);
+    }
+  }, [savedRanking]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -58,6 +66,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking }) => {
   );
 
   const handleDragEnd = (event) => {
+    if (viewMode || (!isEditing && saved)) return;
+    
     const { active, over } = event;
 
     if (active.id !== over.id) {
@@ -71,6 +81,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking }) => {
   };
 
   const handleSave = async () => {
+    if (viewMode) return;
+    
     setSaving(true);
     try {
       await predictionAPI.submitGroupRankings(
@@ -79,6 +91,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking }) => {
       );
       onRankingChange(group.id, rankedTeams);
       setSaved(true);
+      setIsEditing(false);
     } catch (error) {
       console.error('Failed to save ranking:', error);
       alert(error.response?.data?.error || 'Failed to save ranking');
@@ -87,45 +100,108 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking }) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setSaved(false);
+  };
+
+  const handleCancel = () => {
+    setRankedTeams(savedRanking || teams);
+    setIsEditing(false);
+    setSaved(!!savedRanking);
+  };
+
+  const canDrag = !viewMode && (isEditing || !saved);
+
   return (
     <Card className="group-card">
       <div className="group-header">
         <h3>Group {group.code}</h3>
-        {saved && <span className="saved-badge">✓ Saved</span>}
+        {saved && !isEditing && <span className="saved-badge">✓ Saved</span>}
+        {isEditing && <span className="editing-badge">✏️ Editing</span>}
       </div>
       
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={rankedTeams.map(t => t.id)}
-          strategy={verticalListSortingStrategy}
+      {viewMode ? (
+        <div className="teams-list">
+          {rankedTeams.map((team, index) => (
+            <div key={team.id} className={`sortable-team view-mode position-${index + 1}`}>
+              <span className="position-badge">{['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][index]}</span>
+              <span className="team-flag">{team.fifa_code}</span>
+              <span className="team-name">{team.name}</span>
+            </div>
+          ))}
+        </div>
+      ) : canDrag ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          <div className="teams-list">
-            {rankedTeams.map((team, index) => (
-              <SortableTeam key={team.id} team={team} position={index + 1} />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={rankedTeams.map(t => t.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="teams-list">
+              {rankedTeams.map((team, index) => (
+                <SortableTeam key={team.id} team={team} position={index + 1} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : (
+        <div className="teams-list">
+          {rankedTeams.map((team, index) => (
+            <div key={team.id} className={`sortable-team locked position-${index + 1}`}>
+              <span className="position-badge">{['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][index]}</span>
+              <span className="team-flag">{team.fifa_code}</span>
+              <span className="team-name">{team.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
-      <Button 
-        onClick={handleSave} 
-        loading={saving}
-        disabled={saved}
-        size="small"
-        variant={saved ? 'secondary' : 'primary'}
-        className="save-btn"
-      >
-        {saved ? 'Saved' : 'Save Ranking'}
-      </Button>
+      {!viewMode && (
+        <div className="card-actions">
+          {saved && !isEditing ? (
+            <Button 
+              onClick={handleEdit} 
+              size="small"
+              variant="outline"
+              className="edit-btn"
+            >
+              ✏️ Edit
+            </Button>
+          ) : (
+            <>
+              <Button 
+                onClick={handleSave} 
+                loading={saving}
+                disabled={saved && !isEditing}
+                size="small"
+                variant="primary"
+                className="save-btn"
+              >
+                💾 Save
+              </Button>
+              {isEditing && (
+                <Button 
+                  onClick={handleCancel} 
+                  size="small"
+                  variant="outline"
+                  className="cancel-btn"
+                >
+                  ✕ Cancel
+                </Button>
+              )}
+            </>
+          )}
+        </div>
+      )}
     </Card>
   );
 };
 
-export const GroupStage = ({ onComplete, savedPredictions }) => {
+export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rankings, setRankings] = useState({});
@@ -199,7 +275,11 @@ export const GroupStage = ({ onComplete, savedPredictions }) => {
     <div className="group-stage">
       <div className="stage-header">
         <h2>Group Stage Predictions</h2>
-        <p>Drag and drop teams to predict the final ranking for each group</p>
+        <p>
+          {viewMode 
+            ? 'Your group stage predictions' 
+            : 'Drag and drop teams to predict the final ranking for each group'}
+        </p>
       </div>
 
       <div className="groups-grid">
@@ -210,24 +290,27 @@ export const GroupStage = ({ onComplete, savedPredictions }) => {
             teams={group.teams}
             onRankingChange={handleRankingChange}
             savedRanking={rankings[group.id]}
+            viewMode={viewMode}
           />
         ))}
       </div>
 
-      <div className="stage-footer">
-        <Button
-          onClick={onComplete}
-          disabled={!allGroupsRanked}
-          size="large"
-        >
-          Continue to Third Place Selection →
-        </Button>
-        {!allGroupsRanked && (
-          <p className="help-text">
-            Complete all {groups.length} groups to continue
-          </p>
-        )}
-      </div>
+      {!viewMode && (
+        <div className="stage-footer">
+          <Button
+            onClick={onComplete}
+            disabled={!allGroupsRanked}
+            size="large"
+          >
+            Continue to Third Place Selection →
+          </Button>
+          {!allGroupsRanked && (
+            <p className="help-text">
+              Complete all {groups.length} groups to continue
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

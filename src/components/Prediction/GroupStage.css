@@ -150,3 +150,45 @@
   font-size: 1.25rem;
   color: #6b7280;
 }
+
+.sortable-team.view-mode {
+  cursor: default;
+}
+
+.sortable-team.view-mode:hover {
+  transform: none;
+}
+
+.editing-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.sortable-team.locked {
+  cursor: default;
+  background: #f9fafb;
+}
+
+.sortable-team.locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.card-actions button {
+  flex: 1;
+}
+
+.edit-btn {
+  width: 100%;
+}

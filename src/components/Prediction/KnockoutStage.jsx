@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
 import { getThirdPlaceMatchup, findMatchingElement} from '../../utils/helpers';
+import html2canvas from 'html2canvas';
 import './KnockoutStage.css';
 
 const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }) => {
@@ -36,11 +37,13 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
   );
 };
 
-export const KnockoutStage = ({ onBack, onSubmit, savedPredictions }) => {
+export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) => {
   const [predictions, setPredictions] = useState({});
   const [roundOf32Teams, setRoundOf32Teams] = useState([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
+  const bracketRef = useRef(null);
 
   useEffect(() => {
     initializeKnockoutTeams();
@@ -402,6 +405,115 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions }) => {
     }
   };
 
+  const exportAsImage = async () => {
+    if (!bracketRef.current) {
+      alert('Unable to capture bracket. Please try again.');
+      return;
+    }
+    
+    setExporting(true);
+    
+    try {
+      // Save current scroll position
+      const container = document.querySelector('.bracket-container');
+      const originalOverflow = container.style.overflow;
+      const originalHeight = container.style.height;
+      
+      // Temporarily make everything visible
+      container.style.overflow = 'visible';
+      container.style.height = 'auto';
+      
+      // Wait for layout adjustment
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Get the full bracket scroll element
+      const bracketScroll = bracketRef.current.querySelector('.bracket-scroll');
+      
+      // Create export container
+      const exportDiv = document.createElement('div');
+      exportDiv.style.cssText = `
+        position: fixed;
+        left: -99999px;
+        top: 0;
+        background: #f9fafb;
+        padding: 3rem;
+        width: auto;
+        height: auto;
+      `;
+      
+      // Add header
+      const header = document.createElement('div');
+      header.style.cssText = `
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #667eea;
+      `;
+      header.innerHTML = `
+        <h1 style="margin: 0; font-size: 2.5rem; color: #1f2937; font-weight: 800;">
+          🏆 World Cup Knockout Predictions
+        </h1>
+      `;
+      
+      // Clone bracket
+      const bracketClone = bracketScroll.cloneNode(true);
+      bracketClone.style.cssText = `
+        display: flex;
+        width: auto;
+        height: auto;
+        overflow: visible;
+      `;
+      
+      exportDiv.appendChild(header);
+      exportDiv.appendChild(bracketClone);
+      document.body.appendChild(exportDiv);
+      
+      // Wait for images and layout
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Capture
+      const canvas = await html2canvas(exportDiv, {
+        scale: 2.5,
+        backgroundColor: '#f9fafb',
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        width: exportDiv.scrollWidth,
+        height: exportDiv.scrollHeight,
+        windowWidth: exportDiv.scrollWidth,
+        windowHeight: exportDiv.scrollHeight,
+        onclone: (clonedDoc) => {
+          const clonedDiv = clonedDoc.querySelector('div[style*="fixed"]');
+          if (clonedDiv) {
+            clonedDiv.style.left = '0';
+          }
+        }
+      });
+      
+      // Restore original styles
+      container.style.overflow = originalOverflow;
+      container.style.height = originalHeight;
+      document.body.removeChild(exportDiv);
+      
+      // Download
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().split('T')[0];
+        link.download = `worldcup-knockout-predictions-${timestamp}.png`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+      }, 'image/png', 1.0);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('❌ Failed to export: ' + error.message);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="knockout-stage">
@@ -437,7 +549,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions }) => {
   const progress = calculateProgress();
 
   return (
-    <div className="knockout-stage">
+    <div className="knockout-stage" ref={bracketRef}>
       <div className="knockout-header">
         <h2>🏆 Knockout Stage</h2>
         <div className="progress-summary">
@@ -581,23 +693,42 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions }) => {
       </div>
 
       <div className="knockout-footer">
-        <Button onClick={onBack} variant="outline">
-          ← Back to Third Place
-        </Button>
-        
-        {canSubmit() ? (
-          <Button
-            onClick={handleSubmit}
-            loading={saving}
-            size="large"
-            variant="success"
-          >
-            🎯 Submit All Predictions
-          </Button>
-        ) : (
-          <div className="completion-hint">
-            Complete all {Object.values(progress).reduce((sum, p) => sum + (p.total - p.completed), 0)} remaining matches
+        {!viewMode && (
+          <>
+            <Button onClick={onBack} variant="outline">
+              ← Back to Third Place
+            </Button>
+            
+            {canSubmit() ? (
+              <Button
+                onClick={handleSubmit}
+                loading={saving}
+                size="large"
+                variant="success"
+              >
+                🎯 Submit All Predictions
+              </Button>
+            ) : (
+              <div className="completion-hint">
+                Complete all {Object.values(progress).reduce((sum, p) => sum + (p.total - p.completed), 0)} remaining matches
+              </div>
+            )}
+          </>
+        )}
+        {viewMode && (
+          <div className="view-mode-notice">
+            <p>✓ Your predictions are locked and saved</p>
           </div>
+        )}
+        {viewMode && (
+          <Button 
+            onClick={exportAsImage} 
+            loading={exporting}
+            variant="outline"
+            className="export-btn"
+          >
+            📸 Save My Prediction
+          </Button>
         )}
       </div>
     </div>

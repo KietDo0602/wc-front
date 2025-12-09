@@ -347,3 +347,31 @@
     width: 100%;
   }
 }
+
+.export-btn {
+  margin-left: auto;
+}
+
+.view-mode-notice {
+  text-align: center;
+  padding: 1rem;
+  background: #d1fae5;
+  border-radius: 8px;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.view-mode-notice p {
+  margin: 0;
+}
+
+.bracket-scroll {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: fit-content;
+  min-height: 100%;
+  gap: 0;
+  position: relative;
+  padding: 1rem;
+}
