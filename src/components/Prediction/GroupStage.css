@@ -192,3 +192,9 @@
 .edit-btn {
   width: 100%;
 }
+
+.team-flag {
+  font-size: 1.75rem;
+  min-width: 50px;
+  text-align: center;
+}

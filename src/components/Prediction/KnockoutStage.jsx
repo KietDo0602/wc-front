@@ -4,6 +4,8 @@ import { Button } from '../UI/Button';
 import { getThirdPlaceMatchup, findMatchingElement} from '../../utils/helpers';
 import html2canvas from 'html2canvas';
 import './KnockoutStage.css';
+import { getFlagEmoji } from '../../utils/helpers';
+
 
 const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }) => {
   if (!teams || teams.length === 0) {
@@ -11,6 +13,7 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
       <div className={`match-card empty ${compact ? 'compact' : ''}`}>
         <div className="match-label">{match.name}</div>
         <div className="match-placeholder">
+          <div className="placeholder-flag">🌐</div>
           <p>TBD</p>
         </div>
       </div>
@@ -26,8 +29,9 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
             key={team.id}
             className={`match-team ${selectedWinner === team.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
             onClick={() => !disabled && onSelect(match.id, team.id)}
+            style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
           >
-            <span className="team-flag-match">{team.fifa_code}</span>
+            <span className="team-flag-match">{getFlagEmoji(team.fifa_code)}</span>
             <span className="team-name-match">{team.name}</span>
             {selectedWinner === team.id && <span className="winner-badge">✓</span>}
           </div>
@@ -122,6 +126,10 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
   };
 
   const handleMatchSelect = async (matchId, winnerId) => {
+    if (viewMode) {
+      return;
+    }
+
     setPredictions(prev => ({
       ...prev,
       [matchId]: winnerId
@@ -131,6 +139,9 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
       await predictionAPI.submitMatchPrediction(matchId, winnerId);
     } catch (error) {
       console.error('Failed to save prediction:', error);
+      if (!viewMode) {
+        alert(error.response?.data?.error || 'Failed to save prediction');
+      }
     }
   };
 
@@ -451,7 +462,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
       `;
       header.innerHTML = `
         <h1 style="margin: 0; font-size: 2.5rem; color: #1f2937; font-weight: 800;">
-          🏆 World Cup Knockout Predictions
+          🏆 World Cup 2026 Predictions
         </h1>
       `;
       
@@ -567,126 +578,153 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
           {/* Left Side - Top Half */}
           <div className="bracket-section bracket-left">
             <div className="bracket-column r32">
-              <div className="round-header">R32</div>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `M${matchId}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Round of 32</div>
+                <div className="match-list">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(matchId => (
+                    <MatchCard
+                      key={matchId}
+                      match={{ id: matchId, name: `M${matchId}` }}
+                      teams={getMatchTeams(matchId)}
+                      selectedWinner={predictions[matchId]}
+                      onSelect={handleMatchSelect}
+                      disabled={viewMode}
+                      compact
+                    />
+                  ))}
+              </div>
             </div>
 
             <div className="bracket-column r16">
-              <div className="round-header">R16</div>
-              {[17, 18, 19, 20].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `M${matchId}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Round of 16</div>
+              <div className="match-list">
+                {[17, 18, 19, 20].map(matchId => (
+                  <MatchCard
+                    key={matchId}
+                    match={{ id: matchId, name: `M${matchId}` }}
+                    teams={getMatchTeams(matchId)}
+                    selectedWinner={predictions[matchId]}
+                    onSelect={handleMatchSelect}
+                    disabled={viewMode}
+                    compact
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="bracket-column qf">
-              <div className="round-header">QF</div>
-              {[25, 26].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `QF${matchId - 24}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Quarter-Finals</div>
+              <div className="match-list">
+                {[25, 26].map(matchId => (
+                  <MatchCard
+                    key={matchId}
+                    match={{ id: matchId, name: `QF${matchId - 24}` }}
+                    teams={getMatchTeams(matchId)}
+                    selectedWinner={predictions[matchId]}
+                    onSelect={handleMatchSelect}
+                    disabled={viewMode}
+                    compact
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="bracket-column sf">
-              <div className="round-header">SF</div>
-              <MatchCard
-                match={{ id: 29, name: 'SF1' }}
-                teams={getMatchTeams(29)}
-                selectedWinner={predictions[29]}
-                onSelect={handleMatchSelect}
-                compact
-              />
+              <div className="round-label">Semi-Finals</div>
+              <div className="match-list">
+                <MatchCard
+                  match={{ id: 29, name: 'SF1' }}
+                  teams={getMatchTeams(29)}
+                  selectedWinner={predictions[29]}
+                  onSelect={handleMatchSelect}
+                  disabled={viewMode}
+                  compact
+                />
+              </div>
             </div>
           </div>
 
           {/* Center - Final */}
           <div className="bracket-section bracket-center">
             <div className="bracket-column final">
-              <div className="round-header">🏆 FINAL</div>
-              <MatchCard
-                match={{ id: 31, name: 'Final' }}
-                teams={getMatchTeams(31)}
-                selectedWinner={predictions[31]}
-                onSelect={handleMatchSelect}
-                compact
-              />
+              <div className="round-label">World Cup Finals</div>
+              <div className="match-list">
+                <MatchCard
+                  match={{ id: 31, name: 'Final' }}
+                  teams={getMatchTeams(31)}
+                  selectedWinner={predictions[31]}
+                  onSelect={handleMatchSelect}
+                  disabled={viewMode}
+                  compact
+                />
+              </div>
             </div>
           </div>
 
           {/* Right Side - Bottom Half */}
           <div className="bracket-section bracket-right">
             <div className="bracket-column sf">
-              <div className="round-header">SF</div>
-              <MatchCard
-                match={{ id: 30, name: 'SF2' }}
-                teams={getMatchTeams(30)}
-                selectedWinner={predictions[30]}
-                onSelect={handleMatchSelect}
-                compact
-              />
+              <div className="round-label">Semi-Finals</div>
+              <div className="match-list">
+                <MatchCard
+                  match={{ id: 30, name: 'SF2' }}
+                  teams={getMatchTeams(30)}
+                  selectedWinner={predictions[30]}
+                  onSelect={handleMatchSelect}
+                  disabled={viewMode}
+                  compact
+                />
+              </div>
             </div>
 
             <div className="bracket-column qf">
-              <div className="round-header">QF</div>
-              {[27, 28].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `QF${matchId - 24}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Quarter-Finals</div>
+              <div className="match-list">
+                {[27, 28].map(matchId => (
+                  <MatchCard
+                    key={matchId}
+                    match={{ id: matchId, name: `QF${matchId - 24}` }}
+                    teams={getMatchTeams(matchId)}
+                    selectedWinner={predictions[matchId]}
+                    onSelect={handleMatchSelect}
+                    disabled={viewMode}
+                    compact
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="bracket-column r16">
-              <div className="round-header">R16</div>
-              {[21, 22, 23, 24].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `M${matchId}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Round of 16</div>
+              <div className="match-list">
+                {[21, 22, 23, 24].map(matchId => (
+                  <MatchCard
+                    key={matchId}
+                    match={{ id: matchId, name: `M${matchId}` }}
+                    teams={getMatchTeams(matchId)}
+                    selectedWinner={predictions[matchId]}
+                    onSelect={handleMatchSelect}
+                    disabled={viewMode}
+                    compact
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="bracket-column r32">
-              <div className="round-header">R32</div>
-              {[9, 10, 11, 12, 13, 14, 15, 16].map(matchId => (
-                <MatchCard
-                  key={matchId}
-                  match={{ id: matchId, name: `M${matchId}` }}
-                  teams={getMatchTeams(matchId)}
-                  selectedWinner={predictions[matchId]}
-                  onSelect={handleMatchSelect}
-                  compact
-                />
-              ))}
+              <div className="round-label">Round of 32</div>
+              <div className="match-list">
+                {[9, 10, 11, 12, 13, 14, 15, 16].map(matchId => (
+                  <MatchCard
+                    key={matchId}
+                    match={{ id: matchId, name: `M${matchId}` }}
+                    teams={getMatchTeams(matchId)}
+                    selectedWinner={predictions[matchId]}
+                    onSelect={handleMatchSelect}
+                    disabled={viewMode}
+                    compact
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

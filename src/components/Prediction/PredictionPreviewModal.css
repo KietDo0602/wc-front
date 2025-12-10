@@ -367,3 +367,19 @@
     grid-template-columns: 1fr;
   }
 }
+
+.team-flag {
+  font-size: 1.5rem;
+  min-width: 50px;
+  text-align: center;
+}
+
+.team-flag-large {
+  font-size: 2.5rem;
+}
+
+.winner-flag {
+  font-size: 1.5rem;
+  min-width: 40px;
+  text-align: center;
+}

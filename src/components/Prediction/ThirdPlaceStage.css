@@ -202,3 +202,8 @@
 .third-place-card:not(.disabled):active {
   transform: translateY(-2px);
 }
+
+.team-flag-large {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { getFlagEmoji } from '../../utils/helpers';
 import { predictionAPI } from '../../api/api';
 import { Card } from '../UI/Card';
 import { Button } from '../UI/Button';
@@ -37,7 +38,7 @@ const SortableTeam = ({ team, position }) => {
       className={`sortable-team position-${position}`}
     >
       <span className="position-badge">{getPositionLabel(position)}</span>
-      <span className="team-flag">{team.fifa_code}</span>
+      <span className="team-flag">{getFlagEmoji(team.fifa_code)}</span>
       <span className="team-name">{team.name}</span>
       <span className="drag-handle">⋮⋮</span>
     </div>
@@ -126,7 +127,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
           {rankedTeams.map((team, index) => (
             <div key={team.id} className={`sortable-team view-mode position-${index + 1}`}>
               <span className="position-badge">{['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][index]}</span>
-              <span className="team-flag">{team.fifa_code}</span>
+              <span className="team-flag">{getFlagEmoji(team.fifa_code)}</span>
               <span className="team-name">{team.name}</span>
             </div>
           ))}
@@ -153,7 +154,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
           {rankedTeams.map((team, index) => (
             <div key={team.id} className={`sortable-team locked position-${index + 1}`}>
               <span className="position-badge">{['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][index]}</span>
-              <span className="team-flag">{team.fifa_code}</span>
+              <span className="team-flag">{getFlagEmoji(team.fifa_code)}</span>
               <span className="team-name">{team.name}</span>
             </div>
           ))}

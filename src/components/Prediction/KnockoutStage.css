@@ -51,19 +51,18 @@
 }
 
 .bracket-container {
-  flex: 1;
-  overflow: auto;
-  padding: 1rem;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 .bracket-scroll {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: fit-content;
-  min-height: 100%;
-  gap: 0;
-  position: relative;
+  gap: 2rem; /* space between left, center, right sections */
+  width: max-content; /* critical: preserves horizontal scroll */
 }
 
 .bracket-section {
@@ -89,7 +88,7 @@
   justify-content: space-around;
   padding: 0.5rem;
   position: relative;
-  min-width: 180px;
+  width: 180px;
 }
 
 .bracket-column::before {
@@ -111,19 +110,6 @@
 
 .bracket-center .bracket-column::before {
   display: none;
-}
-
-.round-header {
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: #667eea;
-  text-align: center;
-  padding: 0.5rem;
-  background: #ede9fe;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .match-card {
@@ -198,7 +184,7 @@
   font-weight: 700;
   color: #667eea;
   font-size: 0.75rem;
-  min-width: 35px;
+  max-width: 35px;
 }
 
 .team-name-match {
@@ -234,13 +220,6 @@
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   transform: scale(1.1);
   box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2);
-}
-
-.final .round-header {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
-  font-size: 0.875rem;
-  padding: 0.75rem;
 }
 
 .knockout-footer {
@@ -298,7 +277,7 @@
 /* Responsive adjustments */
 @media (max-width: 1400px) {
   .bracket-column {
-    min-width: 160px;
+    max-width: 160px;
   }
   
   .team-name-match {
@@ -308,7 +287,7 @@
 
 @media (max-width: 1200px) {
   .bracket-column {
-    min-width: 140px;
+    max-width: 140px;
   }
   
   .bracket-center {
@@ -335,7 +314,7 @@
   }
   
   .bracket-column {
-    min-width: 120px;
+    max-width: 120px;
   }
   
   .knockout-footer {
@@ -374,4 +353,87 @@
   gap: 0;
   position: relative;
   padding: 1rem;
+}
+
+/* All columns */
+.bracket-column {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  align-items: center;
+  min-width: 140px;
+}
+
+/* The label ABOVE the column */
+.round-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  white-space: nowrap;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  background: #f2f4f7;
+  color: #333;
+  border: 1px solid #d0d5db;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.07);
+}
+
+.bracket-column.sf .round-label {
+  background: #e8f0ff;
+  border-color: #b4c9f0;
+}
+
+.bracket-column.qf .round-label {
+  background: #eef7ff;
+  border-color: #c8dcef;
+}
+
+.bracket-column.final .round-label {
+  background: #ffe8c2;
+  border-color: #e4b46b;
+  color: #7a4f00;
+
+  font-size: 1.05rem;
+  padding: 0.45rem 0.9rem;
+  border-width: 2px;
+
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Wrapper around the match cards */
+.match-list {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* This preserves your original bracket spacing */
+  justify-content: space-around;
+}
+
+/* Optional: ensure match cards align consistently */
+.match-list > * {
+  width: 100%;
+}
+
+.team-flag-match {
+  font-size: 1.5rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.placeholder-flag {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.match-placeholder {
+  padding: 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
 }

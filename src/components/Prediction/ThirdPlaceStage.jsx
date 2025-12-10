@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { predictionAPI } from '../../api/api';
 import { Card } from '../UI/Card';
 import { Button } from '../UI/Button';
+import { getFlagEmoji } from '../../utils/helpers';
 import './ThirdPlaceStage.css';
 
 export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode }) => {
@@ -199,7 +200,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
               <div className="team-group-badge">Group {team.groupCode}</div>
               
               <div className="team-info">
-                <div className="team-flag-large">{team.fifa_code}</div>
+                <div className="team-flag-large">{getFlagEmoji(team.fifa_code)}</div>
                 <h3 className="team-name-large">{team.name}</h3>
               </div>
 
