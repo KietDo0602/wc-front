@@ -369,17 +369,21 @@
 }
 
 .team-flag {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 50px;
-  text-align: center;
 }
 
 .team-flag-large {
-  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .winner-flag {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 40px;
-  text-align: center;
 }

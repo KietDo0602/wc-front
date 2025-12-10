@@ -190,3 +190,57 @@ p {
   background: var(--primary);
   color: white;
 }
+
+/* Flag icon sizes */
+.fi-flag-small {
+  font-size: 1.25rem;
+  width: 1.75rem;
+  height: 1.25rem;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.fi-flag-normal {
+  font-size: 1.5rem;
+  width: 2rem;
+  height: 1.5rem;
+  display: inline-block;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fi-flag-large {
+  font-size: 3rem;
+  width: 4rem;
+  height: 3rem;
+  display: inline-block;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.placeholder-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.placeholder-icon.small {
+  width: 1.75rem;
+  height: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.placeholder-icon.normal {
+  width: 2rem;
+  height: 1.5rem;
+  font-size: 1rem;
+}
+
+.placeholder-icon.large {
+  width: 4rem;
+  height: 3rem;
+  font-size: 2rem;
+}

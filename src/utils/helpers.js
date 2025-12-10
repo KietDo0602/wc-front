@@ -1,68 +1,93 @@
 import { data } from './third_place_matchup';
 
-// FIFA code to flag emoji mapping
-export const getFlagEmoji = (fifaCode) => {
+
+// FIFA code to ISO 3166-1 alpha-2 country code mapping
+export const getFlagCode = (fifaCode) => {
   const flagMap = {
     // CONCACAF
-    'MEX': '🇲🇽',
-    'CAN': '🇨🇦',
-    'JAM': '🇯🇲',
-    'HON': '🇭🇳',
-    'USA': '🇺🇸',
-    'CRC': '🇨🇷',
-    'PAN': '🇵🇦',
-    'SLV': '🇸🇻',
+    'MEX': 'mx',
+    'CAN': 'ca',
+    'JAM': 'jm',
+    'HON': 'hn',
+    'USA': 'us',
+    'CRC': 'cr',
+    'PAN': 'pa',
+    'SLV': 'sv',
     
     // CONMEBOL
-    'BRA': '🇧🇷',
-    'ARG': '🇦🇷',
-    'URU': '🇺🇾',
-    'COL': '🇨🇴',
-    'ECU': '🇪🇨',
-    'PER': '🇵🇪',
-    'CHI': '🇨🇱',
-    'PAR': '🇵🇾',
+    'BRA': 'br',
+    'ARG': 'ar',
+    'URU': 'uy',
+    'COL': 'co',
+    'ECU': 'ec',
+    'PER': 'pe',
+    'CHI': 'cl',
+    'PAR': 'py',
     
     // UEFA
-    'ENG': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-    'FRA': '🇫🇷',
-    'ESP': '🇪🇸',
-    'GER': '🇩🇪',
-    'ITA': '🇮🇹',
-    'POR': '🇵🇹',
-    'NED': '🇳🇱',
-    'BEL': '🇧🇪',
-    'CRO': '🇭🇷',
-    'DEN': '🇩🇰',
-    'SUI': '🇨🇭',
-    'SWE': '🇸🇪',
-    'POL': '🇵🇱',
-    'UKR': '🇺🇦',
-    'AUT': '🇦🇹',
-    'CZE': '🇨🇿',
+    'ENG': 'gb-eng', // England
+    'FRA': 'fr',
+    'ESP': 'es',
+    'GER': 'de',
+    'ITA': 'it',
+    'POR': 'pt',
+    'NED': 'nl',
+    'BEL': 'be',
+    'CRO': 'hr',
+    'DEN': 'dk',
+    'SUI': 'ch',
+    'SWE': 'se',
+    'POL': 'pl',
+    'UKR': 'ua',
+    'AUT': 'at',
+    'CZE': 'cz',
+    'SCO': 'gb-sct',
+    'NOR': 'no',
     
     // AFC
-    'JPN': '🇯🇵',
-    'KOR': '🇰🇷',
-    'AUS': '🇦🇺',
-    'KSA': '🇸🇦',
-    'IRN': '🇮🇷',
-    'IRQ': '🇮🇶',
-    'QAT': '🇶🇦',
-    'UAE': '🇦🇪',
+    'JPN': 'jp',
+    'KOR': 'kr',
+    'AUS': 'au',
+    'KSA': 'sa',
+    'IRN': 'ir',
+    'IRQ': 'iq',
+    'QAT': 'qa',
+    'UAE': 'ae',
+    'JOR': 'jo',
+    'UZB': 'uz',
     
+    'HAI': 'ht',
+    'CUW': 'cw',
+    'NZL': 'nz',
+    'CPV': 'cv',
+
     // CAF
-    'MAR': '🇲🇦',
-    'SEN': '🇸🇳',
-    'NGA': '🇳🇬',
-    'EGY': '🇪🇬',
-    'CMR': '🇨🇲',
-    'GHA': '🇬🇭',
-    'TUN': '🇹🇳',
-    'ALG': '🇩🇿',
+    'MAR': 'ma',
+    'SEN': 'sn',
+    'NGA': 'ng',
+    'EGY': 'eg',
+    'CMR': 'cm',
+    'GHA': 'gh',
+    'TUN': 'tn',
+    'DZA': 'dz',
+    'RSA': 'za',
+    'CIV': 'ci',
   };
   
-  return flagMap[fifaCode] || '🌐'; // Globe for unknown/placeholder
+  return flagMap[fifaCode] || null;
+};
+
+// Component to render flag
+export const FlagIcon = ({ fifaCode, size = 'normal' }) => {
+  const countryCode = getFlagCode(fifaCode);
+  
+  if (!countryCode) {
+    return <span className={`placeholder-icon ${size}`}>🌐</span>;
+  }
+  
+  const sizeClass = size === 'large' ? 'fi-flag-large' : size === 'small' ? 'fi-flag-small' : 'fi-flag-normal';
+  
+  return <span className={`fi fi-${countryCode} ${sizeClass}`}></span>;
 };
 
 // Format date helper

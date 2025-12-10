@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
-import { getFlagEmoji } from '../../utils/helpers';
+import { FlagIcon } from '../../utils/helpers';
 import './PredictionPreviewModal.css';
 
 export const PredictionPreviewModal = ({ userId, username, onClose }) => {
@@ -57,7 +57,9 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
                     <span className="position-badge">
                       {['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][index]}
                     </span>
-                    <span className="team-flag">{getFlagEmoji(ranking.fifa_code)}</span>
+                    <span className="team-flag">
+                      <FlagIcon fifaCode={ranking.fifa_code} size="normal" />
+                    </span>
                     <span className="team-name">{ranking.team_name}</span>
                   </div>
                 ))}
@@ -79,7 +81,9 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
         <div className="preview-third-grid">
           {predictions.thirdPlaceSelections.map(team => (
             <div key={team.id} className="preview-third-card">
-              <div className="team-flag-large">{getFlagEmoji(team.fifa_code)}</div>
+              <div className="team-flag-large">
+                <FlagIcon fifaCode={team.fifa_code} size="large" />
+              </div>
               <div className="team-name-large">{team.name}</div>
             </div>
           ))}
@@ -129,7 +133,9 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
                   <div key={match.match_id} className="preview-match">
                     <span className="match-number">{match.match_name}</span>
                     <div className="predicted-winner">
-                      <span className="winner-flag">{getFlagEmoji(match.fifa_code)}</span>
+                      <span className="winner-flag">
+                        <FlagIcon fifaCode={match.fifa_code} size="normal" />
+                      </span>
                       <span className="winner-name">{match.predicted_team_name}</span>
                       <span className="winner-badge">✓</span>
                     </div>

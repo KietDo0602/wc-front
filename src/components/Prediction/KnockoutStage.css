@@ -418,14 +418,16 @@
 }
 
 .team-flag-match {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 40px;
-  text-align: center;
 }
 
 .placeholder-flag {
-  font-size: 2rem;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 0.25rem;
 }
 

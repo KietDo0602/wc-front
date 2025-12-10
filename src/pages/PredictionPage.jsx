@@ -226,6 +226,7 @@ export const PredictionPage = () => {
             onSubmit={handleSubmitAll}
             savedPredictions={savedPredictions}
             thirdPlaceAdvancers={thirdPlaceAdvancers}
+            user={user?.username}
           />
         )}
       </div>

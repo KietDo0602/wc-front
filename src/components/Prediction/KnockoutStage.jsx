@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { FlagIcon } from '../../utils/helpers';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
 import { getThirdPlaceMatchup, findMatchingElement} from '../../utils/helpers';
 import html2canvas from 'html2canvas';
 import './KnockoutStage.css';
-import { getFlagEmoji } from '../../utils/helpers';
 
 
 const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }) => {
@@ -13,7 +13,9 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
       <div className={`match-card empty ${compact ? 'compact' : ''}`}>
         <div className="match-label">{match.name}</div>
         <div className="match-placeholder">
-          <div className="placeholder-flag">🌐</div>
+          <div className="placeholder-flag">
+            <FlagIcon fifaCode={null} size="normal" />
+          </div>
           <p>TBD</p>
         </div>
       </div>
@@ -31,7 +33,9 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
             onClick={() => !disabled && onSelect(match.id, team.id)}
             style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
           >
-            <span className="team-flag-match">{getFlagEmoji(team.fifa_code)}</span>
+            <span className="team-flag-match">
+              <FlagIcon fifaCode={team.fifa_code} size="small" />
+            </span>
             <span className="team-name-match">{team.name}</span>
             {selectedWinner === team.id && <span className="winner-badge">✓</span>}
           </div>
@@ -41,7 +45,7 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
   );
 };
 
-export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) => {
+export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, user }) => {
   const [predictions, setPredictions] = useState({});
   const [roundOf32Teams, setRoundOf32Teams] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -425,24 +429,14 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
     setExporting(true);
     
     try {
-      // Save current scroll position
-      const container = document.querySelector('.bracket-container');
-      const originalOverflow = container.style.overflow;
-      const originalHeight = container.style.height;
-      
-      // Temporarily make everything visible
-      container.style.overflow = 'visible';
-      container.style.height = 'auto';
-      
-      // Wait for layout adjustment
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      // Get the full bracket scroll element
       const bracketScroll = bracketRef.current.querySelector('.bracket-scroll');
-      
-      // Create export container
-      const exportDiv = document.createElement('div');
-      exportDiv.style.cssText = `
+      if (!bracketScroll) {
+        throw new Error('Bracket content not found');
+      }
+
+      // Create temporary wrapper
+      const exportWrapper = document.createElement('div');
+      exportWrapper.style.cssText = `
         position: fixed;
         left: -99999px;
         top: 0;
@@ -452,21 +446,6 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
         height: auto;
       `;
       
-      // Add header
-      const header = document.createElement('div');
-      header.style.cssText = `
-        text-align: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 3px solid #667eea;
-      `;
-      header.innerHTML = `
-        <h1 style="margin: 0; font-size: 2.5rem; color: #1f2937; font-weight: 800;">
-          🏆 World Cup 2026 Predictions
-        </h1>
-      `;
-      
-      // Clone bracket
       const bracketClone = bracketScroll.cloneNode(true);
       bracketClone.style.cssText = `
         display: flex;
@@ -475,36 +454,93 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
         overflow: visible;
       `;
       
-      exportDiv.appendChild(header);
-      exportDiv.appendChild(bracketClone);
-      document.body.appendChild(exportDiv);
+      // Add title
+      const title = document.createElement('div');
+      const now = new Date();
+      const date = now.toISOString().slice(0,16).replace('T',' ');
+      title.style.cssText = `
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #667eea;
+      `;
+      title.innerHTML = `
+        <h1 style="margin: 0; font-size: 2.5rem; color: #1f2937; font-weight: 800;">
+          🏆 World Cup Knockout Predictions
+        </h1>
+        <p style="margin: 0.5rem 0 0 0; font-size: 1.125rem; color: #6b7280;">
+          ${user?.username || 'My Predictions'}
+        </p>
+        <p style="margin: 0.5rem 0 0 0; font-size: 1.125rem; color: #6b7280;">
+          ${date || ''}
+        </p>
+      `;
       
-      // Wait for images and layout
+      exportWrapper.appendChild(title);
+      exportWrapper.appendChild(bracketClone);
+      document.body.appendChild(exportWrapper);
+      
+      // Convert all flag icons to canvas elements
+      const flagIcons = exportWrapper.querySelectorAll('.fi');
+      
+      await Promise.all(Array.from(flagIcons).map(async (flag) => {
+        const computedStyle = window.getComputedStyle(flag);
+        const backgroundImage = computedStyle.backgroundImage;
+        
+        // Extract URL from background-image
+        const urlMatch = backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+        if (urlMatch && urlMatch[1]) {
+          const svgUrl = urlMatch[1];
+          
+          try {
+            // Fetch the SVG
+            const response = await fetch(svgUrl);
+            const svgText = await response.text();
+            
+            // Convert SVG to data URL
+            const blob = new Blob([svgText], { type: 'image/svg+xml' });
+            const dataUrl = await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            
+            // Create image element
+            const img = document.createElement('img');
+            img.src = dataUrl;
+            img.style.cssText = `
+              width: ${computedStyle.width};
+              height: ${computedStyle.height};
+              border-radius: ${computedStyle.borderRadius};
+              box-shadow: ${computedStyle.boxShadow};
+            `;
+            
+            // Replace flag with image
+            flag.parentNode.replaceChild(img, flag);
+          } catch (err) {
+            console.error('Failed to convert flag:', err);
+          }
+        }
+      }));
+      
+      // Wait for images to load
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Capture
-      const canvas = await html2canvas(exportDiv, {
+      const canvas = await html2canvas(exportWrapper, {
         scale: 2.5,
         backgroundColor: '#f9fafb',
         logging: false,
         useCORS: true,
         allowTaint: true,
-        width: exportDiv.scrollWidth,
-        height: exportDiv.scrollHeight,
-        windowWidth: exportDiv.scrollWidth,
-        windowHeight: exportDiv.scrollHeight,
-        onclone: (clonedDoc) => {
-          const clonedDiv = clonedDoc.querySelector('div[style*="fixed"]');
-          if (clonedDiv) {
-            clonedDiv.style.left = '0';
-          }
-        }
+        width: exportWrapper.scrollWidth,
+        height: exportWrapper.scrollHeight,
+        windowWidth: exportWrapper.scrollWidth,
+        windowHeight: exportWrapper.scrollHeight,
       });
       
-      // Restore original styles
-      container.style.overflow = originalOverflow;
-      container.style.height = originalHeight;
-      document.body.removeChild(exportDiv);
+      // Clean up
+      document.body.removeChild(exportWrapper);
       
       // Download
       canvas.toBlob((blob) => {
@@ -646,7 +682,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode }) 
           {/* Center - Final */}
           <div className="bracket-section bracket-center">
             <div className="bracket-column final">
-              <div className="round-label">World Cup Finals</div>
+              <div className="round-label">🏆 World Cup Finals</div>
               <div className="match-list">
                 <MatchCard
                   match={{ id: 31, name: 'Final' }}
