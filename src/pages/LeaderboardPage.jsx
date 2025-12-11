@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { leaderboardAPI } from '../api/api';
 import { Card } from '../components/UI/Card';
+import { Button } from '../components/UI/Button';
 import { PredictionPreviewModal } from '../components/Prediction/PredictionPreviewModal';
 import './LeaderboardPage.css';
 
@@ -9,7 +10,7 @@ export const LeaderboardPage = () => {
   const [activeUsers, setActiveUsers] = useState([]);
   const [myRank, setMyRank] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState('all'); // 'all' or 'active'
+  const [tab, setTab] = useState('all');
   const [previewUser, setPreviewUser] = useState(null);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export const LeaderboardPage = () => {
         setMyRank(rankRes.data.ranking);
       } catch (err) {
         // User might not have predictions yet
+        console.log('No rank available yet');
       }
     } catch (error) {
       console.error('Failed to load leaderboard:', error);
@@ -39,21 +41,19 @@ export const LeaderboardPage = () => {
     }
   };
 
-  const handlePreviewUser = async (userId, username) => {
-    try {
-      // This would require a new API endpoint to get other users' predictions
-      // For now, show modal with user info
-      setPreviewUser({ userId, username });
-    } catch (error) {
-      console.error('Failed to load user predictions:', error);
-    }
-  };
-
   const getMedalEmoji = (position) => {
     if (position === 1) return '🥇';
     if (position === 2) return '🥈';
     if (position === 3) return '🥉';
     return position;
+  };
+
+  const handlePreviewUser = (userId, username) => {
+    setPreviewUser({ userId, username });
+  };
+
+  const handleClosePreview = () => {
+    setPreviewUser(null);
   };
 
   if (loading) {
@@ -116,8 +116,8 @@ export const LeaderboardPage = () => {
                 <tr>
                   <th>Rank</th>
                   <th>Username</th>
-                  <th>Correct Predictions</th>
-                  <th>Total Predictions</th>
+                  <th>Correct</th>
+                  <th>Total</th>
                   <th>Accuracy</th>
                   <th>Actions</th>
                 </tr>
@@ -130,7 +130,7 @@ export const LeaderboardPage = () => {
                     <td>{user.correct_match_predictions}</td>
                     <td>{user.total_predictions}</td>
                     <td>{user.accuracy_percentage}%</td>
-                    <td>
+                    <td className="actions-cell">
                       <button 
                         className="preview-btn"
                         onClick={() => handlePreviewUser(user.user_id, user.username)}
@@ -150,8 +150,10 @@ export const LeaderboardPage = () => {
                 <tr>
                   <th>#</th>
                   <th>Username</th>
+                  <th>Email</th>
                   <th>Status</th>
                   <th>Joined</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,8 +161,17 @@ export const LeaderboardPage = () => {
                   <tr key={user.id}>
                     <td>{index + 1}</td>
                     <td className="username-cell">{user.username}</td>
+                    <td>{user.email}</td>
                     <td><span className="status-badge active">✓ Active</span></td>
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                    <td className="actions-cell">
+                      <button 
+                        className="preview-btn"
+                        onClick={() => handlePreviewUser(user.id, user.username)}
+                      >
+                        👁️ View
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -174,11 +185,12 @@ export const LeaderboardPage = () => {
           )}
         </div>
       </Card>
+
       {previewUser && (
         <PredictionPreviewModal
           userId={previewUser.userId}
           username={previewUser.username}
-          onClose={() => setPreviewUser(null)}
+          onClose={handleClosePreview}
         />
       )}
     </div>
