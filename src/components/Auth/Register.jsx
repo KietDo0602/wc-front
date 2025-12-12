@@ -51,7 +51,7 @@ export const Register = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <div className="auth-header">
-          <h1>⚽ World Cup Predictor</h1>
+          <h1>🏆 World Cup Brackets</h1>
           <h2>Create Account</h2>
           <p>Join and make your predictions</p>
         </div>

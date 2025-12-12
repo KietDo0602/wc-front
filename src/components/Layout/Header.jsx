@@ -20,8 +20,8 @@ export const Header = () => {
     <header className="app-header">
       <div className="header-container">
         <Link to="/" className="logo">
-          <span className="logo-icon">⚽</span>
-          <span className="logo-text">World Cup Predictor</span>
+          <span className="logo-icon">🏆</span>
+          <span className="logo-text">World Cup Brackets</span>
         </Link>
 
         <nav className="nav-menu">

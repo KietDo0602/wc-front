@@ -43,6 +43,22 @@ export const getFlagCode = (fifaCode) => {
     'CZE': 'cz',
     'SCO': 'gb-sct',
     'NOR': 'no',
+    'CZE': 'cz',
+    'DEN': 'dk',
+    'MKD': 'mk',
+    'IRL': 'ie',
+    'BIH': 'ba',
+    'ITA': 'it',
+    'NIR': 'gb-nir',
+    'WAL': 'gb-wls',
+    "KVX": 'xk',
+    "ROU": 'ro',
+    "SVK": 'sk',
+    "TUR": 'tr',
+    "ALB": 'al',
+    "POL": 'pl',
+    "SWE": 'se',
+    "UKR": 'ua',
     
     // AFC
     'JPN': 'jp',
@@ -72,6 +88,15 @@ export const getFlagCode = (fifaCode) => {
     'DZA': 'dz',
     'RSA': 'za',
     'CIV': 'ci',
+
+
+    "BOL": 'bo', 
+    "IRQ": 'iq', 
+    "SUR": 'sr', 
+
+    "Congo DR": 'cd',
+    "JAM": 'jm', 
+    "NCL": 'nc',
   };
   
   return flagMap[fifaCode] || null;

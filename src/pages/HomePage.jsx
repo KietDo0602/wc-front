@@ -12,8 +12,8 @@ export const HomePage = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            <span className="hero-icon">⚽</span>
-            World Cup Predictor
+            <span className="hero-icon">🏆</span>
+            World Cup Brackets
           </h1>
           <p className="hero-subtitle">
             Predict every match. Compete with friends. Win glory!
@@ -53,7 +53,7 @@ export const HomePage = () => {
           <div className="feature-card">
             <div className="feature-icon">🏆</div>
             <h3>Knockout Bracket</h3>
-            <p>Predict winners from Round of 32 all the way to the final</p>
+            <p>Predict winners from Round of 32 all the way to the World Cup Final!</p>
           </div>
 
           <div className="feature-card">
@@ -65,22 +65,22 @@ export const HomePage = () => {
       </section>
 
       <section className="how-it-works">
-        <h2>How It Works</h2>
+        <h2>Instructions</h2>
         <div className="steps">
           <div className="step">
             <div className="step-number">1</div>
             <h4>Register</h4>
-            <p>Create your account to get started</p>
+            <p>Create your account to get started!</p>
           </div>
           <div className="step">
             <div className="step-number">2</div>
             <h4>Predict</h4>
-            <p>Make predictions for all stages before the deadline</p>
+            <p>Make predictions for all stages: Group Stages, Third Place, Knockout Stages</p>
           </div>
           <div className="step">
             <div className="step-number">3</div>
             <h4>Submit</h4>
-            <p>Lock in your predictions and wait for matches to begin</p>
+            <p>Lock in your predictions before <b>11th June 2026</b>, and wait for matches to begin</p>
           </div>
           <div className="step">
             <div className="step-number">4</div>

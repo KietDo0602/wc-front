@@ -31,7 +31,7 @@ export const Login = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <div className="auth-header">
-          <h1>⚽ World Cup Predictor</h1>
+          <h1>🏆 World Cup Brackets</h1>
           <h2>Welcome Back</h2>
           <p>Login to make your predictions</p>
         </div>

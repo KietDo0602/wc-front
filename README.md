@@ -1,4 +1,4 @@
-# World Cup Prediction App
+# World Cup Brackets Predictor
 
 A full-stack application for predicting World Cup matches with group stage, third-place selection, and knockout bracket predictions.
 
