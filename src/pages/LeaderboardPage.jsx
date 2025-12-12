@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { leaderboardAPI } from '../api/api';
 import { Card } from '../components/UI/Card';
 import { Button } from '../components/UI/Button';
@@ -12,6 +13,7 @@ export const LeaderboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('all');
   const [previewUser, setPreviewUser] = useState(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadData();
@@ -60,7 +62,7 @@ export const LeaderboardPage = () => {
     return (
       <div className="leaderboard-page loading">
         <div className="spinner-icon"></div>
-        <p>Loading leaderboard...</p>
+        <p>{t('lead.loading')}</p>
       </div>
     );
   }
@@ -68,25 +70,25 @@ export const LeaderboardPage = () => {
   return (
     <div className="leaderboard-page">
       <div className="leaderboard-header">
-        <h1>🏆 Leaderboard</h1>
-        <p>See how you stack up against other predictors</p>
+        <h1>🏆 {t('lead.title')}</h1>
+        <p>{t('lead.subtitle')}</p>
       </div>
 
       {myRank && (
         <Card className="my-rank-card">
           <div className="my-rank-content">
             <div className="rank-info">
-              <span className="rank-label">Your Rank</span>
+              <span className="rank-label">{t('lead.yourRank')}</span>
               <span className="rank-number">#{myRank.rank}</span>
             </div>
             <div className="rank-stats">
               <div className="stat">
                 <span className="stat-value">{myRank.correct_match_predictions}</span>
-                <span className="stat-label">Correct</span>
+                <span className="stat-label">{t('lead.correct')}</span>
               </div>
               <div className="stat">
                 <span className="stat-value">{myRank.total_predictions}</span>
-                <span className="stat-label">Total</span>
+                <span className="stat-label">{t('lead.total')}</span>
               </div>
             </div>
           </div>
@@ -98,13 +100,13 @@ export const LeaderboardPage = () => {
           className={`tab ${tab === 'all' ? 'active' : ''}`}
           onClick={() => setTab('all')}
         >
-          All Users ({leaderboard.length})
+          {t('lead.allUsers')} ({leaderboard.length})
         </button>
         <button
           className={`tab ${tab === 'active' ? 'active' : ''}`}
           onClick={() => setTab('active')}
         >
-          Still in the Running ({activeUsers.length})
+          {t('lead.stillRunning')} ({activeUsers.length})
         </button>
       </div>
 
@@ -114,12 +116,12 @@ export const LeaderboardPage = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Rank</th>
-                  <th>Username</th>
-                  <th>Correct</th>
-                  <th>Total</th>
-                  <th>Accuracy</th>
-                  <th>Actions</th>
+                  <th>{t('lead.rank')}</th>
+                  <th>{t('lead.username')}</th>
+                  <th>{t('lead.correct')}</th>
+                  <th>{t('lead.total')}</th>
+                  <th>{t('lead.accuracy')}</th>
+                  <th>{t('lead.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -135,7 +137,7 @@ export const LeaderboardPage = () => {
                         className="preview-btn"
                         onClick={() => handlePreviewUser(user.user_id, user.username)}
                       >
-                        👁️ View
+                        👁️ {t('lead.view')}
                       </button>
                     </td>
                   </tr>
@@ -149,11 +151,10 @@ export const LeaderboardPage = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Joined</th>
-                  <th>Actions</th>
+                  <th>{t('lead.username')}</th>
+                  <th>{t('lead.status')}</th>
+                  <th>{t('lead.joined')}</th>
+                  <th>{t('lead.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -161,15 +162,14 @@ export const LeaderboardPage = () => {
                   <tr key={user.id}>
                     <td>{index + 1}</td>
                     <td className="username-cell">{user.username}</td>
-                    <td>{user.email}</td>
-                    <td><span className="status-badge active">✓ Active</span></td>
+                    <td><span className="status-badge active">✓ {t('lead.active')}</span></td>
                     <td>{new Date(user.created_at).toLocaleDateString()}</td>
                     <td className="actions-cell">
                       <button 
                         className="preview-btn"
                         onClick={() => handlePreviewUser(user.id, user.username)}
                       >
-                        👁️ View
+                        👁️ {t('lead.view')}
                       </button>
                     </td>
                   </tr>
@@ -180,7 +180,7 @@ export const LeaderboardPage = () => {
 
           {((tab === 'all' && leaderboard.length === 0) || (tab === 'active' && activeUsers.length === 0)) && (
             <div className="empty-state">
-              <p>No users found</p>
+              <p>{t('lead.noUsers')}</p>
             </div>
           )}
         </div>

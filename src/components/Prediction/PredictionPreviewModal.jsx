@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
 import { FlagIcon } from '../../utils/helpers';
@@ -9,6 +10,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState('groups');
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadUserPredictions();
@@ -72,12 +74,12 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
 
   const renderThirdPlacePredictions = () => {
     if (!predictions?.thirdPlaceSelections || predictions.thirdPlaceSelections.length === 0) {
-      return <div className="empty-state">No third-place predictions available</div>;
+      return <div className="empty-state">{t('pred.thirdPlace.none')}</div>;
     }
 
     return (
       <div className="preview-third-place">
-        <h3>Selected Third-Place Advancers ({predictions.thirdPlaceSelections.length}/8)</h3>
+        <h3>{t('pred.selected', {number: predictions.thirdPlaceSelections.length})}</h3>
         <div className="preview-third-grid">
           {predictions.thirdPlaceSelections.map(team => (
             <div key={team.id} className="preview-third-card">
@@ -113,11 +115,11 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
     });
 
     const roundNames = {
-      'R32': 'Round of 32',
-      'R16': 'Round of 16',
-      'QF': 'Quarter Finals',
-      'SF': 'Semi Finals',
-      'F': 'Final'
+      'R32': t('pred.roundof36'),
+      'R16': t('pred.roundof16'),
+      'QF': t('pred.quarterfinals'),
+      'SF': t('pred.semifinals'),
+      'F': t('pred.final'),
     };
 
     return (
@@ -153,7 +155,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>👤 {username}'s Predictions</h2>
+          <h2>👤 {t('pred.prediction.userPrediction', {user: username})}</h2>
           <button className="close-btn" onClick={onClose}>✕</button>
         </div>
 
@@ -162,19 +164,19 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
             className={`tab ${tab === 'groups' ? 'active' : ''}`}
             onClick={() => setTab('groups')}
           >
-            Group Stage
+            {t('pred.groupStage')}
           </button>
           <button 
             className={`tab ${tab === 'third' ? 'active' : ''}`}
             onClick={() => setTab('third')}
           >
-            Third Place
+            {t('pred.thirdPlace')}
           </button>
           <button 
             className={`tab ${tab === 'knockout' ? 'active' : ''}`}
             onClick={() => setTab('knockout')}
           >
-            Knockout
+            {t('pred.knockout')}
           </button>
         </div>
 
@@ -182,15 +184,15 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
           {loading ? (
             <div className="loading-spinner">
               <div className="spinner-icon"></div>
-              <p>Loading predictions...</p>
+              <p>{t('pred.prediction.loading')}</p>
             </div>
           ) : error ? (
             <div className="error-state">
               <p>⚠️ {error}</p>
               <p className="error-hint">
                 {error.includes('not available') 
-                  ? 'This user has not submitted their predictions yet.'
-                  : 'Please try again later.'}
+                  ? t('pred.prediction.notSubmitted')
+                  : 'pred.prediction.tryAgain'}
               </p>
             </div>
           ) : (
@@ -203,7 +205,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
         </div>
 
         <div className="modal-footer">
-          <Button onClick={onClose} variant="outline">Close</Button>
+          <Button onClick={onClose} variant="outline">{t('button.close')}</Button>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { predictionAPI } from '../api/api';
 import { GroupStage } from '../components/Prediction/GroupStage';
@@ -17,6 +18,7 @@ export const PredictionPage = () => {
   const [thirdPlaceAdvancers, setThirdPlaceAdvancers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState(false); // NEW: View-only mode
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -111,7 +113,7 @@ export const PredictionPage = () => {
       <div className="prediction-page loading">
         <div className="loading-spinner">
           <div className="spinner-icon"></div>
-          <p>Loading your predictions...</p>
+          <p>{t('pred.prediction.loading')}</p>
         </div>
       </div>
     );
@@ -123,10 +125,10 @@ export const PredictionPage = () => {
       <div className="prediction-page view-mode">
         <div className="prediction-header">
           <div className="header-content">
-            <h1>My Predictions</h1>
-            <p className="welcome-text">Welcome, {user?.username}! 👋</p>
+            <h1>{t('nav.myPredictions')}</h1>
+            <p className="welcome-text">{t('pred.welcome', {user: user?.username})} 👋</p>
             <div className="submitted-badge">
-              ✓ Submitted on {new Date(status?.predictions_submitted_at).toLocaleDateString()}
+              ✓ {t('Submitted on', {date: new Date(status?.predictions_submitted_at).toLocaleDateString()})}
             </div>
           </div>
         </div>
@@ -137,19 +139,19 @@ export const PredictionPage = () => {
               className={`tab ${currentStage === 'groups' ? 'active' : ''}`}
               onClick={() => setCurrentStage('groups')}
             >
-              Group Stage
+              {t('pred.groupStage')}
             </button>
             <button 
               className={`tab ${currentStage === 'third' ? 'active' : ''}`}
               onClick={() => setCurrentStage('third')}
             >
-              Third Place
+              {t('pred.thirdPlace')}
             </button>
             <button 
               className={`tab ${currentStage === 'knockout' ? 'active' : ''}`}
               onClick={() => setCurrentStage('knockout')}
             >
-              Knockout Stage
+              {t('pred.knockout')}
             </button>
           </div>
 
@@ -182,7 +184,7 @@ export const PredictionPage = () => {
 
           <div className="view-mode-actions">
             <Button onClick={() => navigate('/leaderboard')} variant="outline">
-              View Leaderboard
+              {t('pred.viewLeaderboard')}
             </Button>
           </div>
         </div>
@@ -194,8 +196,8 @@ export const PredictionPage = () => {
     <div className="prediction-page">
       <div className="prediction-header">
         <div className="header-content">
-          <h1>Make Your Predictions</h1>
-          <p className="welcome-text">Welcome, {user?.username}! 👋</p>
+          <h1>{t('pred.makePredictions')}</h1>
+          <p className="welcome-text">{t('pred.welcome', {user: user?.username})} 👋</p>
         </div>
       </div>
 

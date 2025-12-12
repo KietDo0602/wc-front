@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlagIcon } from '../../utils/helpers';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
@@ -52,6 +53,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const bracketRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     initializeKnockoutTeams();
@@ -384,11 +386,11 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
 
   const calculateProgress = () => {
     const rounds = {
-      'R32': { matches: Array.from({length: 16}, (_, i) => i + 1), label: 'Round of 32' },
-      'R16': { matches: Array.from({length: 8}, (_, i) => i + 17), label: 'Round of 16' },
-      'QF': { matches: Array.from({length: 4}, (_, i) => i + 25), label: 'Quarter Finals' },
-      'SF': { matches: Array.from({length: 2}, (_, i) => i + 29), label: 'Semi Finals' },
-      'F': { matches: [31], label: 'Final' }
+      'R32': { matches: Array.from({length: 16}, (_, i) => i + 1), label: t('pred.roundof32') },
+      'R16': { matches: Array.from({length: 8}, (_, i) => i + 17), label: t('pred.roundof16') },
+      'QF': { matches: Array.from({length: 4}, (_, i) => i + 25), label: t('pred.quarterfinals') },
+      'SF': { matches: Array.from({length: 2}, (_, i) => i + 29), label: t('pred.semifinals') },
+      'F': { matches: [31], label: t('pred.final') }
     };
 
     const progress = {};
@@ -565,8 +567,8 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
     return (
       <div className="knockout-stage">
         <div className="stage-header">
-          <h2>Knockout Stage Predictions</h2>
-          <p>Loading knockout bracket...</p>
+          <h2>{t('pred.knockout.header')}</h2>
+          <p>{t('pred.knockout.loading')}</p>
         </div>
         <div className="loading-spinner">
           <div className="spinner-icon"></div>
@@ -579,14 +581,14 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
     return (
       <div className="knockout-stage">
         <div className="stage-header">
-          <h2>Knockout Stage Predictions</h2>
+          <h2>{t('pred.knockout.header')}</h2>
           <p className="error-message">
-            Unable to load knockout teams. Please ensure you've completed both group stage and third-place selections.
+            {t("pred.knockout.error")}
           </p>
         </div>
         <div className="stage-footer">
           <Button onClick={onBack} variant="outline">
-            ← Back to Third Place
+            ← {t('pred.backToThird')}
           </Button>
         </div>
       </div>
@@ -598,7 +600,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
   return (
     <div className="knockout-stage" ref={bracketRef}>
       <div className="knockout-header">
-        <h2>🏆 Knockout Stage</h2>
+        <h2>🏆 {t('pred.knockout')}</h2>
         <div className="progress-summary">
           {Object.entries(progress).map(([key, p]) => (
             <div key={key} className={`progress-item ${p.completed === p.total ? 'complete' : ''}`}>
@@ -614,7 +616,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
           {/* Left Side - Top Half */}
           <div className="bracket-section bracket-left">
             <div className="bracket-column r32">
-              <div className="round-label">Round of 32</div>
+              <div className="round-label">{t('pred.roundof32')}</div>
                 <div className="match-list">
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(matchId => (
                     <MatchCard
@@ -631,7 +633,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column r16">
-              <div className="round-label">Round of 16</div>
+              <div className="round-label">{t('pred.roundof16')}</div>
               <div className="match-list">
                 {[17, 18, 19, 20].map(matchId => (
                   <MatchCard
@@ -648,7 +650,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column qf">
-              <div className="round-label">Quarter-Finals</div>
+              <div className="round-label">{t('pred.quarterfinals')}</div>
               <div className="match-list">
                 {[25, 26].map(matchId => (
                   <MatchCard
@@ -665,7 +667,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column sf">
-              <div className="round-label">Semi-Finals</div>
+              <div className="round-label">{t('pred.semifinals')}</div>
               <div className="match-list">
                 <MatchCard
                   match={{ id: 29, name: 'SF1' }}
@@ -682,7 +684,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
           {/* Center - Final */}
           <div className="bracket-section bracket-center">
             <div className="bracket-column final">
-              <div className="round-label">🏆 World Cup Finals</div>
+              <div className="round-label">🏆 {t('pred.final.full')}</div>
               <div className="match-list">
                 <MatchCard
                   match={{ id: 31, name: 'Final' }}
@@ -699,7 +701,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
           {/* Right Side - Bottom Half */}
           <div className="bracket-section bracket-right">
             <div className="bracket-column sf">
-              <div className="round-label">Semi-Finals</div>
+              <div className="round-label">{t('pred.semifinals')}</div>
               <div className="match-list">
                 <MatchCard
                   match={{ id: 30, name: 'SF2' }}
@@ -713,7 +715,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column qf">
-              <div className="round-label">Quarter-Finals</div>
+              <div className="round-label">{t('pred.quarterfinals')}</div>
               <div className="match-list">
                 {[27, 28].map(matchId => (
                   <MatchCard
@@ -730,7 +732,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column r16">
-              <div className="round-label">Round of 16</div>
+              <div className="round-label">{t('pred.roundof16')}</div>
               <div className="match-list">
                 {[21, 22, 23, 24].map(matchId => (
                   <MatchCard
@@ -747,7 +749,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             </div>
 
             <div className="bracket-column r32">
-              <div className="round-label">Round of 32</div>
+              <div className="round-label">{t('pred.roundof32')}</div>
               <div className="match-list">
                 {[9, 10, 11, 12, 13, 14, 15, 16].map(matchId => (
                   <MatchCard
@@ -770,7 +772,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
         {!viewMode && (
           <>
             <Button onClick={onBack} variant="outline">
-              ← Back to Third Place
+              ← {t('pred.backToThird')}
             </Button>
             
             {canSubmit() ? (
@@ -780,18 +782,18 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
                 size="large"
                 variant="success"
               >
-                🎯 Submit All Predictions
+                🎯 {t('pred.submit')}
               </Button>
             ) : (
               <div className="completion-hint">
-                Complete all {Object.values(progress).reduce((sum, p) => sum + (p.total - p.completed), 0)} remaining matches
+                {t('pred.knockout.complete', {number: Object.values(progress).reduce((sum, p) => sum + (p.total - p.completed), 0)})}
               </div>
             )}
           </>
         )}
         {viewMode && (
           <div className="view-mode-notice">
-            <p>✓ Your predictions are locked and saved</p>
+            <p>✓ {t('pred.knockout.locked')}</p>
           </div>
         )}
         {viewMode && (
@@ -801,7 +803,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
             variant="outline"
             className="export-btn"
           >
-            📸 Save My Prediction
+            📸 {t('pred.knockout.export')}
           </Button>
         )}
       </div>

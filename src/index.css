@@ -244,3 +244,127 @@ p {
   height: 3rem;
   font-size: 2rem;
 }
+
+:root {
+  --primary: #667eea;
+  --primary-dark: #764ba2;
+  --background: #f9fafb;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --text-secondary: #6b7280;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--background);
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+
+/* Theme-specific adjustments */
+body[data-theme="dark"] {
+  background: var(--background);
+}
+
+body[data-theme="miami"] {
+  background: var(--background);
+  font-family: 'Courier New', monospace;
+}
+
+body[data-theme="miami"] * {
+  text-shadow: 0 0 10px var(--primary);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Language flag sizes */
+.fi-lang-small {
+  font-size: 1rem;
+  width: 1.5rem;
+  height: 1.125rem;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.fi-lang-normal {
+  font-size: 1.25rem;
+  width: 1.75rem;
+  height: 1.3125rem;
+  display: inline-block;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Team flag sizes */
+.fi-flag-small {
+  font-size: 1.25rem;
+  width: 1.75rem;
+  height: 1.25rem;
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.fi-flag-normal {
+  font-size: 1.5rem;
+  width: 2rem;
+  height: 1.5rem;
+  display: inline-block;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fi-flag-large {
+  font-size: 3rem;
+  width: 4rem;
+  height: 3rem;
+  display: inline-block;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.placeholder-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.placeholder-icon.small {
+  width: 1.75rem;
+  height: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.placeholder-icon.normal {
+  width: 2rem;
+  height: 1.5rem;
+  font-size: 1rem;
+}
+
+.placeholder-icon.large {
+  width: 4rem;
+  height: 3rem;
+  font-size: 2rem;
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { predictionAPI } from '../../api/api';
 import { Card } from '../UI/Card';
 import { Button } from '../UI/Button';
@@ -11,6 +12,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadThirdPlaceTeams();
@@ -151,32 +153,32 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
   return (
     <div className="third-place-stage">
       <div className="stage-header">
-        <h2>Third Place Advancers</h2>
-        {!viewMode && (<p>Select 8 teams from the 12 third-place finishers that will advance to the knockout stage</p>)}
-        {viewMode && (<p>8 teams from the 12 third-place finishers selected here will advance to the knockout stage</p>)}
+        <h2>{t('pred.thirdPlace.header')}</h2>
+        {!viewMode && (<p>{t('pred.thirdPlace.text1')}</p>)}
+        {viewMode && (<p>{t('pred.thirdPlace.text2')}</p>)}
         {!viewMode && saved && (
-          <p className="saved-notice">✓ Selections saved. Click "Edit Selections" below to modify.</p>
+          <p className="saved-notice">✓ {t('pred.thirdPlace.saved')}</p>
         )}
       </div>
 
       <Card className="selection-info">
         <div className="selection-counter">
           <span className="counter-number">{selectedTeams.length}</span>
-          <span className="counter-label">/ 8 teams selected</span>
+          <span className="counter-label">/ {t('pred.thirdPlace.teamSelected')}</span>
         </div>
 
         {!viewMode && (
           saved ? (
             <Button onClick={handleUnsave} variant="outline">
-              Edit Selections
+              {t('pred.thirdPlace.editSelections')}
             </Button>
           ) : selectedTeams.length === 8 ? (
             <Button onClick={handleSave} loading={saving} variant="success">
-              Save Selections
+              {t('pred.thirdPlace.saveSelections')}
             </Button>
           ) : (
             <div className="selection-hint">
-              Select {8 - selectedTeams.length} more team{8 - selectedTeams.length !== 1 ? 's' : ''}
+              {t('pred.thirdPlace.selectMore', {teams: 8 - selectedTeams.length})}
             </div>
           )
         )}
@@ -197,7 +199,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
             >
               {isSelected && <div className="selection-badge">✓</div>}
               
-              <div className="team-group-badge">Group {team.groupCode}</div>
+              <div className="team-group-badge">{t("pred.groupStage.group", {group: team.groupCode})}</div>
               
               <div className="team-info">
                 <div className="team-flag-large">
@@ -206,7 +208,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
                 <h3 className="team-name-large">{team.name}</h3>
               </div>
 
-              <div className="team-position-label">3rd Place in Group {team.groupCode}</div>
+              <div className="team-position-label">{t('pred.thirdPlace.teamPositionLabel', {group: team.groupCode})}</div>
             </div>
           );
         })}
@@ -214,22 +216,23 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
 
       <div className="stage-footer">
         <Button onClick={onBack} variant="outline">
-          ← Back to Groups
+          ← {t('pred.thirdPlace.backtoButton')}
         </Button>
         <Button
           onClick={onComplete}
           disabled={!canContinue}
           size="large"
         >
-          Continue to Knockout Stage →
+          {t('pred.thirdPlace.continueButton')} →
         </Button>
       </div>
 
       {!canContinue && (
         <p className="help-text">
           {selectedTeams.length !== 8 
-            ? `Select ${8 - selectedTeams.length} more team${8 - selectedTeams.length !== 1 ? 's' : ''}`
-            : 'Save your selections to continue'}
+            ? t('pred.thirdPlace.selectMore', {teams: 8 - selectedTeams.length})
+            : t('pred.thirdPlace.saveContinue')
+          }
         </p>
       )}
     </div>

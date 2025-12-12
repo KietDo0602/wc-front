@@ -43,12 +43,9 @@ export const getFlagCode = (fifaCode) => {
     'CZE': 'cz',
     'SCO': 'gb-sct',
     'NOR': 'no',
-    'CZE': 'cz',
-    'DEN': 'dk',
     'MKD': 'mk',
     'IRL': 'ie',
     'BIH': 'ba',
-    'ITA': 'it',
     'NIR': 'gb-nir',
     'WAL': 'gb-wls',
     "KVX": 'xk',
@@ -56,9 +53,6 @@ export const getFlagCode = (fifaCode) => {
     "SVK": 'sk',
     "TUR": 'tr',
     "ALB": 'al',
-    "POL": 'pl',
-    "SWE": 'se',
-    "UKR": 'ua',
     
     // AFC
     'JPN': 'jp',
@@ -89,13 +83,9 @@ export const getFlagCode = (fifaCode) => {
     'RSA': 'za',
     'CIV': 'ci',
 
-
     "BOL": 'bo', 
-    "IRQ": 'iq', 
     "SUR": 'sr', 
-
     "Congo DR": 'cd',
-    "JAM": 'jm', 
     "NCL": 'nc',
   };
   
@@ -111,6 +101,26 @@ export const FlagIcon = ({ fifaCode, size = 'normal' }) => {
   }
   
   const sizeClass = size === 'large' ? 'fi-flag-large' : size === 'small' ? 'fi-flag-small' : 'fi-flag-normal';
+  
+  return <span className={`fi fi-${countryCode} ${sizeClass}`}></span>;
+};
+
+
+export const getLanguageFlagCode = (languageCode) => {
+  const langFlagMap = {
+    'en': 'gb-eng', // English -> USA flag
+    'es': 'es', // Spanish -> Spain flag
+    'fr': 'fr', // French -> France flag
+    'vi': 'vn', // Vietnamese -> Vietnam flag
+  };
+  
+  return langFlagMap[languageCode] || 'us';
+};
+
+// Language Flag Component
+export const LanguageFlag = ({ languageCode, size = 'normal' }) => {
+  const countryCode = getLanguageFlagCode(languageCode);
+  const sizeClass = size === 'small' ? 'fi-lang-small' : 'fi-lang-normal';
   
   return <span className={`fi fi-${countryCode} ${sizeClass}`}></span>;
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -52,6 +53,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(!!savedRanking);
   const [isEditing, setIsEditing] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (savedRanking) {
@@ -119,9 +121,9 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
   return (
     <Card className="group-card">
       <div className="group-header">
-        <h3>Group {group.code}</h3>
-        {saved && !isEditing && <span className="saved-badge">✓ Saved</span>}
-        {isEditing && <span className="editing-badge">✏️ Editing</span>}
+        <h3>{t('pred.groupStage.group', {group: group.code})}</h3>
+        {saved && !isEditing && <span className="saved-badge">✓ {t('pred.saved')}</span>}
+        {isEditing && <span className="editing-badge">✏️ {t('pred.editing')}</span>}
       </div>
       
       {viewMode ? (
@@ -176,7 +178,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
               variant="outline"
               className="edit-btn"
             >
-              ✏️ Edit
+              ✏️ {t('pred.edit')}
             </Button>
           ) : (
             <>
@@ -188,7 +190,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
                 variant="primary"
                 className="save-btn"
               >
-                💾 Save
+                💾 {t('pred.save')}
               </Button>
               {isEditing && (
                 <Button 
@@ -197,7 +199,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
                   variant="outline"
                   className="cancel-btn"
                 >
-                  ✕ Cancel
+                  ✕ {t('pred.cancel')}
                 </Button>
               )}
             </>
@@ -212,6 +214,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rankings, setRankings] = useState({});
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadGroups();
@@ -281,11 +284,12 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
   return (
     <div className="group-stage">
       <div className="stage-header">
-        <h2>Group Stage Predictions</h2>
+        <h2>{t('pred.groupStage.prediction')}</h2>
         <p>
           {viewMode 
-            ? 'Your group stage predictions' 
-            : 'Drag and drop teams to predict the final ranking for each group'}
+            ? t('pred.groupStage.caption1')
+            : t('pred.groupStage.caption2')
+          }
         </p>
       </div>
 
@@ -309,11 +313,11 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
             disabled={!allGroupsRanked}
             size="large"
           >
-            Continue to Third Place Selection →
+            {t('pred.groupStage.continue')} →
           </Button>
           {!allGroupsRanked && (
             <p className="help-text">
-              Complete all {groups.length} groups to continue
+              {t("pred.groupStage.helpText", { groupsLen: groups.length })}
             </p>
           )}
         </div>
