@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../UI/Button';
@@ -10,6 +11,7 @@ export const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -31,16 +33,15 @@ export const Login = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <div className="auth-header">
-          <h1>🏆 World Cup Brackets</h1>
-          <h2>Welcome Back</h2>
-          <p>Login to make your predictions</p>
+          <h1>{t("home.welcome")}</h1>
+          <p>{t("login.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t("username")}</label>
             <input
               id="username"
               type="text"
@@ -52,7 +53,7 @@ export const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("password")}</label>
             <input
               id="password"
               type="password"
@@ -63,11 +64,11 @@ export const Login = () => {
           </div>
 
           <Button type="submit" loading={loading} className="w-full">
-            Login
+            {t("login.button")}
           </Button>
 
           <p className="auth-link">
-            Don't have an account? <Link to="/register">Register here</Link>
+            {t("login.dontHaveAccount")} <Link to="/register">{t("login.registerHere")}</Link>
           </p>
         </form>
       </Card>

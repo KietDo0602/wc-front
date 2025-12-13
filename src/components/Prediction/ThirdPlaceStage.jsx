@@ -120,8 +120,8 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     return (
       <div className="third-place-stage">
         <div className="stage-header">
-          <h2>Third Place Advancers</h2>
-          <p>Loading third-place teams...</p>
+          <h2>{t("pred.thirdPlace.header")}</h2>
+          <p>{t("pred.thirdPlace.loading")}</p>
         </div>
         <div className="loading-spinner">
           <div className="spinner-icon"></div>
@@ -134,14 +134,14 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     return (
       <div className="third-place-stage">
         <div className="stage-header">
-          <h2>Third Place Advancers</h2>
+          <h2>{t("pred.thirdPlace.header")}</h2>
           <p className="error-message">
-            No third-place teams found. Please complete all 12 group predictions first.
+            {t("pred.thirdPlace.missingGroups")}
           </p>
         </div>
         <div className="stage-footer">
           <Button onClick={onBack} variant="outline">
-            ← Back to Groups
+            ← {t('pred.backToGroups')}
           </Button>
         </div>
       </div>

@@ -18,6 +18,7 @@ const resources = {
       
       // Home
       "home.title": "World Cup Brackets",
+      "home.welcome": "Welcome!",
       "home.subtitle": "Predict every match. Compete with friends. Win glory!",
       "home.getStarted": "Get Started",
       "home.login": "Login",
@@ -29,6 +30,20 @@ const resources = {
       "home.knockoutDesc": "Predict winners from Round of 32 all the way to the final",
       "home.leaderboard": "Live Leaderboard",
       "home.leaderboardDesc": "Track your ranking as matches are played and results come in",
+
+      // Login & Register
+      "login.subtitle": "Login to make your predictions!",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "password.confirm": "Confirm Password",
+      "login.button": "Login",
+      "login.dontHaveAccount": "Don't have an account?",
+      "login.registerHere": "Register here",
+      "register.createAccount": "Create Account",
+      "register.subtitle": "Join and make your predictions!",
+      "register.existingAccount": "Already have an account?",
+      "register.loginHere": "Login here",
       
       // Auth
       "auth.welcomeBack": "Welcome Back",
@@ -52,7 +67,6 @@ const resources = {
       "pred.final": "Final",
       "pred.final.full": "World Cup Finals",
       "pred.makePredictions": "Make Your Predictions",
-      "pred.welcome": "Welcome",
       "pred.groupStage": "Group Stage",
       "pred.groupStage.prediction": "Group Stage Predictions",
       "pred.groupStage.caption1": "Your group stage predictions",
@@ -74,6 +88,10 @@ const resources = {
       "pred.thirdPlace.selectMore": "Select {{teams}} more team(s)",
       "pred.thirdPlace.saveContinue": "Save your selections to continue",
       "pred.thirdPlace.none": "No third-place predictions available",
+      "pred.thirdPlace.missingGroups": "No third-place teams found. Please complete all 12 group predictions first.",
+      "pred.thirdPlace.loading": "Loading third-place teams...",
+
+
       "pred.selected": "Selected Third-Place Advancers ({{number}}/8)",
 
       "pred.knockout": "Knockout Stage",
@@ -178,7 +196,7 @@ const resources = {
       "auth.loginHere": "Inicia sesión aquí",
       
       "pred.makePredictions": "Haz Tus Predicciones",
-      "pred.welcome": "Bienvenido",
+      "pred.welcome": "Bienvenido, {{user}}",
       "pred.groupStage": "Fase de Grupos",
       "pred.thirdPlace": "Tercer Lugar",
       "pred.knockout": "Eliminatorias",
@@ -261,7 +279,7 @@ const resources = {
       "auth.loginHere": "Connectez-vous ici",
       
       "pred.makePredictions": "Faites Vos Prédictions",
-      "pred.welcome": "Bienvenue",
+      "pred.welcome": "Bienvenue, {{user}}",
       "pred.groupStage": "Phase de Groupes",
       "pred.thirdPlace": "Troisième Place",
       "pred.knockout": "Éliminatoires",
@@ -344,7 +362,7 @@ const resources = {
       "auth.loginHere": "Đăng nhập tại đây",
       
       "pred.makePredictions": "Đưa Ra Dự Đoán",
-      "pred.welcome": "Chào Mừng",
+      "pred.welcome": "Chào Mừng, {{user}}",
       "pred.groupStage": "Vòng Bảng",
       "pred.thirdPlace": "Hạng Ba",
       "pred.knockout": "Loại Trực Tiếp",

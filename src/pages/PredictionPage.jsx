@@ -128,7 +128,7 @@ export const PredictionPage = () => {
             <h1>{t('nav.myPredictions')}</h1>
             <p className="welcome-text">{t('pred.welcome', {user: user?.username})} 👋</p>
             <div className="submitted-badge">
-              ✓ {t('Submitted on', {date: new Date(status?.predictions_submitted_at).toLocaleDateString()})}
+              ✓ {t('pred.submitted.on', {date: new Date(status?.predictions_submitted_at).toLocaleDateString()})}
             </div>
           </div>
         </div>

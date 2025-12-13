@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../UI/Button';
@@ -15,6 +16,7 @@ export const Register = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -51,16 +53,15 @@ export const Register = () => {
     <div className="auth-container">
       <Card className="auth-card">
         <div className="auth-header">
-          <h1>🏆 World Cup Brackets</h1>
-          <h2>Create Account</h2>
-          <p>Join and make your predictions</p>
+          <h1>{t("register.createAccount")}</h1>
+          <p>{t("register.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t("username")}</label>
             <input
               id="username"
               type="text"
@@ -72,7 +73,7 @@ export const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t("email")}</label>
             <input
               id="email"
               type="email"
@@ -83,7 +84,7 @@ export const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("password")}</label>
             <input
               id="password"
               type="password"
@@ -94,7 +95,7 @@ export const Register = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label htmlFor="confirmPassword">{t("password.confirm")}</label>
             <input
               id="confirmPassword"
               type="password"
@@ -105,11 +106,11 @@ export const Register = () => {
           </div>
 
           <Button type="submit" loading={loading} className="w-full">
-            Create Account
+            {t("register.createAccount")}
           </Button>
 
           <p className="auth-link">
-            Already have an account? <Link to="/login">Login here</Link>
+            {t("register.existingAccount")} <Link to="/login">{t("register.loginHere")}</Link>
           </p>
         </form>
       </Card>
