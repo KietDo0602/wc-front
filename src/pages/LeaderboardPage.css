@@ -1,6 +1,6 @@
 .leaderboard-page {
   min-height: 100vh;
-  background: #f9fafb;
+  background: var(--background);
   padding: 2rem;
 }
 
@@ -21,11 +21,11 @@
 .leaderboard-header h1 {
   font-size: 2.5rem;
   margin: 0 0 0.5rem 0;
-  color: #1f2937;
+  color: var(--text);
 }
 
 .leaderboard-header p {
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 1.125rem;
   margin: 0;
 }
@@ -33,7 +33,7 @@
 .my-rank-card {
   max-width: 1200px;
   margin: 0 auto 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
 }
 
@@ -90,7 +90,7 @@
   margin: 0 auto 1rem;
   display: flex;
   gap: 0.5rem;
-  background: white;
+  background: var(--surface);
   padding: 0.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -101,7 +101,7 @@
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
@@ -109,17 +109,18 @@
 }
 
 .tab:hover {
-  background: #f3f4f6;
+  background: var(--background);
 }
 
 .tab.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
 }
 
 .leaderboard-card {
   max-width: 1200px;
   margin: 0 auto;
+  background: var(--surface);
 }
 
 .leaderboard-table {
@@ -132,22 +133,24 @@ table {
 }
 
 thead {
-  background: #f9fafb;
+  background: var(--background);
 }
 
 th {
   padding: 1rem;
   text-align: left;
   font-weight: 700;
-  color: #374151;
+  color: var(--text);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--primary);
+
 }
 
 td {
   padding: 1rem;
+  color: var(--text);
   border-top: 1px solid #e5e7eb;
 }
 
@@ -156,21 +159,23 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f9fafb;
+  background: var(--background);
 }
 
 tbody tr.highlight {
-  background: #ede9fe;
+  background: var(--background);
+  color: black;
 }
 
 .rank-cell {
   font-weight: 700;
   font-size: 1.125rem;
+  color: var(--text);
 }
 
 .username-cell {
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text);
 }
 
 .actions-cell {
@@ -179,10 +184,10 @@ tbody tr.highlight {
 
 .preview-btn {
   padding: 0.5rem 1rem;
-  background: #ede9fe;
-  border: 1px solid #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid var(--primary);
   border-radius: 6px;
-  color: #667eea;
+  color: var(--primary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -191,7 +196,7 @@ tbody tr.highlight {
 }
 
 .preview-btn:hover {
-  background: #667eea;
+  background: var(--primary);
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
@@ -213,14 +218,14 @@ tbody tr.highlight {
 .empty-state {
   padding: 3rem;
   text-align: center;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .spinner-icon {
   width: 60px;
   height: 60px;
   border: 4px solid #e5e7eb;
-  border-top-color: #667eea;
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

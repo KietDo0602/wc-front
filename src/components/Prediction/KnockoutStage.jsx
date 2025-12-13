@@ -80,7 +80,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
       }
 
       if (!thirdPlaceSelections || thirdPlaceSelections.length !== 8) {
-        alert('Please complete third-place selections first (need exactly 8 teams)');
+        alert(t('alert.completeThirdSelection'));
         setLoading(false);
         return;
       }
@@ -125,7 +125,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
       setRoundOf32Teams(result);
     } catch (error) {
       console.error('Failed to initialize knockout teams:', error);
-      alert('Failed to load knockout stage. Please ensure all previous stages are complete.');
+      alert(t('alert.loadKnockoutFail'));
     } finally {
       setLoading(false);
     }
@@ -144,9 +144,9 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
     try {
       await predictionAPI.submitMatchPrediction(matchId, winnerId);
     } catch (error) {
-      console.error('Failed to save prediction:', error);
+      console.error(t('error.failedSavePred'), error);
       if (!viewMode) {
-        alert(error.response?.data?.error || 'Failed to save prediction');
+        alert(error.response?.data?.error || t('error.failedSavePred'));
       }
     }
   };
@@ -416,7 +416,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
     try {
       await onSubmit();
     } catch (error) {
-      alert(error.response?.data?.error || 'Failed to submit predictions');
+      alert(error.response?.data?.error || t('error.failedSubmitPred'));
     } finally {
       setSaving(false);
     }
@@ -424,7 +424,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
 
   const exportAsImage = async () => {
     if (!bracketRef.current) {
-      alert('Unable to capture bracket. Please try again.');
+      alert(t('error.unableCaptureBracket'));
       return;
     }
     
@@ -557,7 +557,7 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
       
     } catch (error) {
       console.error('Export error:', error);
-      alert('❌ Failed to export: ' + error.message);
+      alert(t('error.failedExport') + error.message);
     } finally {
       setExporting(false);
     }

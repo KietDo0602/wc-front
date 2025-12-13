@@ -1,11 +1,14 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './PredictionProgress.css';
 
 export const PredictionProgress = ({ currentStage, completeness }) => {
+  const { t } = useTranslation();
+
   const stages = [
-    { id: 'groups', label: 'Group Stage', icon: '🏟️' },
-    { id: 'third', label: 'Third Place', icon: '🥉' },
-    { id: 'knockout', label: 'Knockout', icon: '🏆' }
+    { id: 'groups', label: t('home.groupStage'), icon: '🏟️' },
+    { id: 'third', label: t('pred.thirdPlace'), icon: '🥉' },
+    { id: 'knockout', label: t('pred.knockout'), icon: '🏆' }
   ];
 
   const getStageStatus = (stageId) => {
@@ -45,13 +48,13 @@ export const PredictionProgress = ({ currentStage, completeness }) => {
       {completeness && (
         <div className="completeness-info">
           <div className="completeness-item">
-            <span className="completeness-label">Groups:</span>
+            <span className="completeness-label">{t("pred.groupStage")}:</span>
             <span className="completeness-value">
               {completeness.groups_completed} / {completeness.groups_required}
             </span>
           </div>
           <div className="completeness-item">
-            <span className="completeness-label">Third Place:</span>
+            <span className="completeness-label">{t("pred.thirdPlace")}:</span>
             <span className="completeness-value">
               {completeness.third_place_selections} / {completeness.third_place_required}
             </span>

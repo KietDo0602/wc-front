@@ -18,7 +18,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
 }
 
@@ -39,8 +39,8 @@
 
 .btn-outline {
   background: transparent;
-  border: 2px solid #667eea;
-  color: #667eea;
+  border: 2px solid var(--primary);
+  color: var(--primary);
 }
 
 .btn-small {

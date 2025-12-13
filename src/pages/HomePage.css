@@ -1,9 +1,10 @@
 .home-page {
   min-height: 100vh;
+  background: var(--background);
 }
 
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   padding: 6rem 2rem;
   text-align: center;
@@ -60,7 +61,7 @@
 }
 
 .feature-card {
-  background: white;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 12px;
   text-align: center;
@@ -71,6 +72,7 @@
 .feature-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary);
 }
 
 .feature-icon {
@@ -80,13 +82,13 @@
 
 .feature-card h3 {
   margin: 0 0 0.5rem 0;
-  color: #1f2937;
+  color: var(--text);
   font-size: 1.25rem;
 }
 
 .feature-card p {
   margin: 0;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .how-it-works {

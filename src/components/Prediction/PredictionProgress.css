@@ -1,8 +1,8 @@
 .prediction-progress {
-  background: white;
+  background: var(--background);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.30);
   margin-bottom: 2rem;
 }
 
@@ -98,7 +98,7 @@
 .completeness-value {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text);
 }
 
 @media (max-width: 768px) {

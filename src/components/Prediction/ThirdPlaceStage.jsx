@@ -41,7 +41,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
       console.log('Third Place Teams:', thirdPlaceList);
 
       if (thirdPlaceList.length !== 12) {
-        alert(`Error: Expected 12 third-place teams but found ${thirdPlaceList.length}. Please complete all group predictions first.`);
+        alert(t('error.completeGroupPred', {number: thirdPlaceList.length}));
       }
 
       setThirdPlaceTeams(thirdPlaceList);
@@ -59,7 +59,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
       }
     } catch (error) {
       console.error('Failed to load third place teams:', error);
-      alert('Failed to load third place teams. Please ensure all groups are completed.');
+      alert(t('error.failedLoadThirdPlace'));
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
 
   const handleSave = async () => {
     if (selectedTeams.length !== 8) {
-      alert('Please select exactly 8 teams');
+      alert(t('error.exact8Teams'));
       return;
     }
 
@@ -99,17 +99,17 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     try {
       await predictionAPI.submitThirdPlace(selectedTeams);
       setSaved(true);
-      alert('Third place selections saved successfully!');
+      alert('alert.savedSuccess');
     } catch (error) {
       console.error('Failed to save selections:', error);
-      alert(error.response?.data?.error || 'Failed to save selections');
+      alert(error.response?.data?.error || t('error.failedSave'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleUnsave = () => {
-    if (window.confirm('Are you sure you want to modify your selections? This will unsave them.')) {
+    if (window.confirm(t('confirm.unSaved'))) {
       setSaved(false);
     }
   };

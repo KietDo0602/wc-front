@@ -99,7 +99,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
       setIsEditing(false);
     } catch (error) {
       console.error('Failed to save ranking:', error);
-      alert(error.response?.data?.error || 'Failed to save ranking');
+      alert(error.response?.data?.error || t('error.failedSaveRanking'));
     } finally {
       setSaving(false);
     }
