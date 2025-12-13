@@ -19,17 +19,55 @@ export const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const { username, email, password, confirmPassword } = formData;
+
+    // Username checks
+    if (!username || username.trim().length < 3 || username.trim().length > 20) {
+      return 'Username must be between 3 and 20 characters';
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      return 'Username can only contain letters, numbers, and underscores';
+    }
+
+    // Email checks
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Invalid email format';
+    }
+
+    // Password checks
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!/[a-z]/.test(password)) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!/[0-9]/.test(password)) {
+      return 'Password must contain at least one number';
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return 'Password must contain at least one special character';
+    }
+
+    // Confirm password
+    if (password !== confirmPassword) {
+      return 'Passwords do not match';
+    }
+
+    return null; // no errors
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -37,8 +75,8 @@ export const Register = () => {
 
     try {
       await register({
-        username: formData.username,
-        email: formData.email,
+        username: formData.username.trim(),
+        email: formData.email.trim().toLowerCase(),
         password: formData.password
       });
       navigate('/predictions');
@@ -117,3 +155,4 @@ export const Register = () => {
     </div>
   );
 };
+

@@ -14,13 +14,42 @@ export const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const { username, password } = formData;
+
+    // Username checks
+    if (!username || username.trim().length < 4 || username.trim().length > 20) {
+      return 'Username must be between 3 and 20 characters';
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      return 'Username can only contain letters, numbers, and underscores';
+    }
+
+    // Password checks
+    if (!password || password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+
+    return null; // no errors
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await login(formData);
+      await login({
+        username: formData.username.trim(),
+        password: formData.password
+      });
       navigate('/predictions');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
@@ -75,3 +104,4 @@ export const Login = () => {
     </div>
   );
 };
+
