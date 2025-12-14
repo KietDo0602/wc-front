@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authAPI } from '../api/api';
 
 const AuthContext = createContext(null);
@@ -52,8 +52,15 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Memoize setAuthData with useCallback
+  const setAuthData = useCallback(({ token: newToken, user: newUser }) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken); // IMPORTANT: Update token state to trigger useEffect
+    setUser(newUser);
+  }, []); // Empty deps - function never changes
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, setAuthData }}>
       {children}
     </AuthContext.Provider>
   );

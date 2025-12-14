@@ -1,61 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../context/AuthContext';
-import { Button } from '../UI/Button';
 import { Card } from '../UI/Card';
+import { Button } from '../UI/Button';
 import './Auth.css';
 
 export const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const validateForm = () => {
-    const { username, password } = formData;
-
-    // Username checks
-    if (!username || username.trim().length < 4 || username.trim().length > 20) {
-      return 'Username must be between 3 and 20 characters';
+  useEffect(() => {
+    // Check for error in URL params
+    const params = new URLSearchParams(location.search);
+    const error = params.get('error');
+    if (error === 'auth_failed' || error === 'google_auth_failed') {
+      alert('Authentication failed. Please try again.');
     }
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      return 'Username can only contain letters, numbers, and underscores';
-    }
-
-    // Password checks
-    if (!password || password.length < 8) {
-      return 'Password must be at least 8 characters';
-    }
-
-    return null; // no errors
-  };
+  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
     setLoading(true);
-
     try {
-      await login({
-        username: formData.username.trim(),
-        password: formData.password
-      });
+      await login(formData);
       navigate('/predictions');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+    } catch (error) {
+      alert(error.response?.data?.error || 'Login failed');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth
+    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users/auth/google`;
   };
 
   return (
@@ -67,13 +51,11 @@ export const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="error-message">{error}</div>}
-
           <div className="form-group">
-            <label htmlFor="username">{t("username")}</label>
+            <label>{t('auth.username')}</label>
             <input
-              id="username"
               type="text"
+              id="username"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               required
@@ -82,26 +64,40 @@ export const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">{t("password")}</label>
+            <label>{t('auth.password')}</label>
             <input
-              id="password"
               type="password"
+              id="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
             />
           </div>
 
-          <Button type="submit" loading={loading} className="w-full">
-            {t("login.button")}
+          <Button type="submit" size="large" className="w-full" loading={loading} fullWidth>
+            {loading ? t('auth.loggingIn') : t('nav.login')}
           </Button>
 
           <p className="auth-link">
-            {t("login.dontHaveAccount")} <Link to="/register">{t("login.registerHere")}</Link>
+            {t('auth.noAccount')} <Link to="/register">{t('auth.registerHere')}</Link>
           </p>
         </form>
+
+        <div className="auth-divider">
+          <span>{t("or")}</span>
+        </div>
+
+        <Button 
+          onClick={handleGoogleLogin}
+          variant="outline"
+          size="large"
+          fullWidth
+          className="google-btn"
+        >
+          <img src="https://www.google.com/favicon.ico" alt="Google" className="google-icon" />
+          {t("Continue with Google")}
+        </Button>
       </Card>
     </div>
   );
 };
-

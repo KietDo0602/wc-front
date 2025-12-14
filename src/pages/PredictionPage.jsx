@@ -194,13 +194,6 @@ export const PredictionPage = () => {
 
   return (
     <div className="prediction-page">
-      <div className="prediction-header">
-        <div className="header-content">
-          <h1>{t('pred.makePredictions')}</h1>
-          <p className="welcome-text">{t('pred.welcome', {user: user?.username})} 👋</p>
-        </div>
-      </div>
-
       <div className="prediction-container">
         <PredictionProgress 
           currentStage={currentStage} 

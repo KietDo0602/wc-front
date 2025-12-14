@@ -9,6 +9,9 @@ import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { PredictionPage } from './pages/PredictionPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
+import { AuthCallbackPage } from './pages/AuthCallbackPage';
+import { CompleteSignupPage } from './pages/CompleteSignupPage';
+
 
 function App() {
   return (
@@ -21,6 +24,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/auth/callback" element={<AuthCallbackPage />} />
+              <Route path="/auth/complete-signup" element={<CompleteSignupPage />} />
               <Route
                 path="/predictions"
                 element={

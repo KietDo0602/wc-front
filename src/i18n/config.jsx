@@ -18,7 +18,7 @@ const resources = {
       // Home
       "home.title": "World Cup Brackets",
       "home.welcome": "Welcome!",
-      "home.subtitle": "Predict every match. Compete with friends. Win glory!",
+      "home.subtitle": "Predict every group stage and knockout World Cup matches!",
       "home.predictions": "Make Your Predictions",
       "home.getStarted": "Get Started",
       "home.login": "Login",
@@ -53,6 +53,16 @@ const resources = {
       "register.subtitle": "Join and make your predictions!",
       "register.existingAccount": "Already have an account?",
       "register.loginHere": "Login here",
+      "login.google": "Continue with Google",
+      "or": "OR",
+      "name.choose": "Choose Your Username",
+      "name.pickUsername": "Pick a unique username to complete your signup",
+      "name.validation": "Only letters, numbers, and underscores allowed",
+      "name.format": "4-20 characters, letters, numbers, and underscores only",
+      "name.required": "Username must be between 4 and 20 characters",
+      "name.accountCreate": "Creating Account...",
+      "name.completeSignup": "Complete Signup",
+      "error.faileCreateAccount": "Failed to create account",
       
       // Auth
       "auth.welcomeBack": "Welcome Back",
@@ -203,7 +213,7 @@ const resources = {
       // Home
       "home.title": "Cuadros del Mundial",
       "home.welcome": "¡Bienvenido!",
-      "home.subtitle": "Predice cada partido. Compite con amigos. ¡Gana la gloria!",
+      "home.subtitle": "¡Predice todos los partidos de la fase de grupos y eliminatorias de la Copa del Mundo!",
       "home.getStarted": "Comenzar",
       "home.login": "Iniciar Sesión",
       "home.groupStage": "Fase de Grupos",
@@ -238,6 +248,16 @@ const resources = {
       "register.subtitle": "¡Únete y haz tus predicciones!",
       "register.existingAccount": "¿Ya tienes una cuenta?",
       "register.loginHere": "Inicia sesión aquí",
+      "login.google": "Continuar con Google",
+      "or": "O",
+      "name.choose": "Elige tu nombre de usuario",
+      "name.pickUsername": "Elige un nombre de usuario único para completar tu registro",
+      "name.validation": "Solo se permiten letras, números y guiones bajos",
+      "name.format": "De 4 a 20 caracteres, solo letras, números y guiones bajos",
+      "name.required": "El nombre de usuario debe tener entre 4 y 20 caracteres",
+      "name.accountCreate": "Creando cuenta...",
+      "name.completeSignup": "Completar registro",
+      "error.faileCreateAccount": "No se pudo crear la cuenta",
 
       // Auth
       "auth.welcomeBack": "Bienvenido de Nuevo",
@@ -387,7 +407,7 @@ const resources = {
       // Home
       "home.title": "Tableaux de la Coupe du Monde",
       "home.welcome": "Bienvenue !",
-      "home.subtitle": "Pronostique chaque match. Affronte tes amis. Gagne la gloire !",
+      "home.subtitle": "Prédisez tous les matchs de phase de groupes et à élimination directe de la Coupe du Monde !",
       "home.getStarted": "Commencer",
       "home.login": "Connexion",
       "home.groupStage": "Phase de Groupes",
@@ -421,6 +441,16 @@ const resources = {
       "register.subtitle": "Rejoins-nous et fais tes pronostics !",
       "register.existingAccount": "Déjà un compte ?",
       "register.loginHere": "Connecte-toi ici",
+      "login.google": "Continuer avec Google",
+      "or": "OU",
+      "name.choose": "Choisis ton nom d’utilisateur",
+      "name.pickUsername": "Choisis un nom d’utilisateur unique pour finaliser ton inscription",
+      "name.validation": "Seules les lettres, les chiffres et les tirets bas sont autorisés",
+      "name.format": "4 à 20 caractères, lettres, chiffres et tirets bas uniquement",
+      "name.required": "Le nom d’utilisateur doit contenir entre 4 et 20 caractères",
+      "name.accountCreate": "Création du compte...",
+      "name.completeSignup": "Finaliser l’inscription",
+      "error.faileCreateAccount": "Échec de la création du compte",
 
       // Auth
       "auth.welcomeBack": "Bon Retour",
@@ -570,7 +600,7 @@ const resources = {
       // Home
       "home.title": "Sơ Đồ World Cup",
       "home.welcome": "Chào Mừng!",
-      "home.subtitle": "Dự đoán mọi trận đấu. So tài cùng bạn bè. Chinh phục vinh quang!",
+      "home.subtitle": "Dự đoán mọi trận đấu vòng bảng và vòng loại trực tiếp của World Cup!",
       "home.getStarted": "Bắt Đầu",
       "home.login": "Đăng Nhập",
       "home.groupStage": "Vòng Bảng",
@@ -604,6 +634,16 @@ const resources = {
       "register.subtitle": "Tham gia và bắt đầu dự đoán!",
       "register.existingAccount": "Đã có tài khoản?",
       "register.loginHere": "Đăng nhập tại đây",
+      "login.google": "Tiếp tục với Google",
+      "or": "HOẶC",
+      "name.choose": "Chọn tên người dùng",
+      "name.pickUsername": "Chọn một tên người dùng duy nhất để hoàn tất đăng ký",
+      "name.validation": "Chỉ cho phép chữ cái, số và dấu gạch dưới",
+      "name.format": "Từ 4 đến 20 ký tự, chỉ gồm chữ cái, số và dấu gạch dưới",
+      "name.required": "Tên người dùng phải có từ 4 đến 20 ký tự",
+      "name.accountCreate": "Đang tạo tài khoản...",
+      "name.completeSignup": "Hoàn tất đăng ký",
+      "error.faileCreateAccount": "Không thể tạo tài khoản",
 
       // Auth
       "auth.welcomeBack": "Chào Mừng Trở Lại",

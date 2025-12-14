@@ -23,6 +23,10 @@ export const authAPI = {
   register: (data) => api.post('/users/register', data),
   login: (data) => api.post('/users/login', data),
   getProfile: () => api.get('/users/profile'),
+  completeGoogleSignup: (data, tempToken) => 
+  api.post('/users/auth/google/complete-signup', data, {
+    headers: { Authorization: `Bearer ${tempToken}` }
+  }),
 };
 
 // Prediction APIs
