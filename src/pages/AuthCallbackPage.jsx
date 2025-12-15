@@ -6,15 +6,15 @@ export const AuthCallbackPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setAuthData } = useAuth();
-  const hasProcessed = useRef(false); // Prevent double execution
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
-    // Prevent running twice (React 18 strict mode)
     if (hasProcessed.current) return;
     hasProcessed.current = true;
 
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    const isNewUser = params.get('newUser');
 
     if (token) {
       try {
@@ -23,7 +23,15 @@ export const AuthCallbackPage = () => {
           token, 
           user: { id: payload.userId, username: payload.username } 
         });
-        navigate('/predictions', { replace: true }); // Use replace to avoid back button issues
+        
+        setTimeout(() => {
+          if (isNewUser) {
+            // Show welcome message for new users
+            navigate('/predictions?welcome=true', { replace: true });
+          } else {
+            navigate('/predictions', { replace: true });
+          }
+        }, 100);
       } catch (error) {
         console.error('Token decode error:', error);
         navigate('/login?error=auth_failed', { replace: true });
@@ -31,7 +39,7 @@ export const AuthCallbackPage = () => {
     } else {
       navigate('/login?error=auth_failed', { replace: true });
     }
-  }, [location.search, navigate, setAuthData]); // Include all dependencies
+  }, [location.search, navigate, setAuthData]);
 
   return (
     <div style={{ 
@@ -43,7 +51,14 @@ export const AuthCallbackPage = () => {
       gap: '1rem'
     }}>
       <h2>Completing login...</h2>
-      <div className="spinner-icon"></div>
+      <div className="spinner-icon" style={{
+        width: '60px',
+        height: '60px',
+        border: '4px solid #e5e7eb',
+        borderTopColor: '#667eea',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite'
+      }}></div>
     </div>
   );
 };
