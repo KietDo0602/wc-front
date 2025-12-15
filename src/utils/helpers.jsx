@@ -112,6 +112,16 @@ export const getLanguageFlagCode = (languageCode) => {
     'es': 'es', // Spanish -> Spain flag
     'fr': 'fr', // French -> France flag
     'vi': 'vn', // Vietnamese -> Vietnam flag
+    'cn': 'cn', // Chinese -> Chinese flag
+    'pt': 'br', // Portugese -> Brazil flag
+    'ar': 'sa', // Arabic -> Saudi Arabia flag
+    'de': 'de', // German -> Germany flag
+    'it': 'it', // Italian -> Italy flag
+    'ja': 'jp', // Japanese -> Japan flag
+    'ko': 'kr', // Korea -> Korean flag
+    'tr': 'tr', // Turkish -> Turkey flag
+    'in': 'in', // Hindi -> India flag
+    'th': 'th', // Thai -> Thailand flag
   };
   
   return langFlagMap[languageCode] || 'us';

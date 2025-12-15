@@ -197,7 +197,6 @@
 .team-name {
   flex: 1;
   font-weight: 600;
-  color: var(--text);
 }
 
 /* Third Place Predictions */

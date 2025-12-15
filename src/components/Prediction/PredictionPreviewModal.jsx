@@ -115,7 +115,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
     });
 
     const roundNames = {
-      'R32': t('pred.roundof36'),
+      'R32': t('pred.roundof32'),
       'R16': t('pred.roundof16'),
       'QF': t('pred.quarterfinals'),
       'SF': t('pred.semifinals'),

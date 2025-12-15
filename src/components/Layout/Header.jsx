@@ -63,7 +63,17 @@ export const Header = () => {
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
     { code: 'fr', name: "Français" },
+    { code: 'ar', name: "العربية" },
+    { code: 'pt', name: "Português" },
+    { code: 'cn', name: "中文" },
     { code: 'vi', name: "Tiếng Việt" },
+    { code: 'de', name: "Deutsch" },
+    { code: 'it', name: "Italiano" },
+    { code: 'ja', name: "日本語" },
+    { code: 'ko', name: "한국어" },
+    { code: 'tr', name: "Türkçe" },
+    { code: 'in', name: "हिन्दी" },
+    { code: 'th', name: "ไทย" },
   ];
 
   const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
