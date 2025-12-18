@@ -181,6 +181,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Are you sure you want to modify your selections? This will unsave them.",
+      "confirm.submit": "Are you sure you want to submit? You cannot make changes after submission.",
+      "confirm.submit.success": "✅ Predictions submitted successfully! Good luck!",
 
       // Themes
       "theme.light": "Light",
@@ -369,6 +371,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "¿Estás seguro de que deseas modificar tus selecciones? Esto las desguardará.",
+      "confirm.submit": "¿Está seguro de que desea enviar? No podrá realizar cambios después del envío.",
+      "confirm.submit.success": "✅ ¡Predicciones enviadas correctamente! ¡Buena suerte!",
 
       // Themes
       "theme.light": "Claro",
@@ -556,6 +560,9 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Es-tu sûr de vouloir modifier tes sélections ? Elles ne seront plus enregistrées.",
+      "confirm.submit": "Êtes-vous sûr de vouloir soumettre ? Vous ne pourrez plus effectuer de modifications après l’envoi.",
+      "confirm.submit.success": "✅ Pronostics envoyés avec succès ! Bonne chance !",
+
 
       // Themes
       "theme.light": "Clair",
@@ -743,6 +750,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "确定要修改你的选择吗？这将取消已保存的内容。",
+      "confirm.submit": "您确定要提交吗？提交后将无法进行任何修改。",
+      "confirm.submit.success": "✅ 预测提交成功！祝您好运！",
 
       // Themes
       "theme.light": "浅色",
@@ -930,6 +939,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Tem certeza de que deseja modificar suas seleções? Isso irá desfazer o salvamento.",
+      "confirm.submit": "Tem certeza de que deseja enviar? Após o envio, não será possível fazer alterações.",
+      "confirm.submit.success": "✅ Palpites enviados com sucesso! Boa sorte!",
 
       // Themes
       "theme.light": "Claro",
@@ -1117,6 +1128,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "هل أنت متأكد أنك تريد تعديل اختياراتك؟ سيؤدي ذلك إلى إلغاء حفظها.",
+      "confirm.submit": "هل أنت متأكد أنك تريد الإرسال؟ لن تتمكن من إجراء أي تغييرات بعد الإرسال.",
+      "confirm.submit.success": "✅ تم إرسال التوقعات بنجاح! حظًا موفقًا!",
 
       // Themes
       "theme.light": "فاتح",
@@ -1304,6 +1317,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Bist du sicher, dass du deine Auswahl ändern möchtest? Dadurch wird sie nicht mehr gespeichert.",
+      "confirm.submit": "Sind Sie sicher, dass Sie absenden möchten? Nach dem Absenden können keine Änderungen mehr vorgenommen werden.",
+      "confirm.submit.success": "✅ Tipps erfolgreich übermittelt! Viel Glück!",
 
       // Themes
       "theme.light": "Hell",
@@ -1491,6 +1506,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Sei sicuro di voler modificare le tue selezioni? Questo annullerà il salvataggio.",
+      "confirm.submit": "Sei sicuro di voler inviare? Dopo l’invio non sarà più possibile apportare modifiche.",
+      "confirm.submit.success": "✅ Pronostici inviati con successo! Buona fortuna!",
 
       // Themes
       "theme.light": "Chiaro",
@@ -1678,6 +1695,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "選択を変更してもよろしいですか？保存内容は失われます。",
+      "confirm.submit": "本当に送信しますか？送信後は変更できません。",
+      "confirm.submit.success": "✅ 予想が正常に送信されました！幸運を祈ります！",
 
       // Themes
       "theme.light": "ライト",
@@ -1865,6 +1884,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "선택을 수정하시겠습니까? 저장된 내용이 사라집니다.",
+      "confirm.submit": "정말로 제출하시겠습니까? 제출 후에는 수정할 수 없습니다.",
+      "confirm.submit.success": "✅ 예측이 성공적으로 제출되었습니다! 행운을 빕니다!",
 
       // Themes
       "theme.light": "라이트",
@@ -2052,6 +2073,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Seçimlerinizi değiştirmek istediğinizden emin misiniz? Bu işlem kayıtlı seçimleri kaldıracaktır.",
+      "confirm.submit": "Göndermek istediğinizden emin misiniz? Gönderimden sonra değişiklik yapamazsınız.",
+      "confirm.submit.success": "✅ Tahminler başarıyla gönderildi! Bol şans!",
 
       // Themes
       "theme.light": "Açık",
@@ -2239,6 +2262,9 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "क्या आप अपने चयन में बदलाव करना चाहते हैं? इससे सहेजे गए चयन हट जाएँगे।",
+      "confirm.submit": "क्या आप वाकई सबमिट करना चाहते हैं? सबमिट करने के बाद आप कोई बदलाव नहीं कर पाएंगे।",
+      "confirm.submit.success": "✅ भविष्यवाणियाँ सफलतापूर्वक सबमिट हो गई हैं! शुभकामनाएँ!",
+
 
       // Themes
       "theme.light": "लाइट",
@@ -2427,6 +2453,9 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "คุณต้องการแก้ไขการเลือกหรือไม่? การกระทำนี้จะลบข้อมูลที่บันทึกไว้",
+      "confirm.submit": "คุณแน่ใจหรือไม่ว่าต้องการส่ง? หลังจากส่งแล้วจะไม่สามารถแก้ไขได้",
+      "confirm.submit.success": "✅ ส่งคำทำนายเรียบร้อยแล้ว! ขอให้โชคดี!",
+
 
       // Themes
       "theme.light": "สว่าง",
@@ -2615,6 +2644,8 @@ const resources = {
 
       // Confirm
       "confirm.unSaved": "Bạn có chắc chắn muốn chỉnh sửa lựa chọn không? Các lựa chọn này sẽ không còn được lưu.",
+      "confirm.submit": "Bạn có chắc chắn muốn gửi không? Sau khi gửi, bạn sẽ không thể chỉnh sửa.",
+      "confirm.submit.success": "✅ Dự đoán đã được gửi thành công! Chúc may mắn!",
 
       // Themes
       "theme.light": "Sáng",

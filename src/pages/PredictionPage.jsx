@@ -94,20 +94,26 @@ export const PredictionPage = () => {
   };
 
   const handleSubmitAll = async () => {
-    if (!window.confirm('Are you sure you want to submit? You cannot make changes after submission.')) {
+    if (!window.confirm(t('confirm.submit'))) {
       return;
     }
 
     try {
       await predictionAPI.submitComplete();
-      alert('✅ Predictions submitted successfully! Good luck!');
+      
+      // Reload BOTH predictions AND status after submission
+      await Promise.all([
+        loadPredictions(),
+        loadStatus()
+      ]);
+      
+      alert(t('confirm.submit.success'));
       setViewMode(true); // Enable view mode
-      loadStatus(); // Reload status
     } catch (error) {
-      throw error;
+      console.error('Submit error:', error);
+      alert(error.response?.data?.error || t('Failed to submit predictions'));
     }
   };
-
   if (loading) {
     return (
       <div className="prediction-page loading">

@@ -86,7 +86,6 @@
 }
 
 .third-place-card.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -139,7 +138,7 @@
 .team-position-label {
   text-align: center;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--text);
   font-weight: 600;
   padding: 0.5rem;
   background: #10b981;
@@ -192,7 +191,6 @@
 
 .third-place-card.disabled {
   border-color: var(--primary);
-  opacity: 0.6;
   cursor: not-allowed !important;
 }
 
@@ -228,7 +226,6 @@
 }
 
 .third-place-card.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
 }
 

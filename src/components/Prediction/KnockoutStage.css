@@ -176,11 +176,6 @@
   font-weight: 600;
 }
 
-.match-team.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .team-flag-match {
   font-weight: 700;
   color: #667eea;

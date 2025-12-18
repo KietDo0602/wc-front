@@ -30,7 +30,7 @@ const MatchCard = ({ match, teams, selectedWinner, onSelect, disabled, compact }
         {teams.map(team => (
           <div
             key={team.id}
-            className={`match-team ${selectedWinner === team.id ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+            className={`match-team ${selectedWinner === team.id ? 'selected' : ''}`}
             onClick={() => !disabled && onSelect(match.id, team.id)}
             style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
           >

@@ -166,7 +166,8 @@
 .view-mode-actions {
   text-align: center;
   padding: 2rem;
-  background: #f9fafb;
+  background: var(--background);
+  color: var(--text);
   border-radius: 12px;
   margin-top: 2rem;
 }

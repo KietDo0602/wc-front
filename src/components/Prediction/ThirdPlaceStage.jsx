@@ -99,7 +99,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     try {
       await predictionAPI.submitThirdPlace(selectedTeams);
       setSaved(true);
-      alert('alert.savedSuccess');
+      alert(t('alert.savedSuccess'));
     } catch (error) {
       console.error('Failed to save selections:', error);
       alert(error.response?.data?.error || t('error.failedSave'));
@@ -169,7 +169,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
 
         {!viewMode && (
           saved ? (
-            <Button onClick={handleUnsave} variant="outline">
+            <Button onClick={handleUnsave} variant="primary">
               {t('pred.thirdPlace.editSelections')}
             </Button>
           ) : selectedTeams.length === 8 ? (
@@ -195,7 +195,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
               key={team.id}
               className={`third-place-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
               onClick={() => toggleTeam(team.id)}
-              style={{ cursor: canSelect ? 'pointer' : 'not-allowed' }}
+              style={{ cursor: !viewMode && canSelect ? 'pointer' : 'not-allowed' }}
             >
               {isSelected && <div className="selection-badge">✓</div>}
               
