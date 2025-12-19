@@ -47,6 +47,9 @@ export const predictionAPI = {
   
   submitMatchPrediction: (matchId, predictedWinnerTeamId) => 
     api.post(`/predictions/matches/${matchId}`, { predictedWinnerTeamId }),
+
+  deleteMatchPrediction: (matchId) =>
+    api.delete(`/predictions/matches/${matchId}`),
   
   submitBracketPredictions: (predictions) => 
     api.post('/predictions/bracket', { predictions }),

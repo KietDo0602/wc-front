@@ -207,3 +207,13 @@
   justify-content: center;
   min-width: 50px;
 }
+
+.stage-footer.view-mode-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem;
+}
+
+.stage-footer.view-mode-footer button {
+  min-width: 200px;
+}

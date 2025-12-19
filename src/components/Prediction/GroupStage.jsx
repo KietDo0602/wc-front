@@ -322,6 +322,18 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
           )}
         </div>
       )}
+
+      {viewMode && (
+        <div className="stage-footer view-mode-footer">
+          <Button
+            onClick={onComplete}
+            size="large"
+            variant="outline"
+          >
+            {t('pred.groupStage.continue')} →
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

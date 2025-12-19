@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlagIcon } from '../../utils/helpers';
+import { FlagIcon, getFlagCode, } from '../../utils/helpers';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
 import { getThirdPlaceMatchup, findMatchingElement} from '../../utils/helpers';
-import html2canvas from 'html2canvas';
 import './KnockoutStage.css';
 
 
@@ -136,22 +135,43 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
       return;
     }
 
+    // Check if this is changing an existing prediction
+    const isChangingPrediction = predictions[matchId] && predictions[matchId] !== winnerId;
+
+    // Update frontend state optimistically
     setPredictions(prev => ({
       ...prev,
       [matchId]: winnerId
     }));
 
     try {
+      // Save the new prediction
       await predictionAPI.submitMatchPrediction(matchId, winnerId);
+      
+      // If changing a prediction, clear all dependent matches
+      if (isChangingPrediction) {
+        console.log(`🔄 Prediction changed for match ${matchId}, clearing dependents...`);
+        await clearDependentMatches(matchId);
+      }
     } catch (error) {
       console.error(t('error.failedSavePred'), error);
+      // Revert optimistic update on error
+      setPredictions(prev => {
+        const newPredictions = { ...prev };
+        if (isChangingPrediction) {
+          newPredictions[matchId] = predictions[matchId]; // Restore old value
+        } else {
+          delete newPredictions[matchId]; // Remove if it was new
+        }
+        return newPredictions;
+      });
       if (!viewMode) {
         alert(error.response?.data?.error || t('error.failedSavePred'));
       }
     }
   };
 
-  function helperGetTeam(teams, groupId, position) {
+function helperGetTeam(teams, groupId, position) {
     const res = teams.find(team => team.groupId === groupId && team.position === position);
     // console.log(res);
     return res;
@@ -384,6 +404,67 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
     return [];
   };
 
+  const clearDependentMatches = async (changedMatchId) => {
+    const matchDependencies = {
+      // R32 matches affect R16
+      1: [17], 2: [17], 3: [18], 4: [18],
+      5: [19], 6: [19], 7: [20], 8: [20],
+      9: [21], 10: [21], 11: [22], 12: [22],
+      13: [23], 14: [23], 15: [24], 16: [24],
+      
+      // R16 matches affect QF
+      17: [25], 18: [25], 19: [26], 20: [26],
+      21: [27], 22: [27], 23: [28], 24: [28],
+      
+      // QF matches affect QF
+      25: [29], 26: [29], 27: [30], 28: [30],
+      
+      // SF matches affect Final
+      29: [31], 30: [31]
+    };
+
+    const getAllDependentMatches = (matchId) => {
+      const direct = matchDependencies[matchId] || [];
+      const all = [...direct];
+      
+      // Recursively get all downstream matches
+      direct.forEach(dependentId => {
+        all.push(...getAllDependentMatches(dependentId));
+      });
+      
+      return [...new Set(all)]; // Remove duplicates
+    };
+
+    const matchesToClear = getAllDependentMatches(changedMatchId);
+    
+    if (matchesToClear.length > 0) {
+      // Clear from frontend state immediately
+      setPredictions(prev => {
+        const newPredictions = { ...prev };
+        matchesToClear.forEach(matchId => {
+          delete newPredictions[matchId];
+        });
+        return newPredictions;
+      });
+
+      // Delete from backend - WAIT for all to complete
+      try {
+        await Promise.all(
+          matchesToClear.map(matchId => 
+            predictionAPI.deleteMatchPrediction(matchId)
+              .catch(err => {
+                console.error(`Failed to delete prediction for match ${matchId}:`, err);
+                // Don't throw, continue with other deletes
+              })
+          )
+        );
+        console.log(`✅ Cleared ${matchesToClear.length} dependent matches:`, matchesToClear);
+      } catch (error) {
+        console.error('Error clearing dependent matches:', error);
+      }
+    }
+  };
+
   const calculateProgress = () => {
     const rounds = {
       'R32': { matches: Array.from({length: 16}, (_, i) => i + 1), label: t('pred.roundof32') },
@@ -423,141 +504,341 @@ export const KnockoutStage = ({ onBack, onSubmit, savedPredictions, viewMode, us
   };
 
   const exportAsImage = async () => {
-    if (!bracketRef.current) {
-      alert(t('error.unableCaptureBracket'));
-      return;
-    }
-    
     setExporting(true);
-    
-    try {
-      const bracketScroll = bracketRef.current.querySelector('.bracket-scroll');
-      if (!bracketScroll) {
-        throw new Error('Bracket content not found');
-      }
 
-      // Create temporary wrapper
-      const exportWrapper = document.createElement('div');
-      exportWrapper.style.cssText = `
-        position: fixed;
-        left: -99999px;
-        top: 0;
-        background: #f9fafb;
-        padding: 3rem;
-        width: auto;
-        height: auto;
-      `;
-      
-      const bracketClone = bracketScroll.cloneNode(true);
-      bracketClone.style.cssText = `
-        display: flex;
-        width: auto;
-        height: auto;
-        overflow: visible;
-      `;
-      
-      // Add title
-      const title = document.createElement('div');
-      const now = new Date();
-      const date = now.toISOString().slice(0,16).replace('T',' ');
-      title.style.cssText = `
-        text-align: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 3px solid #667eea;
-      `;
-      title.innerHTML = `
-        <h1 style="margin: 0; font-size: 2.5rem; color: #1f2937; font-weight: 800;">
-          🏆 World Cup Knockout Predictions
-        </h1>
-        <p style="margin: 0.5rem 0 0 0; font-size: 1.125rem; color: #6b7280;">
-          ${user?.username || 'My Predictions'}
-        </p>
-        <p style="margin: 0.5rem 0 0 0; font-size: 1.125rem; color: #6b7280;">
-          ${date || ''}
-        </p>
-      `;
-      
-      exportWrapper.appendChild(title);
-      exportWrapper.appendChild(bracketClone);
-      document.body.appendChild(exportWrapper);
-      
-      // Convert all flag icons to canvas elements
-      const flagIcons = exportWrapper.querySelectorAll('.fi');
-      
-      await Promise.all(Array.from(flagIcons).map(async (flag) => {
-        const computedStyle = window.getComputedStyle(flag);
-        const backgroundImage = computedStyle.backgroundImage;
-        
-        // Extract URL from background-image
-        const urlMatch = backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
-        if (urlMatch && urlMatch[1]) {
-          const svgUrl = urlMatch[1];
-          
-          try {
-            // Fetch the SVG
-            const response = await fetch(svgUrl);
-            const svgText = await response.text();
-            
-            // Convert SVG to data URL
-            const blob = new Blob([svgText], { type: 'image/svg+xml' });
-            const dataUrl = await new Promise((resolve) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result);
-              reader.readAsDataURL(blob);
-            });
-            
-            // Create image element
-            const img = document.createElement('img');
-            img.src = dataUrl;
-            img.style.cssText = `
-              width: ${computedStyle.width};
-              height: ${computedStyle.height};
-              border-radius: ${computedStyle.borderRadius};
-              box-shadow: ${computedStyle.boxShadow};
-            `;
-            
-            // Replace flag with image
-            flag.parentNode.replaceChild(img, flag);
-          } catch (err) {
-            console.error('Failed to convert flag:', err);
+    try {
+      /* =============================
+         Submission date
+      ============================== */
+      let submittedDate = 'Not submitted';
+      try {
+        const statusRes = await predictionAPI.getStatus();
+        if (statusRes.data.predictions_submitted_at) {
+          submittedDate = new Date(statusRes.data.predictions_submitted_at)
+            .toISOString()
+            .slice(0, 16)
+            .replace('T', ' ');
+        }
+      } catch {}
+
+      /* =============================
+         Canvas
+      ============================== */
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = 3000;
+      canvas.height = 1650;
+
+      ctx.fillStyle = '#f9fafb';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      /* =============================
+         Header
+      ============================== */
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 60px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('🏆 World Cup Knockout Predictions', 1500, 80);
+
+      ctx.font = '36px Arial';
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText(user?.username || 'My Predictions', 1500, 130);
+
+      ctx.font = '28px Arial';
+      ctx.fillText(`Submitted: ${submittedDate}`, 1500, 170);
+
+      ctx.strokeStyle = '#667eea';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(600, 190);
+      ctx.lineTo(2400, 190);
+      ctx.stroke();
+
+      /* =============================
+         Flag drawing
+      ============================== */
+      const drawFlag = async (fifaCode, x, y, size = 16) => {
+        const iso = getFlagCode(fifaCode);
+        if (!iso) return;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = `https://flagcdn.com/w40/${iso}.png`;
+
+        await new Promise((res) => {
+          img.onload = res;
+          img.onerror = res;
+        });
+
+        if (!img.naturalWidth) return;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, x, y, size, size);
+        ctx.restore();
+      };
+
+      /* =============================
+         Match card
+      ============================== */
+      const drawMatch = async (x, y, label, teams, winnerId, isFinal = false) => {
+        const w = 220;
+        const h = teams.length ? 120 : 80;
+
+        ctx.fillStyle = isFinal ? 'rgba(245,158,11,.15)' : '#fff';
+        ctx.strokeStyle = isFinal ? '#f59e0b' : '#e5e7eb';
+        ctx.lineWidth = isFinal ? 3 : 2;
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = isFinal ? '#f59e0b' : '#667eea';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x + w / 2, y + 24);
+
+        ctx.textAlign = 'left';
+
+        for (let i = 0; i < teams.length; i++) {
+          const t = teams[i];
+          const ty = y + 50 + i * 32;
+          const win = t.id === winnerId;
+
+          if (win) {
+            ctx.fillStyle = '#d1fae5';
+            ctx.strokeStyle = '#10b981';
+            ctx.beginPath();
+            ctx.roundRect(x + 10, ty - 18, w - 20, 28, 6);
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          await drawFlag(t.fifa_code, x + 16, ty - 12, 16);
+
+          ctx.fillStyle = win ? '#065f46' : '#1f2937';
+          ctx.font = win ? 'bold 15px Arial' : '15px Arial';
+          ctx.fillText(
+            t.name.length > 15 ? t.name.slice(0, 13) + '…' : t.name,
+            x + 38,
+            ty
+          );
+
+          if (win) {
+            ctx.textAlign = 'right';
+            ctx.fillText('✓', x + w - 14, ty);
+            ctx.textAlign = 'left';
           }
         }
-      }));
+
+        return { x, y, w, h };
+      };
+
+      /* =============================
+         Round labels
+      ============================== */
+      const startY = 250;
       
-      // Wait for images to load
-      await new Promise(resolve => setTimeout(resolve, 500));
+      ctx.fillStyle = '#4b5563';
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
       
-      // Capture
-      const canvas = await html2canvas(exportWrapper, {
-        scale: 2.5,
-        backgroundColor: '#f9fafb',
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        width: exportWrapper.scrollWidth,
-        height: exportWrapper.scrollHeight,
-        windowWidth: exportWrapper.scrollWidth,
-        windowHeight: exportWrapper.scrollHeight,
-      });
-      
-      // Clean up
-      document.body.removeChild(exportWrapper);
-      
-      // Download
+      ctx.fillText('Round of 32', 280, startY - 20);
+      ctx.fillText('Round of 16', 600, startY - 20);
+      ctx.fillText('Quarter Finals', 920, startY - 20);
+      ctx.fillText('Semi Finals', 1240, startY - 20);
+      ctx.fillText('🏆 FINAL', 1500, startY - 20);
+      ctx.fillText('Semi Finals', 1760, startY - 20);
+      ctx.fillText('Quarter Finals', 2080, startY - 20);
+      ctx.fillText('Round of 16', 2400, startY - 20);
+      ctx.fillText('Round of 32', 2720, startY - 20);
+
+      /* =============================
+         LEFT BRACKET
+      ============================== */
+      const r32Left = [];
+      let y = startY;
+      for (let i = 1; i <= 8; i++) {
+        r32Left.push(
+          await drawMatch(170, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 140;
+      }
+
+      const r16Left = [];
+      y = startY + 70;
+      for (let i = 17; i <= 20; i++) {
+        r16Left.push(
+          await drawMatch(490, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 280;
+      }
+
+      const qfLeft = [];
+      y = startY + 210;
+      for (let i = 25; i <= 26; i++) {
+        qfLeft.push(
+          await drawMatch(810, y, `QF${i - 24}`, getMatchTeams(i), predictions[i])
+        );
+        y += 560;
+      }
+
+      const sf1 = await drawMatch(
+        1130,
+        startY + 490,
+        'SF1',
+        getMatchTeams(29),
+        predictions[29]
+      );
+
+      /* =============================
+         CHAMPION & FINAL
+      ============================== */
+      const finalTeams = getMatchTeams(31);
+      const finalWinner = finalTeams.find(t => t?.id === predictions[31]);
+
+      if (finalWinner) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏆 CHAMPION 🏆', 1500, startY + 290);
+        ctx.font = 'bold 28px Arial';
+        ctx.fillText(finalWinner.name, 1500, startY + 325);
+      }
+
+      const finalBox = await drawMatch(
+        1390,
+        startY + 350,
+        'FINAL',
+        finalTeams,
+        predictions[31],
+        true
+      );
+
+      /* =============================
+         RIGHT BRACKET
+      ============================== */
+      const sf2 = await drawMatch(
+        1650,
+        startY + 490,
+        'SF2',
+        getMatchTeams(30),
+        predictions[30]
+      );
+
+      const qfRight = [];
+      y = startY + 210;
+      for (let i = 27; i <= 28; i++) {
+        qfRight.push(
+          await drawMatch(1970, y, `QF${i - 24}`, getMatchTeams(i), predictions[i])
+        );
+        y += 560;
+      }
+
+      const r16Right = [];
+      y = startY + 70;
+      for (let i = 21; i <= 24; i++) {
+        r16Right.push(
+          await drawMatch(2290, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 280;
+      }
+
+      const r32Right = [];
+      y = startY;
+      for (let i = 9; i <= 16; i++) {
+        r32Right.push(
+          await drawMatch(2610, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 140;
+      }
+
+      /* =============================
+         CONNECTION LINES
+      ============================== */
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 2;
+
+      const drawConnection = (x1, y1, x2, y2) => {
+        const midX = (x1 + x2) / 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(midX, y1);
+        ctx.lineTo(midX, y2);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      };
+
+      // LEFT: R32 -> R16
+      for (let i = 0; i < 4; i++) {
+        const m1 = r32Left[i * 2];
+        const m2 = r32Left[i * 2 + 1];
+        const target = r16Left[i];
+        drawConnection(m1.x + m1.w, m1.y + m1.h / 2, target.x, target.y + target.h / 2);
+        drawConnection(m2.x + m2.w, m2.y + m2.h / 2, target.x, target.y + target.h / 2);
+      }
+
+      // LEFT: R16 -> QF
+      for (let i = 0; i < 2; i++) {
+        const m1 = r16Left[i * 2];
+        const m2 = r16Left[i * 2 + 1];
+        const target = qfLeft[i];
+        drawConnection(m1.x + m1.w, m1.y + m1.h / 2, target.x, target.y + target.h / 2);
+        drawConnection(m2.x + m2.w, m2.y + m2.h / 2, target.x, target.y + target.h / 2);
+      }
+
+      // LEFT: QF -> SF1
+      drawConnection(qfLeft[0].x + qfLeft[0].w, qfLeft[0].y + qfLeft[0].h / 2, sf1.x, sf1.y + sf1.h / 2);
+      drawConnection(qfLeft[1].x + qfLeft[1].w, qfLeft[1].y + qfLeft[1].h / 2, sf1.x, sf1.y + sf1.h / 2);
+
+      // LEFT: SF1 -> FINAL
+      drawConnection(sf1.x + sf1.w, sf1.y + sf1.h / 2, finalBox.x, finalBox.y + finalBox.h / 2);
+
+      // RIGHT: SF2 -> FINAL
+      drawConnection(finalBox.x + finalBox.w, finalBox.y + finalBox.h / 2, sf2.x, sf2.y + sf2.h / 2);
+
+      // RIGHT: QF -> SF2
+      drawConnection(sf2.x + sf2.w, sf2.y + sf2.h / 2, qfRight[0].x, qfRight[0].y + qfRight[0].h / 2);
+      drawConnection(sf2.x + sf2.w, sf2.y + sf2.h / 2, qfRight[1].x, qfRight[1].y + qfRight[1].h / 2);
+
+      // RIGHT: R16 -> QF
+      for (let i = 0; i < 2; i++) {
+        const m1 = r16Right[i * 2];
+        const m2 = r16Right[i * 2 + 1];
+        const target = qfRight[i];
+        drawConnection(target.x + target.w, target.y + target.h / 2, m1.x, m1.y + m1.h / 2);
+        drawConnection(target.x + target.w, target.y + target.h / 2, m2.x, m2.y + m2.h / 2);
+      }
+
+      // RIGHT: R32 -> R16
+      for (let i = 0; i < 4; i++) {
+        const m1 = r32Right[i * 2];
+        const m2 = r32Right[i * 2 + 1];
+        const target = r16Right[i];
+        drawConnection(target.x + target.w, target.y + target.h / 2, m1.x, m1.y + m1.h / 2);
+        drawConnection(target.x + target.w, target.y + target.h / 2, m2.x, m2.y + m2.h / 2);
+      }
+
+      /* =============================
+         EXPORT
+      ============================== */
       canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        const timestamp = new Date().toISOString().split('T')[0];
-        link.download = `worldcup-knockout-predictions-${timestamp}.png`;
-        link.href = url;
-        link.click();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `worldcup-bracket-${Date.now()}.png`;
+        a.click();
         URL.revokeObjectURL(url);
-      }, 'image/png', 1.0);
-      
-    } catch (error) {
-      console.error('Export error:', error);
-      alert(t('error.failedExport') + error.message);
+        alert('✅ Bracket exported successfully!');
+      });
+
+    } catch (err) {
+      console.error(err);
+      alert('Export failed');
     } finally {
       setExporting(false);
     }
