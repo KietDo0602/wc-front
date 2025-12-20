@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { predictionAPI } from '../api/api';
 import { GroupStage } from '../components/Prediction/GroupStage';
 import { ThirdPlaceStage } from '../components/Prediction/ThirdPlaceStage';
-import { KnockoutStage } from '../components/Prediction/KnockoutStage';
+// import { KnockoutStage } from '../components/Prediction/KnockoutStage';
+import { KnockoutCanvas } from '../components/Prediction/KnockoutCanvas';
 import { PredictionProgress } from '../components/Prediction/PredictionProgress';
 import { Button } from '../components/UI/Button';
 import { useAuth } from '../context/AuthContext';
@@ -179,12 +180,12 @@ export const PredictionPage = () => {
           )}
 
           {currentStage === 'knockout' && (
-            <KnockoutStage
+            <KnockoutCanvas
+              viewMode={viewMode}
               onBack={handleBackToThird}
               onSubmit={handleSubmitAll}
               savedPredictions={savedPredictions}
               thirdPlaceAdvancers={thirdPlaceAdvancers}
-              viewMode={true}
             />
           )}
 
@@ -222,7 +223,8 @@ export const PredictionPage = () => {
         )}
 
         {currentStage === 'knockout' && (
-          <KnockoutStage
+          <KnockoutCanvas
+            viewMode={viewMode}
             onBack={handleBackToThird}
             onSubmit={handleSubmitAll}
             savedPredictions={savedPredictions}
