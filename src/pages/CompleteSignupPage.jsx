@@ -90,7 +90,7 @@ export const CompleteSignupPage = () => {
             <small>{t("name.format")}</small>
           </div>
 
-          <Button type="submit" size="large" loading={loading} fullWidth>
+          <Button type="submit" size="large" loading={loading} fullwidth="true">
             {loading ? t('name.accountCreate') : t('name.completeSignup')}
           </Button>
         </form>

@@ -133,6 +133,12 @@ const resources = {
       "pred.submittedMsg": "Your predictions have been locked in. Good luck!",
       "pred.viewLeaderboard": "View Leaderboard",
       "pred.exportImage": "Save as Image",
+      "pred.zoomIn": "Zoom In",
+      "pred.zoomOut": "Zoom Out",
+      "pred.resetView": "Reset View",
+
+      "pred.exportSuccess": "✅ Bracket exported successfully!",
+      "pred.exportFailed": "Export failed",
 
       "pred.prediction": "Share My Prediction",
       "pred.prediction.notSubmitted": "This user has not submitted their predictions yet.",
@@ -322,6 +328,13 @@ const resources = {
       "pred.submittedMsg": "Tus predicciones han sido bloqueadas. ¡Buena suerte!",
       "pred.viewLeaderboard": "Ver Clasificación",
       "pred.exportImage": "Guardar como Imagen",
+      "pred.zoomIn": "Acercar",
+      "pred.zoomOut": "Alejar",
+      "pred.resetView": "Restablecer vista",
+
+      "pred.exportSuccess": "✅ Bracket exportado correctamente",
+      "pred.exportFailed": "Error al exportar",
+
 
       "pred.prediction": "Compartir Mi Predicción",
       "pred.prediction.notSubmitted": "Este usuario aún no ha enviado sus predicciones.",
@@ -510,6 +523,13 @@ const resources = {
       "pred.submittedMsg": "Tes pronostics ont été verrouillés. Bonne chance !",
       "pred.viewLeaderboard": "Voir le Classement",
       "pred.exportImage": "Enregistrer comme Image",
+      "pred.zoomIn": "Zoom avant",
+      "pred.zoomOut": "Zoom arrière",
+      "pred.resetView": "Réinitialiser la vue",
+
+      "pred.exportSuccess": "✅ Tableau exporté avec succès",
+      "pred.exportFailed": "Échec de l’exportation",
+
 
       "pred.prediction": "Partager Mon Pronostic",
       "pred.prediction.notSubmitted": "Cet utilisateur n’a pas encore soumis ses pronostics.",
@@ -699,6 +719,12 @@ const resources = {
       "pred.submittedMsg": "你的预测已锁定，祝你好运！",
       "pred.viewLeaderboard": "查看排行榜",
       "pred.exportImage": "保存为图片",
+      "pred.zoomIn": "放大",
+      "pred.zoomOut": "缩小",
+      "pred.resetView": "重置视图",
+
+      "pred.exportSuccess": "✅ 对阵表导出成功！",
+      "pred.exportFailed": "导出失败",
 
       "pred.prediction": "分享我的预测",
       "pred.prediction.notSubmitted": "该用户尚未提交预测。",
@@ -887,6 +913,12 @@ const resources = {
       "pred.submittedMsg": "Suas previsões foram travadas. Boa sorte!",
       "pred.viewLeaderboard": "Ver Classificação",
       "pred.exportImage": "Salvar como Imagem",
+      "pred.zoomIn": "Ampliar",
+      "pred.zoomOut": "Reduzir",
+      "pred.resetView": "Redefinir visualização",
+
+      "pred.exportSuccess": "✅ Chave exportada com sucesso!",
+      "pred.exportFailed": "Falha ao exportar",
 
       "pred.prediction": "Compartilhar Minha Previsão",
       "pred.prediction.notSubmitted": "Este usuário ainda não enviou suas previsões.",
@@ -1075,6 +1107,12 @@ const resources = {
       "pred.submittedMsg": "تم تثبيت توقعاتك. حظًا موفقًا!",
       "pred.viewLeaderboard": "عرض لوحة الصدارة",
       "pred.exportImage": "حفظ كصورة",
+      "pred.zoomIn": "تكبير",
+      "pred.zoomOut": "تصغير",
+      "pred.resetView": "إعادة ضبط العرض",
+
+      "pred.exportSuccess": "✅ تم تصدير الجدول بنجاح!",
+      "pred.exportFailed": "فشل التصدير",
 
       "pred.prediction": "مشاركة توقعي",
       "pred.prediction.notSubmitted": "لم يقم هذا المستخدم بإرسال توقعاته بعد.",
@@ -1263,6 +1301,12 @@ const resources = {
       "pred.submittedMsg": "Deine Tipps wurden fixiert. Viel Glück!",
       "pred.viewLeaderboard": "Rangliste ansehen",
       "pred.exportImage": "Als Bild speichern",
+      "pred.zoomIn": "Vergrößern",
+      "pred.zoomOut": "Verkleinern",
+      "pred.resetView": "Ansicht zurücksetzen",
+
+      "pred.exportSuccess": "✅ Turnierbaum erfolgreich exportiert!",
+      "pred.exportFailed": "Export fehlgeschlagen",
 
       "pred.prediction": "Meine Tipps teilen",
       "pred.prediction.notSubmitted": "Dieser Benutzer hat seine Tipps noch nicht eingereicht.",
@@ -1451,6 +1495,12 @@ const resources = {
       "pred.submittedMsg": "I tuoi pronostici sono stati bloccati. Buona fortuna!",
       "pred.viewLeaderboard": "Visualizza Classifica",
       "pred.exportImage": "Salva come Immagine",
+      "pred.zoomIn": "Ingrandisci",
+      "pred.zoomOut": "Riduci",
+      "pred.resetView": "Reimposta vista",
+
+      "pred.exportSuccess": "✅ Tabellone esportato con successo!",
+      "pred.exportFailed": "Esportazione non riuscita",
 
       "pred.prediction": "Condividi il Mio Pronostico",
       "pred.prediction.notSubmitted": "Questo utente non ha ancora inviato i propri pronostici.",
@@ -1639,6 +1689,12 @@ const resources = {
       "pred.submittedMsg": "予想は確定されました。健闘を祈ります！",
       "pred.viewLeaderboard": "ランキングを見る",
       "pred.exportImage": "画像として保存",
+      "pred.zoomIn": "ズームイン",
+      "pred.zoomOut": "ズームアウト",
+      "pred.resetView": "表示をリセット",
+
+      "pred.exportSuccess": "✅ トーナメント表のエクスポートに成功しました！",
+      "pred.exportFailed": "エクスポートに失敗しました",
 
       "pred.prediction": "予想を共有",
       "pred.prediction.notSubmitted": "このユーザーはまだ予想を提出していません。",
@@ -1827,6 +1883,12 @@ const resources = {
       "pred.submittedMsg": "예측이 확정되었습니다. 행운을 빕니다!",
       "pred.viewLeaderboard": "리더보드 보기",
       "pred.exportImage": "이미지로 저장",
+      "pred.zoomIn": "확대",
+      "pred.zoomOut": "축소",
+      "pred.resetView": "보기 초기화",
+
+      "pred.exportSuccess": "✅ 대진표를 성공적으로 내보냈습니다!",
+      "pred.exportFailed": "내보내기 실패",
 
       "pred.prediction": "내 예측 공유",
       "pred.prediction.notSubmitted": "이 사용자는 아직 예측을 제출하지 않았습니다.",
@@ -2015,6 +2077,13 @@ const resources = {
       "pred.submittedMsg": "Tahminleriniz kilitlendi. Bol şans!",
       "pred.viewLeaderboard": "Sıralamayı Görüntüle",
       "pred.exportImage": "Resim Olarak Kaydet",
+      "pred.zoomIn": "Yakınlaştır",
+      "pred.zoomOut": "Uzaklaştır",
+      "pred.resetView": "Görünümü sıfırla",
+
+      "pred.exportSuccess": "✅ Fikstür başarıyla dışa aktarıldı!",
+      "pred.exportFailed": "Dışa aktarma başarısız",
+
 
       "pred.prediction": "Tahminimi Paylaş",
       "pred.prediction.notSubmitted": "Bu kullanıcı henüz tahminlerini göndermedi.",
@@ -2203,6 +2272,12 @@ const resources = {
       "pred.submittedMsg": "आपकी भविष्यवाणियाँ लॉक हो गई हैं। शुभकामनाएँ!",
       "pred.viewLeaderboard": "लीडरबोर्ड देखें",
       "pred.exportImage": "चित्र के रूप में सहेजें",
+      "pred.zoomIn": "ज़ूम इन",
+      "pred.zoomOut": "ज़ूम आउट",
+      "pred.resetView": "दृश्य रीसेट करें",
+
+      "pred.exportSuccess": "✅ ब्रैकेट सफलतापूर्वक निर्यात किया गया!",
+      "pred.exportFailed": "निर्यात विफल",
 
       "pred.prediction": "मेरी भविष्यवाणी साझा करें",
       "pred.prediction.notSubmitted": "इस उपयोगकर्ता ने अभी तक अपनी भविष्यवाणियाँ सबमिट नहीं की हैं।",
@@ -2393,6 +2468,13 @@ const resources = {
       "pred.submittedMsg": "การทำนายของคุณถูกล็อกแล้ว ขอให้โชคดี!",
       "pred.viewLeaderboard": "ดูตารางคะแนน",
       "pred.exportImage": "บันทึกเป็นรูปภาพ",
+      "pred.zoomIn": "ซูมเข้า",
+      "pred.zoomOut": "ซูมออก",
+      "pred.resetView": "รีเซ็ตมุมมอง",
+
+      "pred.exportSuccess": "✅ ส่งออกบรากเก็ตสำเร็จแล้ว!",
+      "pred.exportFailed": "การส่งออกล้มเหลว",
+
 
       "pred.prediction": "แชร์การทำนายของฉัน",
       "pred.prediction.notSubmitted": "ผู้ใช้นี้ยังไม่ได้ส่งการทำนาย",
@@ -2583,6 +2665,12 @@ const resources = {
       "pred.submittedMsg": "Dự đoán của bạn đã được khóa. Chúc may mắn!",
       "pred.viewLeaderboard": "Xem Bảng Xếp Hạng",
       "pred.exportImage": "Lưu Dưới Dạng Hình Ảnh",
+      "pred.zoomIn": "Phóng to",
+      "pred.zoomOut": "Thu nhỏ",
+      "pred.resetView": "Đặt lại chế độ xem",
+
+      "pred.exportSuccess": "✅ Xuất sơ đồ thành công!",
+      "pred.exportFailed": "Xuất không thành công",
 
       "pred.prediction": "Chia Sẻ Dự Đoán",
       "pred.prediction.notSubmitted": "Người dùng này chưa gửi dự đoán.",

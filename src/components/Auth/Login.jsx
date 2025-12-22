@@ -74,7 +74,7 @@ export const Login = () => {
             />
           </div>
 
-          <Button type="submit" size="large" className="w-full" loading={loading} fullWidth>
+          <Button type="submit" size="large" className="w-full" loading={loading} fullwidth="true">
             {loading ? t('auth.loggingIn') : t('nav.login')}
           </Button>
 
@@ -91,7 +91,7 @@ export const Login = () => {
           onClick={handleGoogleLogin}
           variant="outline"
           size="large"
-          fullWidth
+          fullwidth="true"
           className="google-btn"
         >
           <img src="https://www.google.com/favicon.ico" alt="Google" className="google-icon" />

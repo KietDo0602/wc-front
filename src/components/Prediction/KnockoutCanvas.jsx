@@ -1085,12 +1085,12 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         a.download = `worldcup-bracket-${Date.now()}.png`;
         a.click();
         URL.revokeObjectURL(url);
-        alert(t('✅ Bracket exported successfully!'));
+        alert(t('pred.exportSuccess'));
       });
 
     } catch (err) {
       console.error(err);
-      alert('Export failed');
+      alert(t('pred.exportFailed'));
     } finally {
       setExporting(false);
     }
@@ -1133,9 +1133,9 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           onMouseLeave={() => setIsDragging(false)}
         />
         <div className="canvas-controls">
-          <button onClick={handleZoomIn} title="Zoom In">+</button>
-          <button onClick={handleZoomOut} title="Zoom Out">−</button>
-          <button onClick={handleResetView} title="Reset View">⟲</button>
+          <button onClick={handleZoomIn} title={t("pred.zoomIn")}>+</button>
+          <button onClick={handleZoomOut} title={t("pred.zoomOut")}>−</button>
+          <button onClick={handleResetView} title={t("pred.resetView")}>⟲</button>
           <span className="zoom-level">{Math.round(camera.zoom * 100)}%</span>
         </div>
       </div>
