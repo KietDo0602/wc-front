@@ -130,16 +130,6 @@ export const PredictionPage = () => {
   if (viewMode) {
     return (
       <div className="prediction-page view-mode">
-        <div className="prediction-header">
-          <div className="header-content">
-            <h1>{t('nav.myPredictions')}</h1>
-            <p className="welcome-text">{t('pred.welcome', {user: user?.username})} 👋</p>
-            <div className="submitted-badge">
-              ✓ {t('pred.submitted.on', {date: new Date(status?.predictions_submitted_at).toLocaleDateString()})}
-            </div>
-          </div>
-        </div>
-
         <div className="prediction-container">
           <div className="view-mode-tabs">
             <button 
@@ -188,12 +178,6 @@ export const PredictionPage = () => {
               thirdPlaceAdvancers={thirdPlaceAdvancers}
             />
           )}
-
-          <div className="view-mode-actions">
-            <Button onClick={() => navigate('/leaderboard')} variant="outline">
-              {t('pred.viewLeaderboard')}
-            </Button>
-          </div>
         </div>
       </div>
     );
@@ -229,7 +213,7 @@ export const PredictionPage = () => {
             onSubmit={handleSubmitAll}
             savedPredictions={savedPredictions}
             thirdPlaceAdvancers={thirdPlaceAdvancers}
-            user={user?.username}
+            user={user}
           />
         )}
       </div>

@@ -141,6 +141,7 @@
 .stage-footer {
   text-align: center;
   padding: 2rem;
+  justify-content: flex-end;
   background: var(--background);
   border-top: 2px solid var(--background);
   border-radius: 12px;

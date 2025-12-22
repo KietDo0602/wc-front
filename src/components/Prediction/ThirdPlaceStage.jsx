@@ -148,8 +148,6 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     );
   }
 
-  console.log('Render - saved:', saved, 'selectedTeams:', selectedTeams);
-
   return (
     <div className="third-place-stage">
       <div className="stage-header">
@@ -214,9 +212,15 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
         })}
       </div>
 
+      {viewMode && (
+        <div className="view-mode-notice">
+          <p>✓ {t('pred.knockout.locked')}</p>
+        </div>
+      )}
+
       <div className="stage-footer">
         <Button onClick={onBack} variant="outline">
-          ← {t('pred.thirdPlace.backtoButton')}
+          ← {t('pred.backToGroups')}
         </Button>
         <Button
           onClick={onComplete}

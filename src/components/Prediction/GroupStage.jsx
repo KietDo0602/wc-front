@@ -324,6 +324,12 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
       )}
 
       {viewMode && (
+        <div className="view-mode-notice">
+          <p>✓ {t('pred.knockout.locked')}</p>
+        </div>
+      )}
+
+      {viewMode && (
         <div className="stage-footer view-mode-footer">
           <Button
             onClick={onComplete}

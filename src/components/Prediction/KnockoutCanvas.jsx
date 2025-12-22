@@ -14,12 +14,15 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [username, setUsername] = useState('My Predictions');
+  const usernameRef = useRef(null);
   const { t } = useTranslation();
 
   // Canvas state
   const [camera, setCamera] = useState({ x: 0, y: 0, zoom: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragDistance, setDragDistance] = useState(0);
   const [hoveredMatch, setHoveredMatch] = useState(null);
   const [hoveredTeam, setHoveredTeam] = useState(null);
   const [matchBoxes, setMatchBoxes] = useState([]);
@@ -273,9 +276,9 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     const ctx = canvas.getContext('2d');
     const { width, height } = canvas;
 
-    // Clear
+    // Clear with theme background
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#f9fafb';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--background') || '#ffffff';
     ctx.fillRect(0, 0, width, height);
 
     // Apply camera transform
@@ -284,30 +287,27 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     ctx.scale(camera.zoom, camera.zoom);
 
     // Layout parameters
+    // Inside drawBracket function, update the layout parameters:
     const baseX = 100;
     const baseY = 100;
-    const cardW = 180;
-    const cardH = 100;
-    const colGap = 200;
-    const rowGap = 140;
+    const cardW = 220;
+    const cardH = 140; // Increased from 120
+    const colGap = 240;
+    const rowGap = 180; // Increased from 160 to accommodate taller cards
 
     const boxes = [];
 
-    // Draw function for match card
+    // Update the drawMatch function:
     const drawMatch = (x, y, matchId, label, teams, winnerId, isFinal = false) => {
-      const h = teams.length > 0 ? cardH : 80;
+      const h = teams.length > 0 ? cardH : 100; // Increased from 90
 
       // Background
       if (isFinal) {
         ctx.fillStyle = 'rgba(245,158,11,0.15)';
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 3;
-      } else if (hoveredMatch === matchId) {
-        ctx.fillStyle = '#e0e7ff';
-        ctx.strokeStyle = '#667eea';
-        ctx.lineWidth = 3;
       } else {
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#ffffff';
         ctx.strokeStyle = '#e5e7eb';
         ctx.lineWidth = 2;
       }
@@ -318,28 +318,29 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.stroke();
 
       // Label
-      ctx.fillStyle = isFinal ? '#f59e0b' : '#667eea';
-      ctx.font = 'bold 14px Arial';
+      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary') || '#667eea';
+      ctx.fillStyle = isFinal ? '#f59e0b' : primaryColor;
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(label, x + cardW / 2, y + 20);
+      ctx.fillText(label, x + cardW / 2, y + 24); // Adjusted for taller card
 
       if (teams.length === 0) {
         ctx.fillStyle = '#9ca3af';
-        ctx.font = '14px Arial';
-        ctx.fillText('TBD', x + cardW / 2, y + 50);
+        ctx.font = '16px Arial';
+        ctx.fillText('TBD', x + cardW / 2, y + 60);
       } else {
         teams.forEach((team, idx) => {
-          const ty = y + 40 + idx * 36;
+          const ty = y + 54 + idx * 44; // Increased spacing for taller cards
           const isWinner = team.id === winnerId;
           const isHovered = hoveredTeam?.matchId === matchId && hoveredTeam?.teamId === team.id;
 
-          // Team background
+          // Team background - taller team boxes
           if (isWinner) {
             ctx.fillStyle = '#d1fae5';
             ctx.strokeStyle = '#10b981';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.roundRect(x + 8, ty - 16, cardW - 16, 28, 6);
+            ctx.roundRect(x + 10, ty - 20, cardW - 20, 36, 6); // Increased height from 32 to 36
             ctx.fill();
             ctx.stroke();
           } else if (isHovered && !viewMode) {
@@ -347,7 +348,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
             ctx.strokeStyle = '#0284c7';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.roundRect(x + 8, ty - 16, cardW - 16, 28, 6);
+            ctx.roundRect(x + 10, ty - 20, cardW - 20, 36, 6); // Increased height from 32 to 36
             ctx.fill();
             ctx.stroke();
           }
@@ -357,35 +358,46 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           if (flag) {
             ctx.save();
             ctx.beginPath();
-            ctx.arc(x + 20, ty - 2, 8, 0, Math.PI * 2);
+            ctx.arc(x + 24, ty, 10, 0, Math.PI * 2); // Centered vertically
             ctx.clip();
-            ctx.drawImage(flag, x + 12, ty - 10, 16, 16);
+            ctx.drawImage(flag, x + 14, ty - 10, 20, 20);
             ctx.restore();
           }
 
           // Team name
-          ctx.fillStyle = isWinner ? '#065f46' : '#1f2937';
-          ctx.font = isWinner ? 'bold 13px Arial' : '13px Arial';
+          let textColor;
+          if (isWinner) {
+            textColor = '#065f46';
+          } else if (isHovered && !viewMode) {
+            textColor = '#0369a1';
+          } else {
+            textColor = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#1f2937';
+          }
+          
+          ctx.fillStyle = textColor;
+          ctx.font = isWinner ? 'bold 15px Arial' : (isHovered && !viewMode ? 'bold 15px Arial' : '15px Arial');
           ctx.textAlign = 'left';
-          const name = team.name.length > 14 ? team.name.slice(0, 12) + '...' : team.name;
-          ctx.fillText(name, x + 34, ty);
+          const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : team.name;
+          ctx.fillText(name, x + 40, ty + 4); // Adjusted for proper vertical centering
 
-          // Checkmark
+          // Checkmark - FIXED VERTICAL CENTERING
           if (isWinner) {
             ctx.fillStyle = '#10b981';
-            ctx.font = 'bold 16px Arial';
+            ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'right';
-            ctx.fillText('✓', x + cardW - 12, ty);
+            ctx.textBaseline = 'middle'; // Set baseline to middle for proper centering
+            ctx.fillText('✓', x + cardW - 14, ty); // Use ty (center point) directly
+            ctx.textBaseline = 'alphabetic'; // Reset to default
           }
 
           // Store box for hit detection
           boxes.push({
             matchId,
             teamId: team.id,
-            x: x + 8,
-            y: ty - 16,
-            w: cardW - 16,
-            h: 28
+            x: x + 10,
+            y: ty - 20,
+            w: cardW - 20,
+            h: 36 // Updated height
           });
         });
       }
@@ -474,9 +486,9 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 24px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('🏆 CHAMPION 🏆', finalX + cardW / 2, finalY - 40);
+      ctx.fillText('🏆 CHAMPION 🏆', finalX + cardW / 2, finalY - 45);
       ctx.font = 'bold 20px Arial';
-      ctx.fillText(finalWinner.name, finalX + cardW / 2, finalY - 15);
+      ctx.fillText(finalWinner.name, finalX + cardW / 2, finalY - 18);
     }
 
     drawMatch(finalX, finalY, 31, 'FINAL', finalTeams, predictions[31], true);
@@ -573,6 +585,46 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     return () => window.removeEventListener('resize', handleResize);
   }, [drawBracket]);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleWheelEvent = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newZoom = Math.max(0.3, Math.min(2, camera.zoom * delta));
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const worldX = (mouseX - camera.x) / camera.zoom;
+      const worldY = (mouseY - camera.y) / camera.zoom;
+      
+      setCamera({
+        x: mouseX - worldX * newZoom,
+        y: mouseY - worldY * newZoom,
+        zoom: newZoom
+      });
+    };
+
+    // Add with passive: false to allow preventDefault
+    canvas.addEventListener('wheel', handleWheelEvent, { passive: false });
+
+    return () => {
+      canvas.removeEventListener('wheel', handleWheelEvent);
+    };
+  }, [camera]); // Include camera in dependencies since we're using it
+
+  // Add this useEffect to capture the username when user prop changes
+  useEffect(() => {
+    if (user && user.username) {
+      localStorage.setItem('wcPredictionUsername', user.username);
+    }
+  }, [user]);
+
   // Mouse handlers
   const getMousePos = (e) => {
     const canvas = canvasRef.current;
@@ -585,20 +637,28 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
+    setDragDistance(0);
     setDragStart({ x: e.clientX - camera.x, y: e.clientY - camera.y });
   };
 
+  // Update handleMouseMove hover detection:
   const handleMouseMove = (e) => {
     if (isDragging) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      const distance = Math.sqrt(
+        Math.pow(newX - camera.x, 2) + Math.pow(newY - camera.y, 2)
+      );
+      setDragDistance(distance);
+      
       setCamera(prev => ({
         ...prev,
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
+        x: newX,
+        y: newY
       }));
     } else {
-      // Hover detection
+      // Hover detection - ONLY FOR TEAMS, NOT MATCH CARDS
       const pos = getMousePos(e);
-      let foundMatch = null;
       let foundTeam = null;
 
       for (const box of matchBoxes) {
@@ -606,54 +666,40 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
             pos.y >= box.y && pos.y <= box.y + box.h) {
           if (box.teamId) {
             foundTeam = { matchId: box.matchId, teamId: box.teamId };
-          } else {
-            foundMatch = box.matchId;
+            break; // Found a team, stop searching
           }
         }
       }
 
-      setHoveredMatch(foundMatch);
+      setHoveredMatch(null); // Never highlight match cards
       setHoveredTeam(foundTeam);
       canvasRef.current.style.cursor = foundTeam && !viewMode ? 'pointer' : isDragging ? 'grabbing' : 'grab';
     }
   };
 
+  // Update the handleMouseUp function to fix team selection:
   const handleMouseUp = (e) => {
-    if (isDragging) {
-      setIsDragging(false);
-    } else {
-      // Click detection
-      const pos = getMousePos(e);
-      
-      for (const box of matchBoxes) {
-        if (box.teamId &&
-            pos.x >= box.x && pos.x <= box.x + box.w &&
-            pos.y >= box.y && pos.y <= box.y + box.h) {
-          handleMatchSelect(box.matchId, box.teamId);
-          return;
-        }
+    const wasDragging = dragDistance > 5; // Threshold for click vs drag
+    
+    setIsDragging(false);
+    setDragDistance(0);
+    
+    if (wasDragging) {
+      return; // Was a drag, not a click
+    }
+    
+    // Click detection - only if not dragging
+    const pos = getMousePos(e);
+    
+    for (const box of matchBoxes) {
+      if (box.teamId &&
+          pos.x >= box.x && pos.x <= box.x + box.w &&
+          pos.y >= box.y && pos.y <= box.y + box.h) {
+        console.log('Clicked team:', box.teamId, 'in match:', box.matchId);
+        handleMatchSelect(box.matchId, box.teamId);
+        break;
       }
     }
-  };
-
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-    const newZoom = Math.max(0.3, Math.min(2, camera.zoom * delta));
-    
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    
-    const worldX = (mouseX - camera.x) / camera.zoom;
-    const worldY = (mouseY - camera.y) / camera.zoom;
-    
-    setCamera({
-      x: mouseX - worldX * newZoom,
-      y: mouseY - worldY * newZoom,
-      zoom: newZoom
-    });
   };
 
   const handleZoomIn = () => {
@@ -706,6 +752,350 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     }
   };
 
+  const exportAsImage = async () => {
+    setExporting(true);
+
+    try {
+      /* =============================
+         Submission date
+      ============================== */
+      let submittedDate = 'Not submitted';
+      const storedUsername = localStorage.getItem('wcPredictionUsername');
+      try {
+        const statusRes = await predictionAPI.getStatus();
+        if (statusRes.data.predictions_submitted_at) {
+          console.log(statusRes);
+          submittedDate = new Date(statusRes.data.predictions_submitted_at)
+            .toISOString()
+            .slice(0, 16)
+            .replace('T', ' ');
+        }
+      } catch {}
+
+      /* =============================
+         Canvas
+      ============================== */
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = 3000;
+      canvas.height = 1650;
+
+      ctx.fillStyle = '#f9fafb';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      /* =============================
+         Header
+      ============================== */
+      ctx.fillStyle = '#1f2937';
+      ctx.font = 'bold 60px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('🏆 World Cup Knockout Predictions', 1500, 80);
+
+      ctx.font = '36px Arial';
+      ctx.fillStyle = '#6b7280';
+      const displayName = storedUsername || 'My Predictions';
+      ctx.fillText(`${t('username')}: ${displayName}`, 1500, 130);
+
+      ctx.font = '28px Arial';
+      ctx.fillText(`Submitted: ${submittedDate}`, 1500, 170);
+
+      ctx.strokeStyle = '#667eea';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(600, 190);
+      ctx.lineTo(2400, 190);
+      ctx.stroke();
+
+      /* =============================
+         Flag drawing
+      ============================== */
+      const drawFlag = async (fifaCode, x, y, size = 16) => {
+        const iso = getFlagCode(fifaCode);
+        if (!iso) return;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = `https://flagcdn.com/w40/${iso}.png`;
+
+        await new Promise((res) => {
+          img.onload = res;
+          img.onerror = res;
+        });
+
+        if (!img.naturalWidth) return;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, x, y, size, size);
+        ctx.restore();
+      };
+
+      /* =============================
+         Match card
+      ============================== */
+      const drawMatch = async (x, y, label, teams, winnerId, isFinal = false) => {
+        const w = 220;
+        const h = teams.length ? 120 : 80;
+
+        ctx.fillStyle = isFinal ? 'rgba(245,158,11,.15)' : '#fff';
+        ctx.strokeStyle = isFinal ? '#f59e0b' : '#e5e7eb';
+        ctx.lineWidth = isFinal ? 3 : 2;
+
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = isFinal ? '#f59e0b' : '#667eea';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x + w / 2, y + 24);
+
+        ctx.textAlign = 'left';
+
+        for (let i = 0; i < teams.length; i++) {
+          const t = teams[i];
+          const ty = y + 50 + i * 32;
+          const win = t.id === winnerId;
+
+          if (win) {
+            ctx.fillStyle = '#d1fae5';
+            ctx.strokeStyle = '#10b981';
+            ctx.beginPath();
+            ctx.roundRect(x + 10, ty - 18, w - 20, 28, 6);
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          await drawFlag(t.fifa_code, x + 16, ty - 12, 16);
+
+          ctx.fillStyle = win ? '#065f46' : '#1f2937';
+          ctx.font = win ? 'bold 15px Arial' : '15px Arial';
+          ctx.fillText(
+            t.name.length > 15 ? t.name.slice(0, 13) + '…' : t.name,
+            x + 38,
+            ty
+          );
+
+          if (win) {
+            ctx.textAlign = 'right';
+            ctx.fillText('✓', x + w - 14, ty);
+            ctx.textAlign = 'left';
+          }
+        }
+
+        return { x, y, w, h };
+      };
+
+      /* =============================
+         Round labels
+      ============================== */
+      const startY = 250;
+      
+      ctx.fillStyle = '#4b5563';
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      
+      ctx.fillText('Round of 32', 280, startY - 20);
+      ctx.fillText('Round of 16', 600, startY - 20);
+      ctx.fillText('Quarter Finals', 920, startY - 20);
+      ctx.fillText('Semi Finals', 1240, startY - 20);
+      ctx.fillText('🏆 FINAL', 1500, startY - 20);
+      ctx.fillText('Semi Finals', 1760, startY - 20);
+      ctx.fillText('Quarter Finals', 2080, startY - 20);
+      ctx.fillText('Round of 16', 2400, startY - 20);
+      ctx.fillText('Round of 32', 2720, startY - 20);
+
+      /* =============================
+         LEFT BRACKET
+      ============================== */
+      const r32Left = [];
+      let y = startY;
+      for (let i = 1; i <= 8; i++) {
+        r32Left.push(
+          await drawMatch(170, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 140;
+      }
+
+      const r16Left = [];
+      y = startY + 70;
+      for (let i = 17; i <= 20; i++) {
+        r16Left.push(
+          await drawMatch(490, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 280;
+      }
+
+      const qfLeft = [];
+      y = startY + 210;
+      for (let i = 25; i <= 26; i++) {
+        qfLeft.push(
+          await drawMatch(810, y, `QF${i - 24}`, getMatchTeams(i), predictions[i])
+        );
+        y += 560;
+      }
+
+      const sf1 = await drawMatch(
+        1130,
+        startY + 490,
+        'SF1',
+        getMatchTeams(29),
+        predictions[29]
+      );
+
+      /* =============================
+         CHAMPION & FINAL
+      ============================== */
+      const finalTeams = getMatchTeams(31);
+      const finalWinner = finalTeams.find(t => t?.id === predictions[31]);
+
+      if (finalWinner) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏆 CHAMPION 🏆', 1500, startY + 290);
+        ctx.font = 'bold 28px Arial';
+        ctx.fillText(finalWinner.name, 1500, startY + 325);
+      }
+
+      const finalBox = await drawMatch(
+        1390,
+        startY + 350,
+        'FINAL',
+        finalTeams,
+        predictions[31],
+        true
+      );
+
+      /* =============================
+         RIGHT BRACKET
+      ============================== */
+      const sf2 = await drawMatch(
+        1650,
+        startY + 490,
+        'SF2',
+        getMatchTeams(30),
+        predictions[30]
+      );
+
+      const qfRight = [];
+      y = startY + 210;
+      for (let i = 27; i <= 28; i++) {
+        qfRight.push(
+          await drawMatch(1970, y, `QF${i - 24}`, getMatchTeams(i), predictions[i])
+        );
+        y += 560;
+      }
+
+      const r16Right = [];
+      y = startY + 70;
+      for (let i = 21; i <= 24; i++) {
+        r16Right.push(
+          await drawMatch(2290, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 280;
+      }
+
+      const r32Right = [];
+      y = startY;
+      for (let i = 9; i <= 16; i++) {
+        r32Right.push(
+          await drawMatch(2610, y, `M${i}`, getMatchTeams(i), predictions[i])
+        );
+        y += 140;
+      }
+
+      /* =============================
+         CONNECTION LINES
+      ============================== */
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 2;
+
+      const drawConnection = (x1, y1, x2, y2) => {
+        const midX = (x1 + x2) / 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(midX, y1);
+        ctx.lineTo(midX, y2);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      };
+
+      // LEFT: R32 -> R16
+      for (let i = 0; i < 4; i++) {
+        const m1 = r32Left[i * 2];
+        const m2 = r32Left[i * 2 + 1];
+        const target = r16Left[i];
+        drawConnection(m1.x + m1.w, m1.y + m1.h / 2, target.x, target.y + target.h / 2);
+        drawConnection(m2.x + m2.w, m2.y + m2.h / 2, target.x, target.y + target.h / 2);
+      }
+
+      // LEFT: R16 -> QF
+      for (let i = 0; i < 2; i++) {
+        const m1 = r16Left[i * 2];
+        const m2 = r16Left[i * 2 + 1];
+        const target = qfLeft[i];
+        drawConnection(m1.x + m1.w, m1.y + m1.h / 2, target.x, target.y + target.h / 2);
+        drawConnection(m2.x + m2.w, m2.y + m2.h / 2, target.x, target.y + target.h / 2);
+      }
+
+      // LEFT: QF -> SF1
+      drawConnection(qfLeft[0].x + qfLeft[0].w, qfLeft[0].y + qfLeft[0].h / 2, sf1.x, sf1.y + sf1.h / 2);
+      drawConnection(qfLeft[1].x + qfLeft[1].w, qfLeft[1].y + qfLeft[1].h / 2, sf1.x, sf1.y + sf1.h / 2);
+
+      // LEFT: SF1 -> FINAL
+      drawConnection(sf1.x + sf1.w, sf1.y + sf1.h / 2, finalBox.x, finalBox.y + finalBox.h / 2);
+
+      // RIGHT: SF2 -> FINAL
+      drawConnection(finalBox.x + finalBox.w, finalBox.y + finalBox.h / 2, sf2.x, sf2.y + sf2.h / 2);
+
+      // RIGHT: QF -> SF2
+      drawConnection(sf2.x + sf2.w, sf2.y + sf2.h / 2, qfRight[0].x, qfRight[0].y + qfRight[0].h / 2);
+      drawConnection(sf2.x + sf2.w, sf2.y + sf2.h / 2, qfRight[1].x, qfRight[1].y + qfRight[1].h / 2);
+
+      // RIGHT: R16 -> QF
+      for (let i = 0; i < 2; i++) {
+        const m1 = r16Right[i * 2];
+        const m2 = r16Right[i * 2 + 1];
+        const target = qfRight[i];
+        drawConnection(target.x + target.w, target.y + target.h / 2, m1.x, m1.y + m1.h / 2);
+        drawConnection(target.x + target.w, target.y + target.h / 2, m2.x, m2.y + m2.h / 2);
+      }
+
+      // RIGHT: R32 -> R16
+      for (let i = 0; i < 4; i++) {
+        const m1 = r32Right[i * 2];
+        const m2 = r32Right[i * 2 + 1];
+        const target = r16Right[i];
+        drawConnection(target.x + target.w, target.y + target.h / 2, m1.x, m1.y + m1.h / 2);
+        drawConnection(target.x + target.w, target.y + target.h / 2, m2.x, m2.y + m2.h / 2);
+      }
+
+      /* =============================
+         EXPORT
+      ============================== */
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `worldcup-bracket-${Date.now()}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert(t('✅ Bracket exported successfully!'));
+      });
+
+    } catch (err) {
+      console.error(err);
+      alert('Export failed');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="knockout-canvas-container">
@@ -741,7 +1131,6 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={() => setIsDragging(false)}
-          onWheel={handleWheel}
         />
         <div className="canvas-controls">
           <button onClick={handleZoomIn} title="Zoom In">+</button>
@@ -750,8 +1139,15 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           <span className="zoom-level">{Math.round(camera.zoom * 100)}%</span>
         </div>
       </div>
+
+      {viewMode && (
+        <div className="view-mode-notice">
+          <p>✓ {t('pred.knockout.locked')}</p>
+        </div>
+      )}
+
       <div className="knockout-footer">
-        {!viewMode && (
+        {!viewMode ? (
           <>
             <Button onClick={onBack} variant="outline">
               ← {t('pred.backToThird')}
@@ -776,11 +1172,20 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
               </div>
             )}
           </>
-        )}
-        {viewMode && (
-          <div className="view-mode-notice">
-            <p>✓ {t('pred.knockout.locked')}</p>
-          </div>
+        ) : (
+          <>
+            <Button onClick={onBack} variant="outline">
+              ← {t('pred.backToThird')}
+            </Button>
+            
+            <Button 
+              onClick={exportAsImage} 
+              loading={exporting}
+              variant="primary"
+            >
+              📸 {t('pred.knockout.export')}
+            </Button>
+          </>
         )}
       </div>
     </div>
