@@ -50,7 +50,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
       <div className="preview-groups-grid">
         {Object.values(groupedRankings).map(group => (
           <div key={group.groupId} className="preview-group-card">
-            <h3>Group {group.groupCode}</h3>
+            <h3>{t('pred.groupStage.group', { group: group.groupCode})}</h3>
             <div className="preview-rankings">
               {group.rankings
                 .sort((a, b) => a.position - b.position)

@@ -312,6 +312,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
             onClick={onComplete}
             disabled={!allGroupsRanked}
             size="large"
+            variant="primary"
           >
             {t('pred.groupStage.continue')} →
           </Button>
@@ -334,7 +335,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
           <Button
             onClick={onComplete}
             size="large"
-            variant="outline"
+            variant="primary"
           >
             {t('pred.groupStage.continue')} →
           </Button>
