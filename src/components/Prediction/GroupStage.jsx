@@ -122,8 +122,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
     <Card className="group-card">
       <div className="group-header">
         <h3>{t('pred.groupStage.group', {group: group.code})}</h3>
-        {saved && !isEditing && <span className="saved-badge">✓ {t('pred.saved')}</span>}
-        {isEditing && <span className="editing-badge">✏️ {t('pred.editing')}</span>}
+        {saved && !isEditing && <span className="group-stage-saved-badge">✓ {t('pred.saved')}</span>}
+        {isEditing && <span className="group-stage-editing-badge">✏️ {t('pred.editing')}</span>}
       </div>
       
       {viewMode ? (
@@ -283,7 +283,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
 
   return (
     <div className="group-stage">
-      <div className="stage-header">
+      <div className="group-stage-header">
         <h2>{t('pred.groupStage.prediction')}</h2>
         <p>
           {viewMode 
@@ -307,7 +307,12 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
       </div>
 
       {!viewMode && (
-        <div className="stage-footer">
+        <div className="group-stage-footer">
+          {!allGroupsRanked && (
+            <p className="group-stage-help-text">
+              {t("pred.groupStage.helpText", { groupsLen: groups.length })}
+            </p>
+          )}
           <Button
             onClick={onComplete}
             disabled={!allGroupsRanked}
@@ -316,22 +321,17 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
           >
             {t('pred.groupStage.continue')} →
           </Button>
-          {!allGroupsRanked && (
-            <p className="help-text">
-              {t("pred.groupStage.helpText", { groupsLen: groups.length })}
-            </p>
-          )}
         </div>
       )}
 
       {viewMode && (
-        <div className="view-mode-notice">
+        <div className="group-stage-view-mode-notice">
           <p>✓ {t('pred.knockout.locked')}</p>
         </div>
       )}
 
       {viewMode && (
-        <div className="stage-footer view-mode-footer">
+        <div className="group-stage-footer view-mode-footer">
           <Button
             onClick={onComplete}
             size="large"
@@ -343,4 +343,5 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
       )}
     </div>
   );
+
 };

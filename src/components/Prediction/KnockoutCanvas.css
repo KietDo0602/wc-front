@@ -145,10 +145,10 @@
 
 .completion-hint {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--background);
+  background: var(--text);
   font-weight: 600;
   padding: 0.75rem 1.5rem;
-  background: #fef3c7;
   border-radius: 8px;
 }
 

@@ -340,7 +340,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
             ctx.strokeStyle = '#10b981';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.roundRect(x + 10, ty - 20, cardW - 20, 36, 6); // Increased height from 32 to 36
+            ctx.roundRect(x + 10, ty - 20, cardW - 20, 40, 6);
             ctx.fill();
             ctx.stroke();
           } else if (isHovered && !viewMode) {
@@ -348,7 +348,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
             ctx.strokeStyle = '#0284c7';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.roundRect(x + 10, ty - 20, cardW - 20, 36, 6); // Increased height from 32 to 36
+            ctx.roundRect(x + 10, ty - 20, cardW - 20, 40, 6);
             ctx.fill();
             ctx.stroke();
           }
@@ -397,7 +397,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
             x: x + 10,
             y: ty - 20,
             w: cardW - 20,
-            h: 36 // Updated height
+            h: 40 // Updated height
           });
         });
       }

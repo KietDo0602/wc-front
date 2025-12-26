@@ -24,8 +24,6 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
       const response = await predictionAPI.getMyPredictions();
       const groupRankings = response.data.groupRankings;
 
-      console.log('Group Rankings from DB:', groupRankings);
-
       // Extract third place teams (position === 3)
       const thirdPlaceList = groupRankings
         .filter(ranking => ranking.position === 3)
@@ -38,8 +36,6 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
         }))
         .sort((a, b) => a.groupId - b.groupId);
 
-      console.log('Third Place Teams:', thirdPlaceList);
-
       if (thirdPlaceList.length !== 12) {
         alert(t('error.completeGroupPred', {number: thirdPlaceList.length}));
       }
@@ -49,7 +45,6 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
       // Load saved selections AFTER we have the teams
       if (response.data.thirdPlaceSelections && response.data.thirdPlaceSelections.length > 0) {
         const savedIds = response.data.thirdPlaceSelections.map(t => t.id);
-        console.log('Saved third place selections:', savedIds);
         setSelectedTeams(savedIds);
         
         // Only mark as saved if we have exactly 8 selections
@@ -68,22 +63,16 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
   const toggleTeam = (teamId) => {
     if (saved || viewMode) return;
 
-    console.log('Toggle team clicked:', teamId, 'saved:', saved);
-    
     if (saved) {
-      console.log('Cannot toggle - already saved');
       return;
     }
 
     setSelectedTeams(prev => {
       if (prev.includes(teamId)) {
-        console.log('Removing team:', teamId);
         return prev.filter(id => id !== teamId);
       } else if (prev.length < 8) {
-        console.log('Adding team:', teamId);
         return [...prev, teamId];
       } else {
-        console.log('Cannot add - already have 8 teams');
         return prev;
       }
     });
@@ -119,7 +108,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
   if (loading) {
     return (
       <div className="third-place-stage">
-        <div className="stage-header">
+        <div className="third-place-stage-header">
           <h2>{t("pred.thirdPlace.header")}</h2>
           <p>{t("pred.thirdPlace.loading")}</p>
         </div>
@@ -133,7 +122,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
   if (thirdPlaceTeams.length === 0) {
     return (
       <div className="third-place-stage">
-        <div className="stage-header">
+        <div className="third-place-stage-header">
           <h2>{t("pred.thirdPlace.header")}</h2>
           <p className="error-message">
             {t("pred.thirdPlace.missingGroups")}
@@ -150,12 +139,12 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
 
   return (
     <div className="third-place-stage">
-      <div className="stage-header">
+      <div className="third-place-stage-header">
         <h2>{t('pred.thirdPlace.header')}</h2>
         {!viewMode && (<p>{t('pred.thirdPlace.text1')}</p>)}
         {viewMode && (<p>{t('pred.thirdPlace.text2')}</p>)}
         {!viewMode && saved && (
-          <p className="saved-notice">✓ {t('pred.thirdPlace.saved')}</p>
+          <p className="third-place-saved-notice">✓ {t('pred.thirdPlace.saved')}</p>
         )}
       </div>
 
@@ -213,12 +202,23 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
       </div>
 
       {viewMode && (
-        <div className="view-mode-notice">
+        <div className="third-place-view-mode-notice">
           <p>✓ {t('pred.knockout.locked')}</p>
         </div>
       )}
 
-      <div className="stage-footer">
+      {!canContinue && !viewMode && (
+        <div className="third-place-help-text-row">
+          <p className="third-place-help-text">
+            {selectedTeams.length !== 8 
+              ? t('pred.thirdPlace.selectMore', {teams: 8 - selectedTeams.length})
+              : t('pred.thirdPlace.saveContinue')
+            }
+          </p>
+        </div>
+      )}
+
+      <div className="third-place-stage-footer">
         <Button onClick={onBack} variant="outline">
           ← {t('pred.backToGroups')}
         </Button>
@@ -231,14 +231,6 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
         </Button>
       </div>
 
-      {!canContinue && (
-        <p className="help-text">
-          {selectedTeams.length !== 8 
-            ? t('pred.thirdPlace.selectMore', {teams: 8 - selectedTeams.length})
-            : t('pred.thirdPlace.saveContinue')
-          }
-        </p>
-      )}
     </div>
   );
 };
