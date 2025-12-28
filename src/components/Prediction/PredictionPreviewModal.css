@@ -94,7 +94,7 @@
 }
 
 .modal-tabs .tab.active {
-  color: var(--text);
+  color: white;
   border-bottom-color: var(--primary);
 }
 

@@ -57,7 +57,7 @@ export const Login = () => {
               id="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your@email.com"
+              placeholder={t('placeholder.email')}
               required
               autoFocus
             />
@@ -70,7 +70,7 @@ export const Login = () => {
               id="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="Enter your password"
+              placeholder={t('placeholder.enterPassword')}
               required
             />
           </div>
@@ -96,7 +96,7 @@ export const Login = () => {
           className="google-btn"
         >
           <img src="https://www.google.com/favicon.ico" alt="Google" className="google-icon" />
-          {t("Continue with Google")}
+          {t("login.google")}
         </Button>
       </Card>
     </div>

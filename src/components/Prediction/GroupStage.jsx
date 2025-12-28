@@ -42,7 +42,7 @@ const SortableTeam = ({ team, position }) => {
       <span className="team-flag">
         <FlagIcon fifaCode={team.fifa_code} size="normal" />
       </span>
-      <span className="team-name">{team.name}</span>
+      <span className="team-name">{t(team.fifa_code)}</span>
       <span className="drag-handle">⋮⋮</span>
     </div>
   );
@@ -134,7 +134,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
               <span className="team-flag">
                 <FlagIcon fifaCode={team.fifa_code} size="normal" />
               </span>
-              <span className="team-name">{team.name}</span>
+              <span className="team-name">{t(team.fifa_code)}</span>
             </div>
           ))}
         </div>
@@ -163,7 +163,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
               <span className="team-flag">
                 <FlagIcon fifaCode={team.fifa_code} size="normal" />
               </span>
-              <span className="team-name">{team.name}</span>
+              <span className="team-name">{t(team.fifa_code)}</span>
             </div>
           ))}
         </div>
@@ -254,7 +254,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
           }
           groupedTeams[team.group_id].teams.push({
             id: team.id,
-            name: team.name,
+            name: t(team.fifa_code),
             fifa_code: team.fifa_code
           });
         }

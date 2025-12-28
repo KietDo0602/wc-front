@@ -85,7 +85,7 @@ export const getFlagCode = (fifaCode) => {
 
     "BOL": 'bo', 
     "SUR": 'sr', 
-    "Congo DR": 'cd',
+    "COD": 'cd',
     "NCL": 'nc',
   };
   
@@ -293,4 +293,93 @@ export const storage = {
       console.error('Error clearing localStorage:', error);
     }
   }
+};
+
+
+export const countryNames = {
+  // CONCACAF
+  MEX: "Mexico",
+  CAN: "Canada",
+  JAM: "Jamaica",
+  HON: "Honduras",
+  USA: "United States",
+  CRC: "Costa Rica",
+  PAN: "Panama",
+  SLV: "El Salvador",
+
+  // CONMEBOL
+  BRA: "Brazil",
+  ARG: "Argentina",
+  URU: "Uruguay",
+  COL: "Colombia",
+  ECU: "Ecuador",
+  PER: "Peru",
+  CHI: "Chile",
+  PAR: "Paraguay",
+
+  // UEFA
+  ENG: "England",
+  FRA: "France",
+  ESP: "Spain",
+  GER: "Germany",
+  ITA: "Italy",
+  POR: "Portugal",
+  NED: "Netherlands",
+  BEL: "Belgium",
+  CRO: "Croatia",
+  DEN: "Denmark",
+  SUI: "Switzerland",
+  SWE: "Sweden",
+  POL: "Poland",
+  UKR: "Ukraine",
+  AUT: "Austria",
+  CZE: "Czech Republic",
+  SCO: "Scotland",
+  NOR: "Norway",
+  MKD: "North Macedonia",
+  IRL: "Ireland",
+  BIH: "Bosnia and Herzegovina",
+  NIR: "Northern Ireland",
+  WAL: "Wales",
+  KVX: "Kosovo",
+  ROU: "Romania",
+  SVK: "Slovakia",
+  TUR: "Turkey",
+  ALB: "Albania",
+
+  // AFC
+  JPN: "Japan",
+  KOR: "South Korea",
+  AUS: "Australia",
+  KSA: "Saudi Arabia",
+  IRN: "Iran",
+  IRQ: "Iraq",
+  QAT: "Qatar",
+  UAE: "United Arab Emirates",
+  JOR: "Jordan",
+  UZB: "Uzbekistan",
+
+  // Extra (CONCACAF + OFC)
+  HAI: "Haiti",
+  CUW: "Curaçao",
+  NZL: "New Zealand",
+  CPV: "Cape Verde",
+
+  // CAF
+  MAR: "Morocco",
+  SEN: "Senegal",
+  NGA: "Nigeria",
+  EGY: "Egypt",
+  CMR: "Cameroon",
+  GHA: "Ghana",
+  TUN: "Tunisia",
+  DZA: "Algeria",
+  RSA: "South Africa",
+  CIV: "Ivory Coast",
+
+  // Others
+  BOL: "Bolivia",
+  SUR: "Suriname",
+  COD: "Democratic Republic of the Congo",
+  NCL: "New Caledonia"
 };

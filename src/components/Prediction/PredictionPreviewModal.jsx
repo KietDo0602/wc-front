@@ -86,7 +86,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
               <div className="team-flag-large">
                 <FlagIcon fifaCode={team.fifa_code} size="large" />
               </div>
-              <div className="team-name-large">{team.name}</div>
+              <div className="team-name-large">{t(team.fifa_code)}</div>
             </div>
           ))}
         </div>
@@ -188,7 +188,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
             </div>
           ) : error ? (
             <div className="error-state">
-              <p>⚠️ {error}</p>
+              <p>⚠️ {t(error)}</p>
               <p className="error-hint">
                 {error.includes('not available') 
                   ? t('pred.prediction.notSubmitted')

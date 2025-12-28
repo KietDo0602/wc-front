@@ -192,7 +192,7 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
                 <div className="team-flag-large">
                   <FlagIcon fifaCode={team.fifa_code} size="large" />
                 </div>
-                <h3 className="team-name-large">{team.name}</h3>
+                <h3 className="team-name-large">{t(team.fifa_code)}</h3>
               </div>
 
               <div className="team-position-label">{t('pred.thirdPlace.teamPositionLabel', {group: team.groupCode})}</div>

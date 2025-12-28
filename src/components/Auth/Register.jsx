@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../UI/Button';
 import { Card } from '../UI/Card';
+import { VerificationStep } from './VerificationStep';
+import api from '../../api/api';
 import './Auth.css';
 
 export const Register = () => {
+  const [step, setStep] = useState(1); // 1: email/password, 2: verification
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -14,43 +17,30 @@ export const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { login } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    // Check for error in URL params
-    const params = new URLSearchParams(location.search);
-    const error = params.get('error');
-    if (error === 'auth_failed' || error === 'google_auth_failed') {
-      alert('Authentication failed. Please try again.');
-    }
-  }, [location]);
 
   const validateForm = () => {
     const { email, password, confirmPassword } = formData;
 
-    // Email checks
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return 'Invalid email format';
     }
 
-    // Password checks
     if (password.length < 6) {
       return 'Password must be at least 6 characters';
     }
 
-    // Confirm password
     if (password !== confirmPassword) {
       return 'Passwords do not match';
     }
 
-    return null; // no errors
+    return null;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSendCode = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -63,22 +53,59 @@ export const Register = () => {
     setLoading(true);
 
     try {
-      await register({
+      await api.post('/users/register/send-code', {
         email: formData.email.trim().toLowerCase(),
         password: formData.password
       });
-      navigate('/predictions');
+      
+      setStep(2);
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed');
+      const errorData = err.response?.data;
+      
+      if (errorData?.authMethod === 'google') {
+        setError(errorData.error || 'An account with this email already exists. Please sign in with Google instead.');
+      } else {
+        setError(errorData?.error || 'Failed to send verification code');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth
-    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users/auth/google`;
+  const handleVerify = async (code) => {
+    const response = await api.post('/users/register/verify', {
+      email: formData.email.trim().toLowerCase(),
+      code
+    });
+
+    const { token, user } = response.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('wcPredictionUsername', user.username);
+    
+    login(token, user);
+    navigate('/predictions');
   };
+
+  const handleResend = async () => {
+    await api.post('/users/register/resend-code', {
+      email: formData.email.trim().toLowerCase()
+    });
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/users/auth/google`;
+  };
+
+  if (step === 2) {
+    return (
+      <VerificationStep
+        email={formData.email}
+        onVerify={handleVerify}
+        onBack={() => setStep(1)}
+        onResend={handleResend}
+      />
+    );
+  }
 
   return (
     <div className="auth-container">
@@ -88,9 +115,11 @@ export const Register = () => {
           <p>{t("register.subtitle")}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">{error}</div>
+        )}
 
+        <form onSubmit={handleSendCode} className="auth-form">
           <div className="form-group">
             <label htmlFor="email">{t("email")}</label>
             <input
@@ -98,7 +127,7 @@ export const Register = () => {
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="your@email.com"
+              placeholder={t('placeholder.email')}
               required
               autoFocus
             />
@@ -111,7 +140,7 @@ export const Register = () => {
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="Enter password (min 6 characters)"
+              placeholder={t('placeholder.enterPasswordMin')}
               required
             />
           </div>
@@ -123,18 +152,13 @@ export const Register = () => {
               type="password"
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-              placeholder="Confirm your password"
+              placeholder={t('placeholder.confirmPassword')}
               required
             />
           </div>
 
-          <div className="username-notice">
-            <span className="info-icon">ℹ️</span>
-            <span>{t("register.usernameAutoGenerated")}</span>
-          </div>
-
           <Button type="submit" loading={loading} size="large" fullwidth="true">
-            {t("register.createAccount")}
+            {t('register.createAccount')}
           </Button>
 
           <p className="auth-link">
@@ -154,7 +178,7 @@ export const Register = () => {
           className="google-btn"
         >
           <img src="https://www.google.com/favicon.ico" alt="Google" className="google-icon" />
-          {t("Continue with Google")}
+          {t("login.google")}
         </Button>
       </Card>
     </div>

@@ -377,12 +377,12 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           ctx.fillStyle = textColor;
           ctx.font = isWinner ? 'bold 15px Arial' : (isHovered && !viewMode ? 'bold 15px Arial' : '15px Arial');
           ctx.textAlign = 'left';
-          const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : team.name;
+          const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : t(team.fifa_code);
           ctx.fillText(name, x + 40, ty + 4); // Adjusted for proper vertical centering
 
           // Checkmark - FIXED VERTICAL CENTERING
           if (isWinner) {
-            ctx.fillStyle = '#10b981';
+            ctx.fillStyle = '#10b981'; // Checkmark color
             ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'middle'; // Set baseline to middle for proper centering
@@ -486,12 +486,12 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.fillStyle = '#f59e0b';
       ctx.font = 'bold 24px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('🏆 CHAMPION 🏆', finalX + cardW / 2, finalY - 45);
+      ctx.fillText(t('pred.knockout.champion'), finalX + cardW / 2, finalY - 45);
       ctx.font = 'bold 20px Arial';
       ctx.fillText(finalWinner.name, finalX + cardW / 2, finalY - 18);
     }
 
-    drawMatch(finalX, finalY, 31, 'FINAL', finalTeams, predictions[31], true);
+    drawMatch(finalX, finalY, 31, t('pred.final'), finalTeams, predictions[31], true);
     const finalPos = { x: finalX + cardW, y: finalY + cardH / 2 };
 
     // Connection SF1 -> Final
@@ -790,7 +790,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.fillStyle = '#1f2937';
       ctx.font = 'bold 60px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('🏆 World Cup Knockout Predictions', 1500, 80);
+      ctx.fillText('🏆 World Cup Brackets', 1500, 80);
 
       ctx.font = '36px Arial';
       ctx.fillStyle = '#6b7280';
@@ -899,15 +899,15 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.font = 'bold 20px Arial';
       ctx.textAlign = 'center';
       
-      ctx.fillText('Round of 32', 280, startY - 20);
-      ctx.fillText('Round of 16', 600, startY - 20);
-      ctx.fillText('Quarter Finals', 920, startY - 20);
-      ctx.fillText('Semi Finals', 1240, startY - 20);
-      ctx.fillText('🏆 FINAL', 1500, startY - 20);
-      ctx.fillText('Semi Finals', 1760, startY - 20);
-      ctx.fillText('Quarter Finals', 2080, startY - 20);
-      ctx.fillText('Round of 16', 2400, startY - 20);
-      ctx.fillText('Round of 32', 2720, startY - 20);
+      ctx.fillText(t('pred.roundof32'), 280, startY - 20);
+      ctx.fillText(t('pred.roundof16'), 600, startY - 20);
+      ctx.fillText(t('pred.quarterfinals'), 920, startY - 20);
+      ctx.fillText(t('pred.semifinals'), 1240, startY - 20);
+      ctx.fillText(t('pred.final'), 1500, startY - 20);
+      ctx.fillText(t('pred.semifinals'), 1760, startY - 20);
+      ctx.fillText(t('pred.quarterfinals'), 2080, startY - 20);
+      ctx.fillText(t('pred.roundof16'), 2400, startY - 20);
+      ctx.fillText(t('pred.roundof32'), 2720, startY - 20);
 
       /* =============================
          LEFT BRACKET
@@ -957,7 +957,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         ctx.fillStyle = '#f59e0b';
         ctx.font = 'bold 32px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('🏆 CHAMPION 🏆', 1500, startY + 290);
+        ctx.fillText(t('pred.knockout.champion'), 1500, startY + 290);
         ctx.font = 'bold 28px Arial';
         ctx.fillText(finalWinner.name, 1500, startY + 325);
       }
@@ -1182,6 +1182,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
               onClick={exportAsImage} 
               loading={exporting}
               variant="primary"
+              size="large"
             >
               📸 {t('pred.knockout.export')}
             </Button>
