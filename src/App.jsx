@@ -11,6 +11,8 @@ import { PredictionPage } from './pages/PredictionPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { AuthCallbackPage } from './pages/AuthCallbackPage';
 import { CompleteSignupPage } from './pages/CompleteSignupPage';
+import { AdminDashboard } from './pages/AdminDashboard';
+
 
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
               <Route path="/auth/complete-signup" element={<CompleteSignupPage />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route
                 path="/predictions"
                 element={

@@ -13,11 +13,26 @@ export const Header = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
-  
+
   const langDropdownRef = useRef(null);
   const themeDropdownRef = useRef(null);
+
+  // Load saved language + theme on first render
+  useEffect(() => {
+    const savedLang = localStorage.getItem("appLanguage");
+    const savedTheme = localStorage.getItem("appTheme");
+
+    if (savedLang && savedLang !== i18n.language) {
+      i18n.changeLanguage(savedLang);
+    }
+
+    if (savedTheme && savedTheme !== currentTheme) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -31,9 +46,7 @@ export const Header = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Close dropdowns on route change
@@ -51,11 +64,13 @@ export const Header = () => {
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
+    localStorage.setItem("appLanguage", lng);
     setShowLangMenu(false);
   };
 
   const changeTheme = (theme) => {
     setCurrentTheme(theme);
+    localStorage.setItem("appTheme", theme);
     setShowThemeMenu(false);
   };
 
@@ -77,6 +92,8 @@ export const Header = () => {
   ];
 
   const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  console.log(user);
 
   return (
     <header className="app-header">
@@ -119,6 +136,7 @@ export const Header = () => {
               <span className="dropdown-label">{currentLang.code.toUpperCase()}</span>
               <span className="dropdown-arrow">▼</span>
             </button>
+
             {showLangMenu && (
               <div className="dropdown-menu">
                 {languages.map((lang) => (
@@ -151,6 +169,7 @@ export const Header = () => {
               <span className="dropdown-label">{t(`theme.${currentTheme}`)}</span>
               <span className="dropdown-arrow">▼</span>
             </button>
+
             {showThemeMenu && (
               <div className="dropdown-menu">
                 {Object.keys(themes).map((themeKey) => (
@@ -172,6 +191,12 @@ export const Header = () => {
               </div>
             )}
           </div>
+
+          {user && user.role === 'admin' && (
+            <Link to="/admin" className="nav-link admin-link">
+              🛡️ Admin
+            </Link>
+          )}
 
           {user ? (
             <div className="user-menu">

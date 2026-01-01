@@ -38,6 +38,7 @@ export const predictionAPI = {
   getTeams: () => api.get('/predictions/teams'),
   getTeamsByGroup: (groupId) => api.get(`/predictions/teams/group/${groupId}`),
   getMatches: (round) => api.get('/predictions/matches', { params: { round } }),
+  getKnockoutMatches: () => api.get('/predictions/matches'),
   
   submitGroupRankings: (groupId, rankings) => 
     api.post(`/predictions/groups/${groupId}/rankings`, { groupId, rankings }),
