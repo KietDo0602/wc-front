@@ -56,6 +56,11 @@ export const predictionAPI = {
     api.post('/predictions/bracket', { predictions }),
   
   submitComplete: () => api.post('/predictions/submit'),
+
+  // Clear predictions
+  clearThirdPlace: () => api.delete('/predictions/clear/third-place'),
+  clearKnockout: () => api.delete('/predictions/clear/knockout'),
+  clearDownstream: (stage) => api.post('/predictions/clear/downstream', { stage }),
 };
 
 // Leaderboard APIs

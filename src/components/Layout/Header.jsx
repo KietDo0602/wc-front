@@ -93,8 +93,6 @@ export const Header = () => {
 
   const currentLang = languages.find(lang => lang.code === i18n.language) || languages[0];
 
-  console.log(user);
-
   return (
     <header className="app-header">
       <div className="header-container">

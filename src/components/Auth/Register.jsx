@@ -15,9 +15,10 @@ export const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { setAuthData } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -53,7 +54,7 @@ export const Register = () => {
     setLoading(true);
 
     try {
-      await api.post('/users/register/send-code', {
+      await api.post('/users/register', {
         email: formData.email.trim().toLowerCase(),
         password: formData.password
       });
@@ -73,21 +74,30 @@ export const Register = () => {
   };
 
   const handleVerify = async (code) => {
-    const response = await api.post('/users/register/verify', {
-      email: formData.email.trim().toLowerCase(),
-      code
-    });
+    if (isVerifying) return;
 
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('wcPredictionUsername', user.username);
-    
-    login(token, user);
-    navigate('/predictions');
+    setIsVerifying(true);
+
+    try {
+      const response = await api.post('/users/verify-email', {
+        email: formData.email.trim().toLowerCase(),
+        code
+      });
+
+      const { token, user } = response.data;
+      
+      setAuthData({ token, user });
+      navigate('/predictions');
+    } catch (error) {
+      console.error('Verification failed:', error);
+      setError(error.response?.data?.error || 'Verification failed');
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const handleResend = async () => {
-    await api.post('/users/register/resend-code', {
+    await api.post('/users/resend-code', {
       email: formData.email.trim().toLowerCase()
     });
   };

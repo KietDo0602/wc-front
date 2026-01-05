@@ -49,11 +49,11 @@ export const AdminDashboard = () => {
   }
 
   const tabs = [
-    { id: 'users', label: '👥 Users', icon: '👥' },
-    { id: 'teams', label: '⚽ Teams', icon: '⚽' },
-    { id: 'results', label: '🏆 Actual Results', icon: '🏆' },
-    { id: 'settings', label: '⚙️ Settings', icon: '⚙️' },
-    { id: 'logs', label: '📋 Audit Logs', icon: '📋' }
+    { id: 'users', label: 'Users', icon: '👥' },
+    { id: 'teams', label: 'Teams', icon: '⚽' },
+    { id: 'results', label: 'Actual Results', icon: '🏆' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'logs', label: 'Audit Logs', icon: '📋' }
   ];
 
   return (

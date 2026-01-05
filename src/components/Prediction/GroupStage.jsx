@@ -19,6 +19,8 @@ const SortableTeam = ({ team, position }) => {
     isDragging,
   } = useSortable({ id: team.id });
 
+  const { t } = useTranslation();
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -48,7 +50,7 @@ const SortableTeam = ({ team, position }) => {
   );
 };
 
-const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) => {
+const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, savedPredictions }) => {
   const [rankedTeams, setRankedTeams] = useState(savedRanking || teams);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(!!savedRanking);
@@ -90,10 +92,31 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode }) =>
     
     setSaving(true);
     try {
+      // Check if user has downstream predictions
+      const hasDownstream = savedPredictions?.thirdPlaceSelections?.length > 0 || 
+                            savedPredictions?.knockoutPredictions?.length > 0;
+      
+      // Warn user if they have downstream predictions
+      if (hasDownstream && saved) {
+        const confirmed = window.confirm(
+          t('confirm.clearDownstream') || 
+          'Changing group rankings will clear your third place and knockout predictions. Continue?'
+        );
+        
+        if (!confirmed) {
+          setSaving(false);
+          return;
+        }
+      }
+      
       await predictionAPI.submitGroupRankings(
         group.id,
         rankedTeams.map(t => t.id)
       );
+
+      // Clear downstream predictions (third place + knockout)
+      await predictionAPI.clearDownstream('groups');
+      
       onRankingChange(group.id, rankedTeams);
       setSaved(true);
       setIsEditing(false);
@@ -301,6 +324,7 @@ export const GroupStage = ({ onComplete, savedPredictions, viewMode }) => {
             teams={group.teams}
             onRankingChange={handleRankingChange}
             savedRanking={rankings[group.id]}
+            savedPredictions={savedPredictions}
             viewMode={viewMode}
           />
         ))}

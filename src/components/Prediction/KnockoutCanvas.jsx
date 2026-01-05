@@ -621,7 +621,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   // Add this useEffect to capture the username when user prop changes
   useEffect(() => {
     if (user && user.username) {
-      localStorage.setItem('wcPredictionUsername', user.username);
+      localStorage.setItem('username', user.username);
     }
   }, [user]);
 
@@ -760,7 +760,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
          Submission date
       ============================== */
       let submittedDate = 'Not submitted';
-      const storedUsername = localStorage.getItem('wcPredictionUsername');
+      const storedUsername = localStorage.getItem('username');
       try {
         const statusRes = await predictionAPI.getStatus();
         if (statusRes.data.predictions_submitted_at) {

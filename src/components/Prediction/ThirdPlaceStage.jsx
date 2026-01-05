@@ -86,7 +86,26 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
 
     setSaving(true);
     try {
+      // Check if user has knockout predictions
+      const hasKnockout = savedPredictions?.knockoutPredictions?.length > 0;
+      
+      // Warn user if they have knockout predictions and are editing
+      if (hasKnockout && saved) {
+        const confirmed = window.confirm(
+          t('confirm.clearKnockout') || 
+          'Changing third place selections will clear your knockout predictions. Continue?'
+        );
+        
+        if (!confirmed) {
+          setSaving(false);
+          return;
+        }
+      }
+      
       await predictionAPI.submitThirdPlace(selectedTeams);
+      
+      await predictionAPI.clearDownstream('third_place');
+      
       setSaved(true);
       alert(t('alert.savedSuccess'));
     } catch (error) {
@@ -97,11 +116,30 @@ export const ThirdPlaceStage = ({ onComplete, onBack, savedPredictions, viewMode
     }
   };
 
-  const handleUnsave = () => {
-    if (window.confirm(t('confirm.unSaved'))) {
+  const handleUnsave = async () => {
+    const hasKnockout = savedPredictions?.knockoutPredictions?.length > 0;
+    
+    let confirmMessage = t('confirm.unSaved') || 'Are you sure you want to edit your selections?';
+    
+    if (hasKnockout) {
+      confirmMessage = t('confirm.unSavedWithKnockout') || 
+        'Editing third place selections will clear your knockout predictions. Continue?';
+    }
+    
+    if (window.confirm(confirmMessage)) {
+      // Clear knockout predictions when starting to edit
+      if (hasKnockout) {
+        try {
+          await predictionAPI.clearDownstream('third_place');
+          console.log('✅ Cleared knockout predictions before editing third place');
+        } catch (error) {
+          console.error('Failed to clear knockout predictions:', error);
+        }
+      }
       setSaved(false);
     }
   };
+
 
   const canContinue = selectedTeams.length === 8 && saved;
 
