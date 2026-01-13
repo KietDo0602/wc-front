@@ -13,7 +13,7 @@ export const ActualResults = () => {
   const [activeTab, setActiveTab] = useState('groups');
   const [groups, setGroups] = useState([]);
   const [teams, setTeams] = useState([]);
-  const [knockoutMatches, setKnockoutMatches] = useState([]);
+  const [knockoutBracket, setKnockoutBracket] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,13 +23,12 @@ export const ActualResults = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      // Only load teams for now
+      // Load teams
       const teamsRes = await predictionAPI.getTeams();
-
-      // Group teams by group_id
       const teamsData = teamsRes.data.teams;
-      const groupedTeams = {};
       
+      // Group teams by group_id
+      const groupedTeams = {};
       teamsData.forEach(team => {
         if (team.group_id) {
           if (!groupedTeams[team.group_id]) {
@@ -46,21 +45,64 @@ export const ActualResults = () => {
       setGroups(Object.values(groupedTeams).sort((a, b) => a.id - b.id));
       setTeams(teamsData);
       
-      // Try to load matches, but don't fail if they don't work
+      // Load generated knockout bracket
       try {
-        const matchesRes = await predictionAPI.getKnockoutMatches();
-        const matches = matchesRes.data?.matches || matchesRes.data || [];
-        setKnockoutMatches(matches);
-      } catch (matchError) {
-        console.warn('Could not load matches:', matchError);
-        // Set empty array so knockout tab can still be accessed
-        setKnockoutMatches([]);
+        const bracketRes = await adminAPI.getGeneratedBracket();
+        setKnockoutBracket(bracketRes.data?.bracket || {});
+        console.log('Loaded bracket:', Object.keys(bracketRes.data?.bracket || {}).length, 'matches');
+      } catch (bracketError) {
+        console.warn('Could not load bracket:', bracketError);
+        setKnockoutBracket({});
       }
     } catch (error) {
       console.error('Failed to load data:', error);
       alert('Failed to load teams data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleClear = async (stage) => {
+    const stageNames = {
+      'groups': 'Group Stage',
+      'third_place': 'Third Place',
+      'knockout': 'Knockout Stage',
+      'all': 'ALL'
+    };
+
+    const confirmMessage = stage === 'all' 
+      ? '⚠️ WARNING: This will delete ALL official results (Groups, Third Place, and Knockout). This action cannot be undone!\n\nAre you absolutely sure?'
+      : `Are you sure you want to clear all ${stageNames[stage]} results? This action cannot be undone.`;
+
+    if (!window.confirm(confirmMessage)) return;
+
+    // Extra confirmation for clearing all
+    if (stage === 'all') {
+      if (!window.confirm('Final confirmation: Delete EVERYTHING?')) return;
+    }
+
+    try {
+      await adminAPI.clearOfficialResults(stage);
+      alert(`${stageNames[stage]} results cleared successfully!`);
+      
+      // Reload data
+      await loadData();
+    } catch (error) {
+      console.error('Failed to clear results:', error);
+      alert(error.response?.data?.error || 'Failed to clear results');
+    }
+  };
+
+  const handleGenerateBracket = async () => {
+    try {
+      const response = await adminAPI.generateKnockoutBracket();
+      alert('Knockout bracket generated successfully!');
+      
+      // Reload data to show the generated bracket
+      await loadData();
+    } catch (error) {
+      console.error('Failed to generate bracket:', error);
+      alert(error.response?.data?.error || 'Failed to generate bracket');
     }
   };
 
@@ -78,6 +120,49 @@ export const ActualResults = () => {
       <div className="management-header">
         <h2>🏆 Actual Results Management</h2>
         <p className="subtitle">Enter real match results for scoring predictions</p>
+
+        <div className="bracket-generation">
+          <Button 
+            onClick={handleGenerateBracket}
+            variant="primary"
+          >
+            🎯 Generate Knockout Bracket
+          </Button>
+        </div>
+        
+        <div className="danger-zone">
+          <h3>⚠️ Danger Zone</h3>
+          <div className="clear-buttons">
+            <Button 
+              variant="danger"
+              size="small"
+              onClick={() => handleClear('groups')}
+            >
+              Clear Group Results
+            </Button>
+            <Button 
+              variant="danger"
+              size="small"
+              onClick={() => handleClear('third_place')}
+            >
+              Clear Third Place
+            </Button>
+            <Button 
+              variant="danger"
+              size="small"
+              onClick={() => handleClear('knockout')}
+            >
+              Clear Knockout
+            </Button>
+            <Button 
+              variant="danger"
+              size="small"
+              onClick={() => handleClear('all')}
+            >
+              🔥 Clear EVERYTHING
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="results-tabs">
@@ -104,7 +189,7 @@ export const ActualResults = () => {
       <div className="results-content">
         {activeTab === 'groups' && <GroupStageResults groups={groups} />}
         {activeTab === 'third-place' && <ThirdPlaceResults teams={teams} />}
-        {activeTab === 'knockout' && <KnockoutResults matches={knockoutMatches} teams={teams} />}
+        {activeTab === 'knockout' && <KnockoutResults bracket={knockoutBracket} teams={teams} onUpdate={loadData} />}
       </div>
     </div>
   );
@@ -310,7 +395,62 @@ const GroupStageResults = ({ groups }) => {
 // Third Place Results Sub-component
 const ThirdPlaceResults = ({ teams }) => {
   const [selectedTeams, setSelectedTeams] = useState([]);
-  const thirdPlaceTeams = teams.filter(t => t.group_id); // Teams in groups
+  const [thirdPlaceTeams, setThirdPlaceTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadThirdPlaceTeams();
+  }, []);
+
+  const loadThirdPlaceTeams = async () => {
+    setLoading(true);
+    try {
+      // Get official group rankings
+      const response = await adminAPI.getAllActualGroupRankings();
+      
+      if (!response?.data?.rankings || response.data.rankings.length === 0) {
+        alert('Please complete all group stage rankings first');
+        setThirdPlaceTeams([]);
+        setLoading(false);
+        return;
+      }
+
+      // Extract teams in 3rd position
+      const thirdPlaceList = response.data.rankings
+        .filter(ranking => ranking.position === 3)
+        .map(ranking => {
+          const team = teams.find(t => t.id === ranking.team_id);
+          return {
+            ...team,
+            groupId: ranking.group_id,
+            groupCode: ranking.group_code
+          };
+        })
+        .sort((a, b) => a.groupId - b.groupId);
+
+      if (thirdPlaceList.length !== 12) {
+        alert(`Expected 12 third-place teams, but found ${thirdPlaceList.length}. Please complete all group rankings.`);
+      }
+
+      setThirdPlaceTeams(thirdPlaceList);
+
+      // Load existing official third place selections if any
+      try {
+        const thirdResponse = await adminAPI.getActualThirdPlace();
+        if (thirdResponse?.data?.teams) {
+          setSelectedTeams(thirdResponse.data.teams.map(t => t.id));
+        }
+      } catch (error) {
+        console.log('No existing third place selections');
+      }
+
+    } catch (error) {
+      console.error('Failed to load third place teams:', error);
+      alert('Failed to load third place teams. Please ensure group rankings are complete.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleTeam = (teamId) => {
     if (selectedTeams.includes(teamId)) {
@@ -333,48 +473,75 @@ const ThirdPlaceResults = ({ teams }) => {
       alert('Third place selections saved successfully!');
     } catch (error) {
       console.error('Failed to save third place:', error);
-      alert('Failed to save third place selections');
+      alert(error.response?.data?.error || 'Failed to save third place selections');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="third-place-results">
+        <Card>
+          <div className="loading-state">
+            <div className="spinner-icon"></div>
+            <p>Loading third place teams...</p>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (thirdPlaceTeams.length === 0) {
+    return (
+      <div className="third-place-results">
+        <Card>
+          <h3>⚠️ Group Stage Not Complete</h3>
+          <p className="error-message">
+            Please complete all 12 group stage rankings before selecting third place advancers.
+          </p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="third-place-results">
       <Card>
         <h3>Select the 8 Third-Place Teams that Advanced</h3>
         <p className="instruction">
-          Select exactly 8 teams (one 3rd place team from each group that advanced to Round of 16)
+          Select exactly 8 teams from the 12 third-place finishers (one from each group)
         </p>
 
         <div className="selection-counter">
           <span className="counter">{selectedTeams.length} / 8 teams selected</span>
         </div>
 
-        <div className="teams-grid">
-          {Object.entries(
-            thirdPlaceTeams.reduce((acc, team) => {
-              const groupCode = team.group_code;
-              if (!acc[groupCode]) acc[groupCode] = [];
-              acc[groupCode].push(team);
-              return acc;
-            }, {})
-          ).sort().map(([groupCode, groupTeams]) => (
-            <div key={groupCode} className="group-teams">
-              <h4>Group {groupCode}</h4>
-              <div className="team-options">
-                {groupTeams.map(team => (
-                  <div
-                    key={team.id}
-                    className={`team-option ${selectedTeams.includes(team.id) ? 'selected' : ''}`}
-                    onClick={() => toggleTeam(team.id)}
-                  >
-                    <FlagIcon fifaCode={team.fifa_code} size="small" />
-                    <span>{team.name}</span>
-                    {selectedTeams.includes(team.id) && <span className="check-mark">✓</span>}
+        <div className="third-place-grid">
+          {thirdPlaceTeams.map(team => {
+            const isSelected = selectedTeams.includes(team.id);
+            const canSelect = selectedTeams.length < 8 || isSelected;
+
+            return (
+              <div
+                key={team.id}
+                className={`third-place-card ${isSelected ? 'selected' : ''} ${!canSelect ? 'disabled' : ''}`}
+                onClick={() => canSelect && toggleTeam(team.id)}
+                style={{ cursor: canSelect ? 'pointer' : 'not-allowed' }}
+              >
+                {isSelected && <div className="selection-badge">✓</div>}
+                
+                <div className="team-group-badge">Group {team.groupCode}</div>
+                
+                <div className="team-info">
+                  <div className="team-flag-large">
+                    <FlagIcon fifaCode={team.fifa_code} size="large" />
                   </div>
-                ))}
+                  <h4 className="team-name-large">{team.name}</h4>
+                </div>
+
+                <div className="team-position-label">3rd Place - Group {team.groupCode}</div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="card-actions">
@@ -382,7 +549,7 @@ const ThirdPlaceResults = ({ teams }) => {
             onClick={handleSave}
             disabled={selectedTeams.length !== 8}
           >
-            💾 Save Third Place Selections
+            💾 Save Third Place Selections ({selectedTeams.length}/8)
           </Button>
         </div>
       </Card>
@@ -391,98 +558,164 @@ const ThirdPlaceResults = ({ teams }) => {
 };
 
 // Knockout Results Sub-component
-const KnockoutResults = ({ matches, teams }) => {
+const KnockoutResults = ({ bracket, teams, onUpdate }) => {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [winnerId, setWinnerId] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  // Convert bracket object to array and group by round
+  const matches = Object.values(bracket);
+  
   const groupedMatches = matches.reduce((acc, match) => {
     if (!acc[match.round]) acc[match.round] = [];
     acc[match.round].push(match);
     return acc;
   }, {});
 
-  const roundOrder = ['round_of_16', 'quarter_finals', 'semi_finals', 'third_place', 'final'];
+  const roundOrder = ['R32', 'R16', 'QF', 'SF', 'F'];
+  const roundNames = {
+    'R32': 'Round of 32',
+    'R16': 'Round of 16',
+    'QF': 'Quarter Finals',
+    'SF': 'Semi Finals',
+    'F': 'Final'
+  };
 
   const handleMatchSelect = (match) => {
     setSelectedMatch(match);
-    setWinnerId('');
+    setWinnerId(match.winner_id?.toString() || '');
   };
+
   const handleSave = async () => {
     if (!selectedMatch || !winnerId) {
       alert('Please select a winner');
       return;
     }
+
+    setLoading(true);
     try {
-      await adminAPI.updateActualKnockoutResult(selectedMatch.id, parseInt(winnerId));
+      await adminAPI.updateActualKnockoutResult(selectedMatch.match_id, parseInt(winnerId));
       alert('Match result saved successfully!');
+      
+      // Reload bracket to show updated matches
+      await onUpdate();
+      
       setSelectedMatch(null);
       setWinnerId('');
     } catch (error) {
       console.error('Failed to save knockout result:', error);
-      alert('Failed to save knockout result');
+      alert(error.response?.data?.error || 'Failed to save knockout result');
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (matches.length === 0) {
+    return (
+      <div className="knockout-results">
+        <Card>
+          <h3>⚠️ No Knockout Bracket Generated</h3>
+          <p className="error-message">
+            Please complete group stage and third place selections, then click "Generate Knockout Bracket" button above.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-  <div className="knockout-results">
-  <div className="rounds-list">
-  {roundOrder.map(round => {
-  const roundMatches = groupedMatches[round] || [];
-  if (roundMatches.length === 0) return null;
-        return (
-          <Card key={round} className="round-card">
-            <h3>{round.replace(/_/g, ' ').toUpperCase()}</h3>
-            <div className="matches-grid">
-              {roundMatches.sort((a, b) => a.match_number - b.match_number).map(match => (
-                <button
-                  key={match.id}
-                  className={`match-button ${selectedMatch?.id === match.id ? 'active' : ''}`}
-                  onClick={() => handleMatchSelect(match)}
-                >
-                  Match {match.match_number}
-                </button>
-              ))}
+    <div className="knockout-results">
+      <div className="rounds-list">
+        {roundOrder.map(round => {
+          const roundMatches = groupedMatches[round] || [];
+          if (roundMatches.length === 0) return null;
+
+          return (
+            <Card key={round} className="round-card">
+              <h3>{roundNames[round]}</h3>
+              <div className="matches-grid">
+                {roundMatches.sort((a, b) => a.match_id - b.match_id).map(match => (
+                  <button
+                    key={match.match_id}
+                    className={`match-button ${selectedMatch?.match_id === match.match_id ? 'active' : ''} ${match.winner_id ? 'completed' : ''}`}
+                    onClick={() => handleMatchSelect(match)}
+                  >
+                    <div className="match-info">
+                      <div className="match-number">Match {match.match_id}</div>
+                      <div className="match-teams">
+                        <div className="match-team">
+                          <FlagIcon fifaCode={match.team1_fifa_code} size="small" />
+                          <span>{match.team1_name}</span>
+                        </div>
+                        <span className="vs">vs</span>
+                        <div className="match-team">
+                          <FlagIcon fifaCode={match.team2_fifa_code} size="small" />
+                          <span>{match.team2_name}</span>
+                        </div>
+                      </div>
+                      {match.winner_id && <span className="completed-badge">✓</span>}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {selectedMatch && (
+        <Card className="match-result-card">
+          <h3>Match {selectedMatch.match_id} - {roundNames[selectedMatch.round]}</h3>
+          <div className="match-teams-display">
+            <div className="team-display">
+              <FlagIcon fifaCode={selectedMatch.team1_fifa_code} size="large" />
+              <span>{selectedMatch.team1_name}</span>
             </div>
-          </Card>
-        );
-      })}
-    </div>
-
-    {selectedMatch && (
-      <Card className="match-result-card">
-        <h3>
-          {selectedMatch.round.replace(/_/g, ' ').toUpperCase()} - Match {selectedMatch.match_number}
-        </h3>
-        <p className="instruction">Select the winning team</p>
-
-        <div className="winner-selector">
-          <div className="teams-selection">
-            {teams.map(team => (
-              <label key={team.id} className="team-radio">
-                <input
-                  type="radio"
-                  name="winner"
-                  value={team.id}
-                  checked={winnerId === team.id.toString()}
-                  onChange={(e) => setWinnerId(e.target.value)}
-                />
-                <FlagIcon fifaCode={team.fifa_code} size="normal" />
-                <span>{team.name}</span>
-              </label>
-            ))}
+            <span className="vs-large">VS</span>
+            <div className="team-display">
+              <FlagIcon fifaCode={selectedMatch.team2_fifa_code} size="large" />
+              <span>{selectedMatch.team2_name}</span>
+            </div>
           </div>
-        </div>
+          
+          <p className="instruction">Select the winning team</p>
 
-        <div className="card-actions">
-          <Button onClick={handleSave} disabled={!winnerId}>
-            💾 Save Match Result
-          </Button>
-          <Button variant="outline" onClick={() => setSelectedMatch(null)}>
-            Cancel
-          </Button>
-        </div>
-      </Card>
-    )}
-  </div>
+          <div className="winner-selector">
+            <label className={`team-radio ${winnerId === selectedMatch.team1_id.toString() ? 'selected' : ''}`}>
+              <input
+                type="radio"
+                name="winner"
+                value={selectedMatch.team1_id}
+                checked={winnerId === selectedMatch.team1_id.toString()}
+                onChange={(e) => setWinnerId(e.target.value)}
+              />
+              <FlagIcon fifaCode={selectedMatch.team1_fifa_code} size="normal" />
+              <span>{selectedMatch.team1_name}</span>
+            </label>
+
+            <label className={`team-radio ${winnerId === selectedMatch.team2_id.toString() ? 'selected' : ''}`}>
+              <input
+                type="radio"
+                name="winner"
+                value={selectedMatch.team2_id}
+                checked={winnerId === selectedMatch.team2_id.toString()}
+                onChange={(e) => setWinnerId(e.target.value)}
+              />
+              <FlagIcon fifaCode={selectedMatch.team2_fifa_code} size="normal" />
+              <span>{selectedMatch.team2_name}</span>
+            </label>
+          </div>
+
+          <div className="card-actions">
+            <Button onClick={handleSave} disabled={!winnerId || loading} loading={loading}>
+              💾 Save Match Result
+            </Button>
+            <Button variant="outline" onClick={() => setSelectedMatch(null)}>
+              Cancel
+            </Button>
+          </div>
+        </Card>
+      )}
+    </div>
   );
 };

@@ -291,15 +291,15 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     const baseX = 100;
     const baseY = 100;
     const cardW = 220;
-    const cardH = 140; // Increased from 120
+    const cardH = 140;
     const colGap = 240;
-    const rowGap = 180; // Increased from 160 to accommodate taller cards
+    const rowGap = 180;
 
     const boxes = [];
 
     // Update the drawMatch function:
     const drawMatch = (x, y, matchId, label, teams, winnerId, isFinal = false) => {
-      const h = teams.length > 0 ? cardH : 100; // Increased from 90
+      const h = teams.length > 0 ? cardH : 100;
 
       // Background
       if (isFinal) {
@@ -322,7 +322,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.fillStyle = isFinal ? '#f59e0b' : primaryColor;
       ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(label, x + cardW / 2, y + 24); // Adjusted for taller card
+      ctx.fillText(label, x + cardW / 2, y + 24);
 
       if (teams.length === 0) {
         ctx.fillStyle = '#9ca3af';
@@ -330,7 +330,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         ctx.fillText('TBD', x + cardW / 2, y + 60);
       } else {
         teams.forEach((team, idx) => {
-          const ty = y + 54 + idx * 44; // Increased spacing for taller cards
+          const ty = y + 54 + idx * 44;
           const isWinner = team.id === winnerId;
           const isHovered = hoveredTeam?.matchId === matchId && hoveredTeam?.teamId === team.id;
 
@@ -378,7 +378,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           ctx.font = isWinner ? 'bold 15px Arial' : (isHovered && !viewMode ? 'bold 15px Arial' : '15px Arial');
           ctx.textAlign = 'left';
           const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : t(team.fifa_code);
-          ctx.fillText(name, x + 40, ty + 4); // Adjusted for proper vertical centering
+          ctx.fillText(name, x + 40, ty + 4);
 
           // Checkmark - FIXED VERTICAL CENTERING
           if (isWinner) {
@@ -1085,7 +1085,6 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         a.download = `worldcup-bracket-${Date.now()}.png`;
         a.click();
         URL.revokeObjectURL(url);
-        alert(t('pred.exportSuccess'));
       });
 
     } catch (err) {

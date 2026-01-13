@@ -204,9 +204,9 @@
 
 .group-label {
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: var(--background);
   padding: 0.125rem 0.5rem;
-  background: #e5e7eb;
+  background: var(--text);
   border-radius: 12px;
 }
 

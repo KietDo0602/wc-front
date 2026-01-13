@@ -26,6 +26,24 @@ export const adminAPI = {
   updateActualKnockoutResult: (matchId, winnerTeamId) => 
     api.post(`/admin/actual-results/knockout/${matchId}`, { winner_team_id: winnerTeamId }),
 
+  generateKnockoutBracket: () => 
+    api.post('/admin/actual-results/generate-bracket'),
+
+  getGeneratedBracket: () => 
+    api.get('/admin/actual-results/bracket'),
+
+  // Get all group rankings
+  getAllActualGroupRankings: () => 
+    api.get('/admin/actual-results/all-groups'),
+
+  // Get third place selections
+  getActualThirdPlace: () => 
+    api.get('/admin/actual-results/third-place'),
+
+  // Clear official results
+  clearOfficialResults: (stage) => 
+    api.post('/admin/actual-results/clear', { stage }),
+
   // Audit Logs
   getAuditLogs: (params) => api.get('/admin/audit-logs', { params })
 };

@@ -90,7 +90,7 @@
   font-weight: 700;
 }
 
-.badge-admin {
+.info-item .badge-admin {
   background: #fbbf24;
   color: #92400e;
 }
@@ -103,34 +103,34 @@
   text-transform: capitalize;
 }
 
-.role-admin {
+.info-item .role-admin {
   background: #fef3c7;
-  color: #92400e;
+  color: black;
 }
 
-.role-user {
+.info-item .role-user {
   background: #e5e7eb;
-  color: #374151;
+  color: black;
 }
 
-.status-badge {
+.info-item .status-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.875rem;
   font-weight: 600;
 }
 
-.status-active {
+.info-item .status-active {
   background: #d1fae5;
   color: #065f46;
 }
 
-.status-banned {
+.info-item .status-banned {
   background: #fee2e2;
   color: #991b1b;
 }
 
-.status-eliminated {
+.info-item .status-eliminated {
   background: #fef3c7;
   color: #92400e;
 }
