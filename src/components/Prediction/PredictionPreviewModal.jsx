@@ -62,7 +62,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
                     <span className="team-flag">
                       <FlagIcon fifaCode={ranking.fifa_code} size="normal" />
                     </span>
-                    <span className="team-name">{ranking.team_name}</span>
+                    <span className="team-name">{t(ranking.fifa_code)}</span>
                   </div>
                 ))}
             </div>
@@ -138,7 +138,7 @@ export const PredictionPreviewModal = ({ userId, username, onClose }) => {
                       <span className="winner-flag">
                         <FlagIcon fifaCode={match.fifa_code} size="normal" />
                       </span>
-                      <span className="winner-name">{match.predicted_team_name}</span>
+                      <span className="winner-name">{t(match.fifa_code)}</span>
                       <span className="winner-badge">✓</span>
                     </div>
                   </div>

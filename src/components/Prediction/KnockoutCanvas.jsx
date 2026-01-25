@@ -14,8 +14,10 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
-  const [username, setUsername] = useState('My Predictions');
-  const usernameRef = useRef(null);
+  // Touch states
+  const [touchStart, setTouchStart] = useState(null);
+  const [lastTouchDistance, setLastTouchDistance] = useState(null);
+  const [isTouching, setIsTouching] = useState(false);
   const { t } = useTranslation();
 
   // Canvas state
@@ -103,12 +105,14 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       const flags = {};
       await Promise.all(
         Array.from(uniqueCodes).map(async (fifaCode) => {
-          const iso = getFlagCode(fifaCode);
-          if (!iso) return;
+          let iso = getFlagCode(fifaCode);
+          if (iso === null) {
+            iso = 'un' // UN Flag
+          }
           
           const img = new Image();
           img.crossOrigin = 'anonymous';
-          img.src = `https://flagcdn.com/w40/${iso}.png`;
+          img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
           
           await new Promise((resolve) => {
             img.onload = resolve;
@@ -308,7 +312,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         ctx.lineWidth = 3;
       } else {
         ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#ffffff';
-        ctx.strokeStyle = '#e5e7eb';
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#636363';
         ctx.lineWidth = 2;
       }
 
@@ -408,7 +412,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     // Draw connection lines
     const drawConnection = (x1, y1, x2, y2) => {
       const midX = (x1 + x2) / 2;
-      ctx.strokeStyle = '#cbd5e1';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#636363';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(x1, y1);
@@ -488,7 +492,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       ctx.textAlign = 'center';
       ctx.fillText(t('pred.knockout.champion'), finalX + cardW / 2, finalY - 45);
       ctx.font = 'bold 20px Arial';
-      ctx.fillText(finalWinner.name, finalX + cardW / 2, finalY - 18);
+      ctx.fillText(t(finalWinner.fifa_code), finalX + cardW / 2, finalY - 18);
     }
 
     drawMatch(finalX, finalY, 31, t('pred.final'), finalTeams, predictions[31], true);
@@ -594,7 +598,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       e.stopPropagation();
       
       const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Math.max(0.3, Math.min(2, camera.zoom * delta));
+      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * delta));
       
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -695,7 +699,6 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       if (box.teamId &&
           pos.x >= box.x && pos.x <= box.x + box.w &&
           pos.y >= box.y && pos.y <= box.y + box.h) {
-        console.log('Clicked team:', box.teamId, 'in match:', box.matchId);
         handleMatchSelect(box.matchId, box.teamId);
         break;
       }
@@ -703,11 +706,11 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   };
 
   const handleZoomIn = () => {
-    setCamera(prev => ({ ...prev, zoom: Math.min(2, prev.zoom * 1.2) }));
+    setCamera(prev => ({ ...prev, zoom: Math.min(3, prev.zoom * 1.2) }));
   };
 
   const handleZoomOut = () => {
-    setCamera(prev => ({ ...prev, zoom: Math.max(0.3, prev.zoom / 1.2) }));
+    setCamera(prev => ({ ...prev, zoom: Math.max(0.4, prev.zoom / 1.2) }));
   };
 
   const handleResetView = () => {
@@ -811,12 +814,14 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
          Flag drawing
       ============================== */
       const drawFlag = async (fifaCode, x, y, size = 16) => {
-        const iso = getFlagCode(fifaCode);
-        if (!iso) return;
+        let iso = getFlagCode(fifaCode);
+        if (iso === null) {
+          iso = 'un' // UN Flag
+        }
 
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.src = `https://flagcdn.com/w40/${iso}.png`;
+        img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
 
         await new Promise((res) => {
           img.onload = res;
@@ -841,7 +846,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         const h = teams.length ? 120 : 80;
 
         ctx.fillStyle = isFinal ? 'rgba(245,158,11,.15)' : '#fff';
-        ctx.strokeStyle = isFinal ? '#f59e0b' : '#e5e7eb';
+        ctx.strokeStyle = isFinal ? '#f59e0b' : '#636363';
         ctx.lineWidth = isFinal ? 3 : 2;
 
         ctx.beginPath();
@@ -959,7 +964,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         ctx.textAlign = 'center';
         ctx.fillText(t('pred.knockout.champion'), 1500, startY + 290);
         ctx.font = 'bold 28px Arial';
-        ctx.fillText(finalWinner.name, 1500, startY + 325);
+        ctx.fillText(t(finalWinner.fifa_code), 1500, startY + 325);
       }
 
       const finalBox = await drawMatch(
@@ -1012,7 +1017,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       /* =============================
          CONNECTION LINES
       ============================== */
-      ctx.strokeStyle = '#cbd5e1';
+      ctx.strokeStyle = '#636363';
       ctx.lineWidth = 2;
 
       const drawConnection = (x1, y1, x2, y2) => {
@@ -1095,6 +1100,129 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     }
   };
 
+  // Helper function to get distance between two touch points
+  const getTouchDistance = (touch1, touch2) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  // Helper function to get midpoint between two touches
+  const getTouchMidpoint = (touch1, touch2) => {
+    return {
+      x: (touch1.clientX + touch2.clientX) / 2,
+      y: (touch1.clientY + touch2.clientY) / 2
+    };
+  };
+
+  // Touch handlers
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 1) {
+      // Single touch - pan
+      setIsTouching(true);
+      setDragDistance(0);
+      setTouchStart({
+        x: e.touches[0].clientX - camera.x,
+        y: e.touches[0].clientY - camera.y
+      });
+    } else if (e.touches.length === 2) {
+      // Two finger - pinch zoom
+      e.preventDefault();
+      const distance = getTouchDistance(e.touches[0], e.touches[1]);
+      setLastTouchDistance(distance);
+      
+      const midpoint = getTouchMidpoint(e.touches[0], e.touches[1]);
+      setTouchStart(midpoint);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 1 && touchStart) {
+      // Single touch - pan
+      const newX = e.touches[0].clientX - touchStart.x;
+      const newY = e.touches[0].clientY - touchStart.y;
+      
+      const distance = Math.sqrt(
+        Math.pow(newX - camera.x, 2) + Math.pow(newY - camera.y, 2)
+      );
+      setDragDistance(distance);
+      
+      setCamera(prev => ({
+        ...prev,
+        x: newX,
+        y: newY
+      }));
+    } else if (e.touches.length === 2 && lastTouchDistance !== null) {
+      // Two finger - pinch zoom
+      e.preventDefault();
+      
+      const newDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      const scale = newDistance / lastTouchDistance;
+      
+      const canvas = canvasRef.current;
+      const rect = canvas.getBoundingClientRect();
+      const midpoint = getTouchMidpoint(e.touches[0], e.touches[1]);
+      
+      // Calculate zoom center point
+      const zoomCenterX = midpoint.x - rect.left;
+      const zoomCenterY = midpoint.y - rect.top;
+      
+      const worldX = (zoomCenterX - camera.x) / camera.zoom;
+      const worldY = (zoomCenterY - camera.y) / camera.zoom;
+      
+      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * scale));
+      
+      setCamera({
+        x: zoomCenterX - worldX * newZoom,
+        y: zoomCenterY - worldY * newZoom,
+        zoom: newZoom
+      });
+      
+      setLastTouchDistance(newDistance);
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (e.touches.length === 0) {
+      // All touches released
+      const wasDragging = dragDistance > 5;
+      
+      if (!wasDragging && touchStart && !lastTouchDistance) {
+        // Was a tap, not a drag or pinch
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        
+        // Use the touch start position for tap detection
+        const pos = {
+          x: (touchStart.x + camera.x - rect.left - camera.x) / camera.zoom,
+          y: (touchStart.y + camera.y - rect.top - camera.y) / camera.zoom
+        };
+        
+        // Check if tap hit a team
+        for (const box of matchBoxes) {
+          if (box.teamId &&
+              pos.x >= box.x && pos.x <= box.x + box.w &&
+              pos.y >= box.y && pos.y <= box.y + box.h) {
+            handleMatchSelect(box.matchId, box.teamId);
+            break;
+          }
+        }
+      }
+      
+      setIsTouching(false);
+      setTouchStart(null);
+      setLastTouchDistance(null);
+      setDragDistance(0);
+    } else if (e.touches.length === 1) {
+      // One finger remaining, switch to pan mode
+      setLastTouchDistance(null);
+      setTouchStart({
+        x: e.touches[0].clientX - camera.x,
+        y: e.touches[0].clientY - camera.y
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="knockout-canvas-container">
@@ -1130,6 +1258,11 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={() => setIsDragging(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+          style={{ touchAction: 'none' }}
         />
         <div className="canvas-controls">
           <button onClick={handleZoomIn} title={t("pred.zoomIn")}>+</button>

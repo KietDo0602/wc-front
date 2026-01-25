@@ -27,15 +27,15 @@ export const Register = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return 'Invalid email format';
+      return t('Invalid email format');
     }
 
-    if (password.length < 6) {
-      return 'Password must be at least 6 characters';
+    if (password.length < 8) {
+      return t('Password must be at least 8 characters');
     }
 
     if (password !== confirmPassword) {
-      return 'Passwords do not match';
+      return t('Passwords do not match');
     }
 
     return null;
@@ -64,9 +64,9 @@ export const Register = () => {
       const errorData = err.response?.data;
       
       if (errorData?.authMethod === 'google') {
-        setError(errorData.error || 'An account with this email already exists. Please sign in with Google instead.');
+        setError(errorData.error || t('An account with this email already exists. Please sign in with Google instead.'));
       } else {
-        setError(errorData?.error || 'Failed to send verification code');
+        setError(errorData?.error || t('Failed to send verification code'));
       }
     } finally {
       setLoading(false);
@@ -90,7 +90,7 @@ export const Register = () => {
       navigate('/predictions');
     } catch (error) {
       console.error('Verification failed:', error);
-      setError(error.response?.data?.error || 'Verification failed');
+      setError(error.response?.data?.error || t('Verification failed'));
     } finally {
       setIsVerifying(false);
     }
@@ -124,10 +124,6 @@ export const Register = () => {
           <h1>{t("register.createAccount")}</h1>
           <p>{t("register.subtitle")}</p>
         </div>
-
-        {error && (
-          <div className="error-message">{error}</div>
-        )}
 
         <form onSubmit={handleSendCode} className="auth-form">
           <div className="form-group">
@@ -166,6 +162,10 @@ export const Register = () => {
               required
             />
           </div>
+
+          {error && (
+            <div className="error-message">{error}</div>
+          )}
 
           <Button type="submit" loading={loading} size="large" fullwidth="true">
             {t('register.createAccount')}
