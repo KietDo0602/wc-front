@@ -65,9 +65,27 @@ export const predictionAPI = {
 
 // Leaderboard APIs
 export const leaderboardAPI = {
-  getActive: () => api.get('/leaderboard/active'),
+  getActiveLeaderboard: () => api.get('/leaderboard/active'),
   getLeaderboard: () => api.get('/leaderboard'),
   getMyRank: () => api.get('/leaderboard/my-rank'),
+};
+
+export const resultsAPI = {
+  // Get official group rankings (public)
+  getOfficialGroupRankings: () => 
+    api.get('/results/groups'),
+
+  // Get official third place advancers (public)
+  getOfficialThirdPlace: () => 
+    api.get('/results/third-place'),
+
+  // Get official knockout bracket (public)
+  getOfficialKnockoutBracket: () => 
+    api.get('/results/knockout'),
+
+  // Get results summary (public)
+  getOfficialResultsSummary: () => 
+    api.get('/results/summary'),
 };
 
 export default api;

@@ -267,7 +267,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         return newPredictions;
       });
       if (!viewMode) {
-        alert(error.response?.data?.error || t('error.failedSavePred'));
+        alert(t(error.response?.data?.error) || t('error.failedSavePred'));
       }
     }
   };
@@ -622,7 +622,6 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     };
   }, [camera]); // Include camera in dependencies since we're using it
 
-  // Add this useEffect to capture the username when user prop changes
   useEffect(() => {
     if (user && user.username) {
       localStorage.setItem('username', user.username);
@@ -749,7 +748,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     try {
       await onSubmit();
     } catch (error) {
-      alert(error.response?.data?.error || t('error.failedSubmitPred'));
+      alert(t(error.response?.data?.error) || t('error.failedSubmitPred'));
     } finally {
       setSaving(false);
     }
@@ -767,7 +766,6 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       try {
         const statusRes = await predictionAPI.getStatus();
         if (statusRes.data.predictions_submitted_at) {
-          console.log(statusRes);
           submittedDate = new Date(statusRes.data.predictions_submitted_at)
             .toISOString()
             .slice(0, 16)

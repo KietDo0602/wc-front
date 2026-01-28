@@ -37,6 +37,10 @@
   color: white;
 }
 
+.my-rank-card.eliminated {
+  background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+}
+
 .my-rank-content {
   display: flex;
   justify-content: space-between;
@@ -62,6 +66,14 @@
   line-height: 1;
 }
 
+.eliminated-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
 .rank-stats {
   display: flex;
   gap: 3rem;
@@ -81,6 +93,14 @@
 }
 
 .stat-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.submission-time {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 0.875rem;
   opacity: 0.9;
 }
@@ -123,6 +143,21 @@
   background: var(--surface);
 }
 
+.info-card {
+  max-width: 1200px;
+  margin: 1rem auto 0;
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+}
+
+.info-message {
+  text-align: center;
+  font-weight: 600;
+  color: #856404;
+  margin: 0;
+  font-size: 1.125rem;
+}
+
 .leaderboard-table {
   overflow-x: auto;
 }
@@ -145,7 +180,6 @@ th {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 2px solid var(--primary);
-
 }
 
 td {
@@ -163,19 +197,56 @@ tbody tr:hover {
 }
 
 tbody tr.highlight {
-  background: var(--background);
-  color: black;
+  background: #f0f4ff;
+  border-left: 4px solid var(--primary);
 }
 
 .rank-cell {
   font-weight: 700;
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   color: var(--text);
+  min-width: 80px;
 }
 
 .username-cell {
   font-weight: 600;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.you-badge {
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.accuracy-cell {
+  font-weight: 600;
+}
+
+.accuracy-value {
+  color: #10b981;
+  font-size: 1.125rem;
+}
+
+.matches-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.date-cell {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
 
 .actions-cell {
@@ -216,9 +287,14 @@ tbody tr.highlight {
 }
 
 .empty-state {
-  padding: 3rem;
+  padding: 4rem 2rem;
   text-align: center;
   color: var(--text-secondary);
+}
+
+.empty-state p {
+  font-size: 1.25rem;
+  margin: 0;
 }
 
 .spinner-icon {
@@ -266,10 +342,15 @@ tbody tr.highlight {
   }
 
   /* Hide some columns on mobile */
-  th:nth-child(4),
-  td:nth-child(4),
   th:nth-child(5),
-  td:nth-child(5) {
+  td:nth-child(5),
+  th:nth-child(6),
+  td:nth-child(6) {
     display: none;
+  }
+
+  .username-cell {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

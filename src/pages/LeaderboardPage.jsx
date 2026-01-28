@@ -8,7 +8,7 @@ import './LeaderboardPage.css';
 
 export const LeaderboardPage = () => {
   const [leaderboard, setLeaderboard] = useState([]);
-  const [activeUsers, setActiveUsers] = useState([]);
+  const [activeLeaderboard, setActiveLeaderboard] = useState([]);
   const [myRank, setMyRank] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('all');
@@ -20,21 +20,25 @@ export const LeaderboardPage = () => {
   }, []);
 
   const loadData = async () => {
+    setLoading(true);
     try {
-      const [leaderboardRes, activeRes] = await Promise.all([
+      // Load both leaderboards
+      const [generalRes, activeRes] = await Promise.all([
         leaderboardAPI.getLeaderboard(),
-        leaderboardAPI.getActive()
+        leaderboardAPI.getActiveLeaderboard()
       ]);
 
-      setLeaderboard(leaderboardRes.data.leaderboard);
-      setActiveUsers(activeRes.data.activeUsers);
+      setLeaderboard(generalRes.data.leaderboard || []);
+      setActiveLeaderboard(activeRes.data.leaderboard || []);
 
+      // Load user's rank if logged in
       try {
         const rankRes = await leaderboardAPI.getMyRank();
-        setMyRank(rankRes.data.ranking);
+        if (rankRes.data.submitted && rankRes.data.qualified) {
+          setMyRank(rankRes.data);
+        }
       } catch (err) {
-        // User might not have predictions yet
-        console.log('No rank available yet');
+        console.log('No rank available');
       }
     } catch (error) {
       console.error('Failed to load leaderboard:', error);
@@ -47,7 +51,7 @@ export const LeaderboardPage = () => {
     if (position === 1) return '🥇';
     if (position === 2) return '🥈';
     if (position === 3) return '🥉';
-    return position;
+    return `#${position}`;
   };
 
   const handlePreviewUser = (userId, username) => {
@@ -56,6 +60,16 @@ export const LeaderboardPage = () => {
 
   const handleClosePreview = () => {
     setPreviewUser(null);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (loading) {
@@ -67,6 +81,8 @@ export const LeaderboardPage = () => {
     );
   }
 
+  const currentLeaderboard = tab === 'all' ? leaderboard : activeLeaderboard;
+
   return (
     <div className="leaderboard-page">
       <div className="leaderboard-header">
@@ -75,22 +91,30 @@ export const LeaderboardPage = () => {
       </div>
 
       {myRank && (
-        <Card className="my-rank-card">
+        <Card className={`my-rank-card ${myRank.is_eliminated ? 'eliminated' : ''}`}>
           <div className="my-rank-content">
             <div className="rank-info">
               <span className="rank-label">{t('lead.yourRank')}</span>
-              <span className="rank-number">#{myRank.rank}</span>
+              <span className="rank-number">{getMedalEmoji(myRank.rank)}</span>
+              {myRank.is_eliminated && (
+                <span className="eliminated-badge">❌ Eliminated</span>
+              )}
             </div>
             <div className="rank-stats">
               <div className="stat">
-                <span className="stat-value">{myRank.correct_match_predictions}</span>
-                <span className="stat-label">{t('lead.correct')}</span>
+                <span className="stat-value">{myRank.accuracy_percentage}%</span>
+                <span className="stat-label">{t('lead.accuracy')}</span>
               </div>
               <div className="stat">
-                <span className="stat-value">{myRank.total_predictions}</span>
-                <span className="stat-label">{t('lead.total')}</span>
+                <span className="stat-value">
+                  {myRank.correct_predictions}/{myRank.completed_matches}
+                </span>
+                <span className="stat-label">{t('lead.correct')}</span>
               </div>
             </div>
+          </div>
+          <div className="submission-time">
+            Submitted: {formatDate(myRank.submitted_at)}
           </div>
         </Card>
       )}
@@ -100,70 +124,62 @@ export const LeaderboardPage = () => {
           className={`tab ${tab === 'all' ? 'active' : ''}`}
           onClick={() => setTab('all')}
         >
-          {t('lead.allUsers')} ({leaderboard.length})
+          📊 {t('lead.allUsers')} ({leaderboard.length})
         </button>
         <button
           className={`tab ${tab === 'active' ? 'active' : ''}`}
           onClick={() => setTab('active')}
         >
-          {t('lead.stillRunning')} ({activeUsers.length})
+          🔥 {t('lead.stillRunning')} ({activeLeaderboard.length})
         </button>
       </div>
 
       <Card className="leaderboard-card">
         <div className="leaderboard-table">
-          {tab === 'all' && leaderboard.length > 0 && (
+          {currentLeaderboard.length > 0 ? (
             <table>
               <thead>
                 <tr>
                   <th>{t('lead.rank')}</th>
                   <th>{t('lead.username')}</th>
-                  <th>{t('lead.correct')}</th>
-                  <th>{t('lead.total')}</th>
                   <th>{t('lead.accuracy')}</th>
+                  <th>{t('lead.correct')}</th>
+                  <th>{t('lead.completed')}</th>
+                  <th>{t('lead.submitted')}</th>
                   <th>{t('lead.actions')}</th>
                 </tr>
               </thead>
               <tbody>
-                {leaderboard.map((user, index) => (
-                  <tr key={user.user_id} className={myRank?.user_id === user.user_id ? 'highlight' : ''}>
-                    <td className="rank-cell">{getMedalEmoji(index + 1)}</td>
-                    <td className="username-cell">{user.username}</td>
-                    <td>{user.correct_match_predictions}</td>
-                    <td>{user.total_predictions}</td>
-                    <td>{user.accuracy_percentage}%</td>
-                    <td className="actions-cell">
-                      <button 
-                        className="preview-btn"
-                        onClick={() => handlePreviewUser(user.user_id, user.username)}
-                      >
-                        👁️ {t('lead.view')}
-                      </button>
+                {currentLeaderboard.map((user) => (
+                  <tr 
+                    key={user.id} 
+                    className={myRank?.id === user.id ? 'highlight' : ''}
+                  >
+                    <td className="rank-cell">
+                      {getMedalEmoji(user.rank)}
                     </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-
-          {tab === 'active' && activeUsers.length > 0 && (
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>{t('lead.username')}</th>
-                  <th>{t('lead.status')}</th>
-                  <th>{t('lead.joined')}</th>
-                  <th>{t('lead.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeUsers.map((user, index) => (
-                  <tr key={user.id}>
-                    <td>{index + 1}</td>
-                    <td className="username-cell">{user.username}</td>
-                    <td><span className="status-badge active">✓ {t('lead.active')}</span></td>
-                    <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                    <td className="username-cell">
+                      {user.username}
+                      {myRank?.id === user.id && (
+                        <span className="you-badge">You</span>
+                      )}
+                    </td>
+                    <td className="accuracy-cell">
+                      <span className="accuracy-value">
+                        {user.accuracy_percentage}%
+                      </span>
+                    </td>
+                    <td>
+                      {user.correct_predictions}/{user.completed_matches}
+                    </td>
+                    <td>
+                      <span className="matches-badge">
+                        {user.completed_matches} matches
+                      </span>
+                    </td>
+                    <td className="date-cell">
+                      {formatDate(user.predictions_submitted_at)}
+                    </td>
                     <td className="actions-cell">
                       <button 
                         className="preview-btn"
@@ -176,15 +192,25 @@ export const LeaderboardPage = () => {
                 ))}
               </tbody>
             </table>
-          )}
-
-          {((tab === 'all' && leaderboard.length === 0) || (tab === 'active' && activeUsers.length === 0)) && (
+          ) : (
             <div className="empty-state">
-              <p>{t('lead.noUsers')}</p>
+              <p>
+                {tab === 'all' 
+                  ? t('lead.noPredictions')
+                  : t('lead.noPlayerRemain')}
+              </p>
             </div>
           )}
         </div>
       </Card>
+
+      {activeLeaderboard.length === 0 && leaderboard.length > 0 && tab === 'active' && (
+        <Card className="info-card">
+          <p className="info-message">
+            🏆 {t('lead.allElminated')}
+          </p>
+        </Card>
+      )}
 
       {previewUser && (
         <PredictionPreviewModal

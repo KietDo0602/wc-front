@@ -116,6 +116,12 @@ export const Header = () => {
               >
                 {t('nav.leaderboard')}
               </Link>
+              <Link 
+                to="/results" 
+                className={`nav-link ${isActive('/results') ? 'active' : ''}`}
+              >
+                {t('nav.matchResults')}
+              </Link>
             </>
           )}
 

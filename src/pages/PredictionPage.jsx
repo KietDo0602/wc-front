@@ -111,7 +111,7 @@ export const PredictionPage = () => {
       setViewMode(true); // Enable view mode
     } catch (error) {
       console.error('Submit error:', error);
-      alert(error.response?.data?.error || t('Failed to submit predictions'));
+      alert(t(error.response?.data?.error) || t('Failed to submit predictions'));
     }
   };
   if (loading) {

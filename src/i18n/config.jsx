@@ -14,7 +14,7 @@ const resources = {
       "nav.language": "Language",
       "nav.theme": "Theme",
       "button.close": "Close",
-      
+
       // Home
       "home.title": "World Cup Brackets",
       "home.welcome": "Welcome!",
@@ -39,6 +39,19 @@ const resources = {
       "home.instructions.submit.desc": "Lock in your predictions before 11th June 2026, and wait for matches to begin",
       "home.instructions.compete": "Compete",
       "home.instructions.compete.desc": "Watch the leaderboard as results are revealed",
+
+      // Match Results
+      "nav.matchResults": "Results",
+      "matchResults.header": "Official Match Results",
+      "matchResults.viewAll": "View all confirmed tournament results",
+      "matchResults.third.advance": "These third-place finishers advanced to the Round of 32",
+      "matchResults.third.advance.2": "8 Teams Advanced from Third Place",
+      "matchResults.third.finisher": "3rd Place Finisher",
+      "matchResults.notPublished": "Group stage results have not been published yet.",
+      "matchResults.third.notPublished": "Third Place advancers have not been published yet.",
+      "matchResults.knockout.notPublished": "Knockout brackets has not been generated yet.",
+      "matchResults.knockout.match": "Match {{id}}",
+      
 
       // Login & Register
       "login.subtitle": "Login to make your predictions!",
@@ -172,7 +185,16 @@ const resources = {
       "lead.joined": "Joined",
       "lead.loading": "Loading leaderboard...",
       "lead.noUsers": "No users found",
-      
+      "lead.completed": "Completed",
+      "lead.submitted": "Submitted",
+      "lead.noPlayerRemain": "🎯 No players remain with perfect predictions!",
+      "lead.noPredictions": "📝 No predictions submitted yet. Be the first!",
+      "lead.allElminated": "All players have been eliminated! Check the general leaderboard to see final rankings.",
+      "lead.matches": "{{no_matches}} matches",
+      "lead.you": "You",
+      "lead.eliminated": "Eliminated",
+
+
       // Error
       "error.failedSaveRanking": "Failed to save ranking",
       "error.completeGroupPred": "Error: Expected 12 third-place teams but found {{number}}. Please complete all group predictions first.",
@@ -183,6 +205,7 @@ const resources = {
       "error.failedSubmitPred": "Failed to submit predictions",
       "error.unableCaptureBracket": "Unable to capture bracket. Please try again.",
       "error.failedExport": "❌ Failed to export:",
+      "Prediction deadline has passed.": "Prediction deadline has passed.",
 
       // Alert
       "alert.savedSuccess": "Third place selections saved successfully!",
@@ -328,6 +351,18 @@ const resources = {
       "home.instructions.compete": "Competir",
       "home.instructions.compete.desc": "Sigue la clasificación a medida que se revelan los resultados",
 
+      // Match Results
+      "nav.matchResults": "Resultados",
+      "matchResults.header": "Resultados oficiales de los partidos",
+      "matchResults.viewAll": "Ver todos los resultados confirmados del torneo",
+      "matchResults.third.advance": "Estos equipos en tercer lugar avanzaron a la ronda de 32",
+      "matchResults.third.advance.2": "8 equipos avanzaron desde el tercer lugar",
+      "matchResults.third.finisher": "Tercer lugar",
+      "matchResults.notPublished": "Los resultados de la fase de grupos aún no se han publicado.",
+      "matchResults.third.notPublished": "Los clasificados desde el tercer lugar aún no se han publicado.",
+      "matchResults.knockout.notPublished": "El cuadro eliminatorio aún no se ha generado.",
+      "matchResults.knockout.match": "Partido {{id}}",
+
 
       // Login & Register
       "login.subtitle": "¡Inicia sesión para hacer tus predicciones!",
@@ -461,6 +496,14 @@ const resources = {
       "lead.joined": "Registrado",
       "lead.loading": "Cargando clasificación...",
       "lead.noUsers": "No se encontraron usuarios",
+      "lead.completed": "Completado",
+      "lead.submitted": "Enviado",
+      "lead.noPlayerRemain": "🎯 ¡No quedan jugadores con predicciones perfectas!",
+      "lead.noPredictions": "📝 Aún no se han enviado predicciones. ¡Sé el primero!",
+      "lead.allElminated": "¡Todos los jugadores han sido eliminados! Consulta la clasificación general para ver los resultados finales.",
+      "lead.matches": "{{no_matches}} partidos",
+      "lead.you": "Tú",
+      "lead.eliminated": "Eliminado",
 
       // Error
       "error.failedSaveRanking": "No se pudo guardar la clasificación",
@@ -472,6 +515,7 @@ const resources = {
       "error.failedSubmitPred": "No se pudieron enviar las predicciones",
       "error.unableCaptureBracket": "No se pudo capturar el cuadro. Inténtalo de nuevo.",
       "error.failedExport": "❌ Error al exportar:",
+      "Prediction deadline has passed.": "La fecha límite para las predicciones ha pasado.",
       "User predictions are not available yet": "Las predicciones del usuario aún no están disponibles",
 
       // Alert
@@ -608,6 +652,18 @@ const resources = {
       "home.instructions.compete": "Compétition",
       "home.instructions.compete.desc": "Suis le classement à mesure que les résultats sont dévoilés",
 
+      // Match Results
+      "nav.matchResults": "Résultats",
+      "matchResults.header": "Résultats officiels des matchs",
+      "matchResults.viewAll": "Voir tous les résultats confirmés du tournoi",
+      "matchResults.third.advance": "Ces équipes classées troisièmes se sont qualifiées pour les 32es de finale",
+      "matchResults.third.advance.2": "8 équipes qualifiées depuis la troisième place",
+      "matchResults.third.finisher": "Troisième place",
+      "matchResults.notPublished": "Les résultats de la phase de groupes n’ont pas encore été publiés.",
+      "matchResults.third.notPublished": "Les équipes qualifiées depuis la troisième place n’ont pas encore été publiées.",
+      "matchResults.knockout.notPublished": "Le tableau à élimination directe n’a pas encore été généré.",
+      "matchResults.knockout.match": "Match {{id}}",
+
       // Login & Register
       "login.subtitle": "Connecte-toi pour faire tes pronostics !",
       "username": "Nom d’utilisateur",
@@ -740,6 +796,14 @@ const resources = {
       "lead.joined": "Inscrit",
       "lead.loading": "Chargement du classement...",
       "lead.noUsers": "Aucun utilisateur trouvé",
+      "lead.completed": "Terminé",
+      "lead.submitted": "Soumis",
+      "lead.noPlayerRemain": "🎯 Aucun joueur ne conserve des pronostics parfaits !",
+      "lead.noPredictions": "📝 Aucun pronostic soumis pour l’instant. Soyez le premier !",
+      "lead.allElminated": "Tous les joueurs ont été éliminés ! Consultez le classement général pour voir les résultats finaux.",
+      "lead.matches": "{{no_matches}} matchs",
+      "lead.you": "Vous",
+      "lead.eliminated": "Éliminé",
 
       // Error
       "error.failedSaveRanking": "Échec de l’enregistrement du classement",
@@ -751,6 +815,7 @@ const resources = {
       "error.failedSubmitPred": "Échec de la soumission des pronostics",
       "error.unableCaptureBracket": "Impossible de capturer le tableau. Veuillez réessayer.",
       "error.failedExport": "❌ Échec de l’exportation :",
+      "Prediction deadline has passed.": "La date limite des pronostics est dépassée.",
       "User predictions are not available yet": "Les pronostics de l’utilisateur ne sont pas encore disponibles",
 
       // Alert
@@ -888,6 +953,18 @@ const resources = {
       "home.instructions.compete": "竞争",
       "home.instructions.compete.desc": "随着结果公布，关注排行榜变化",
 
+      // Match Results
+      "nav.matchResults": "比赛结果",
+      "matchResults.header": "官方比赛结果",
+      "matchResults.viewAll": "查看所有已确认的赛事结果",
+      "matchResults.third.advance": "以下第三名球队晋级32强",
+      "matchResults.third.advance.2": "8 支第三名球队晋级",
+      "matchResults.third.finisher": "小组第三名",
+      "matchResults.notPublished": "小组赛结果尚未公布。",
+      "matchResults.third.notPublished": "第三名晋级球队尚未公布。",
+      "matchResults.knockout.notPublished": "淘汰赛对阵尚未生成。",
+      "matchResults.knockout.match": "比赛 {{id}}",
+
       // Login & Register
       "login.subtitle": "登录以进行预测！",
       "username": "用户名",
@@ -1019,6 +1096,14 @@ const resources = {
       "lead.joined": "加入时间",
       "lead.loading": "正在加载排行榜...",
       "lead.noUsers": "未找到用户",
+      "lead.completed": "已完成",
+      "lead.submitted": "已提交",
+      "lead.noPlayerRemain": "🎯 没有玩家仍保持完美预测！",
+      "lead.noPredictions": "📝 还没有人提交预测。成为第一个吧！",
+      "lead.allElminated": "所有玩家都已被淘汰！请查看总排行榜以了解最终排名。",
+      "lead.matches": "{{no_matches}} 场比赛",
+      "lead.you": "你",
+      "lead.eliminated": "已淘汰",
       
       // Error
       "error.failedSaveRanking": "保存排名失败",
@@ -1030,6 +1115,7 @@ const resources = {
       "error.failedSubmitPred": "提交预测失败",
       "error.unableCaptureBracket": "无法捕获对阵图，请重试。",
       "error.failedExport": "❌ 导出失败：",
+      "Prediction deadline has passed.": "预测截止时间已过。",
       "User predictions are not available yet": "该用户的预测尚不可用",
 
       // Alert
@@ -1166,6 +1252,18 @@ const resources = {
       "home.instructions.compete": "Competir",
       "home.instructions.compete.desc": "Acompanhe a classificação conforme os resultados são divulgados",
 
+      // Match Results
+      "nav.matchResults": "Resultados",
+      "matchResults.header": "Resultados oficiais das partidas",
+      "matchResults.viewAll": "Ver todos os resultados confirmados do torneio",
+      "matchResults.third.advance": "Essas equipes em terceiro lugar avançaram para as oitavas de final",
+      "matchResults.third.advance.2": "8 equipes avançaram do terceiro lugar",
+      "matchResults.third.finisher": "Terceiro colocado",
+      "matchResults.notPublished": "Os resultados da fase de grupos ainda não foram publicados.",
+      "matchResults.third.notPublished": "Os classificados do terceiro lugar ainda não foram publicados.",
+      "matchResults.knockout.notPublished": "A fase eliminatória ainda não foi gerada.",
+      "matchResults.knockout.match": "Partida {{id}}",
+
       // Login & Register
       "login.subtitle": "Entre para fazer suas previsões!",
       "username": "Nome de usuário",
@@ -1297,6 +1395,14 @@ const resources = {
       "lead.joined": "Ingressou em",
       "lead.loading": "Carregando classificação...",
       "lead.noUsers": "Nenhum usuário encontrado",
+      "lead.completed": "Concluído",
+      "lead.submitted": "Enviado",
+      "lead.noPlayerRemain": "🎯 Nenhum jogador mantém previsões perfeitas!",
+      "lead.noPredictions": "📝 Nenhuma previsão enviada ainda. Seja o primeiro!",
+      "lead.allElminated": "Todos os jogadores foram eliminados! Consulte o ranking geral para ver as classificações finais.",
+      "lead.matches": "{{no_matches}} partidas",
+      "lead.you": "Você",
+      "lead.eliminated": "Eliminado",
       
       // Error
       "error.failedSaveRanking": "Falha ao salvar a classificação",
@@ -1308,6 +1414,7 @@ const resources = {
       "error.failedSubmitPred": "Falha ao enviar as previsões",
       "error.unableCaptureBracket": "Não foi possível capturar a chave. Tente novamente.",
       "error.failedExport": "❌ Falha ao exportar:",
+      "Prediction deadline has passed.": "O prazo para as previsões expirou.",
       "User predictions are not available yet": "As previsões do usuário ainda não estão disponíveis",
 
       // Alert
@@ -1443,6 +1550,16 @@ const resources = {
       "home.instructions.submit.desc": "ثبّت توقعاتك قبل 11 يونيو 2026 وانتظر بداية المباريات",
       "home.instructions.compete": "نافس",
       "home.instructions.compete.desc": "تابع لوحة الصدارة مع إعلان النتائج",
+      "nav.matchResults": "النتائج",
+      "matchResults.header": "النتائج الرسمية للمباريات",
+      "matchResults.viewAll": "عرض جميع نتائج البطولة المؤكدة",
+      "matchResults.third.advance": "هذه الفرق التي أنهت في المركز الثالث تأهلت إلى دور الـ32",
+      "matchResults.third.advance.2": "تأهلت 8 فرق من المركز الثالث",
+      "matchResults.third.finisher": "صاحب المركز الثالث",
+      "matchResults.notPublished": "لم يتم نشر نتائج دور المجموعات بعد.",
+      "matchResults.third.notPublished": "لم يتم نشر المتأهلين من المركز الثالث بعد.",
+      "matchResults.knockout.notPublished": "لم يتم إنشاء مباريات الأدوار الإقصائية بعد.",
+      "matchResults.knockout.match": "المباراة {{id}}",
 
       // Login & Register
       "login.subtitle": "سجّل الدخول لإجراء توقعاتك!",
@@ -1575,6 +1692,14 @@ const resources = {
       "lead.joined": "تاريخ الانضمام",
       "lead.loading": "جارٍ تحميل لوحة الصدارة...",
       "lead.noUsers": "لم يتم العثور على مستخدمين",
+      "lead.completed": "مكتمل",
+      "lead.submitted": "تم الإرسال",
+      "lead.noPlayerRemain": "🎯 لا يوجد أي لاعب بتوقعات مثالية!",
+      "lead.noPredictions": "📝 لم يتم إرسال أي توقعات بعد. كن الأول!",
+      "lead.allElminated": "تم إقصاء جميع اللاعبين! تحقق من لوحة الصدارة العامة لمعرفة الترتيب النهائي.",
+      "lead.matches": "{{no_matches}} مباريات",
+      "lead.you": "أنت",
+      "lead.eliminated": "مقصى",
       
       // Error
       "error.failedSaveRanking": "فشل حفظ الترتيب",
@@ -1586,6 +1711,7 @@ const resources = {
       "error.failedSubmitPred": "فشل إرسال التوقعات",
       "error.unableCaptureBracket": "تعذر التقاط الجدول. يرجى المحاولة مرة أخرى.",
       "error.failedExport": "❌ فشل التصدير:",
+      "Prediction deadline has passed.": "انتهى الموعد النهائي للتوقعات.",
       "User predictions are not available yet": "توقعات المستخدم غير متاحة بعد",
 
       // Alert
@@ -1722,6 +1848,18 @@ const resources = {
       "home.instructions.compete": "Mitfiebern",
       "home.instructions.compete.desc": "Beobachte die Rangliste, sobald Ergebnisse feststehen",
 
+      // Match Results
+      "nav.matchResults": "Ergebnisse",
+      "matchResults.header": "Offizielle Spielergebnisse",
+      "matchResults.viewAll": "Alle bestätigten Turnierergebnisse anzeigen",
+      "matchResults.third.advance": "Diese Drittplatzierten haben sich für die Runde der letzten 32 qualifiziert",
+      "matchResults.third.advance.2": "8 Teams sind aus dem dritten Platz weitergekommen",
+      "matchResults.third.finisher": "Drittplatzierter",
+      "matchResults.notPublished": "Die Ergebnisse der Gruppenphase wurden noch nicht veröffentlicht.",
+      "matchResults.third.notPublished": "Die Drittplatzierten sind noch nicht veröffentlicht.",
+      "matchResults.knockout.notPublished": "Der K.-o.-Spielplan wurde noch nicht erstellt.",
+      "matchResults.knockout.match": "Spiel {{id}}",
+
       // Login & Register
       "login.subtitle": "Melde dich an, um deine Tipps abzugeben!",
       "username": "Benutzername",
@@ -1853,6 +1991,14 @@ const resources = {
       "lead.joined": "Beigetreten",
       "lead.loading": "Rangliste wird geladen...",
       "lead.noUsers": "Keine Benutzer gefunden",
+      "lead.completed": "Abgeschlossen",
+      "lead.submitted": "Eingereicht",
+      "lead.noPlayerRemain": "🎯 Keine Spieler mit perfekten Vorhersagen mehr!",
+      "lead.noPredictions": "📝 Noch keine Vorhersagen eingereicht. Sei der Erste!",
+      "lead.allElminated": "Alle Spieler wurden eliminiert! Sieh dir die Gesamtrangliste für die Endplatzierungen an.",
+      "lead.matches": "{{no_matches}} Spiele",
+      "lead.you": "Du",
+      "lead.eliminated": "Ausgeschieden",
       
       // Error
       "error.failedSaveRanking": "Rangliste konnte nicht gespeichert werden",
@@ -1864,6 +2010,7 @@ const resources = {
       "error.failedSubmitPred": "Tipps konnten nicht eingereicht werden",
       "error.unableCaptureBracket": "Turnierbaum konnte nicht erfasst werden. Bitte versuche es erneut.",
       "error.failedExport": "❌ Export fehlgeschlagen:",
+      "Prediction deadline has passed.": "Die Frist für Vorhersagen ist abgelaufen.",
       "User predictions are not available yet": "Die Vorhersagen des Benutzers sind noch nicht verfügbar",
 
       // Alert
@@ -1999,6 +2146,16 @@ const resources = {
       "home.instructions.submit.desc": "Blocca i tuoi pronostici prima dell’11 giugno 2026 e attendi l’inizio delle partite",
       "home.instructions.compete": "Competi",
       "home.instructions.compete.desc": "Osserva la classifica mentre i risultati vengono rivelati",
+      "nav.matchResults": "Risultati",
+      "matchResults.header": "Risultati ufficiali delle partite",
+      "matchResults.viewAll": "Visualizza tutti i risultati confermati del torneo",
+      "matchResults.third.advance": "Queste squadre terze classificate sono avanzate agli ottavi di finale",
+      "matchResults.third.advance.2": "8 squadre avanzate dal terzo posto",
+      "matchResults.third.finisher": "Terzo classificato",
+      "matchResults.notPublished": "I risultati della fase a gironi non sono ancora stati pubblicati.",
+      "matchResults.third.notPublished": "Le squadre qualificate dal terzo posto non sono ancora state pubblicate.",
+      "matchResults.knockout.notPublished": "Il tabellone a eliminazione diretta non è ancora stato generato.",
+      "matchResults.knockout.match": "Partita {{id}}",
 
       // Login & Register
       "login.subtitle": "Accedi per fare i tuoi pronostici!",
@@ -2131,6 +2288,14 @@ const resources = {
       "lead.joined": "Iscritto il",
       "lead.loading": "Caricamento classifica...",
       "lead.noUsers": "Nessun utente trovato",
+      "lead.completed": "Completato",
+      "lead.submitted": "Inviato",
+      "lead.noPlayerRemain": "🎯 Nessun giocatore ha ancora previsioni perfette!",
+      "lead.noPredictions": "📝 Nessuna previsione inviata finora. Sii il primo!",
+      "lead.allElminated": "Tutti i giocatori sono stati eliminati! Consulta la classifica generale per i risultati finali.",
+      "lead.matches": "{{no_matches}} partite",
+      "lead.you": "Tu",
+      "lead.eliminated": "Eliminato",
       
       // Error
       "error.failedSaveRanking": "Salvataggio della classifica non riuscito",
@@ -2142,6 +2307,7 @@ const resources = {
       "error.failedSubmitPred": "Invio dei pronostici non riuscito",
       "error.unableCaptureBracket": "Impossibile acquisire il tabellone. Riprova.",
       "error.failedExport": "❌ Esportazione non riuscita:",
+      "Prediction deadline has passed.": "La scadenza per le previsioni è scaduta.",
       "User predictions are not available yet": "I pronostici dell’utente non sono ancora disponibili",
 
       // Alert
@@ -2278,6 +2444,18 @@ const resources = {
       "home.instructions.compete": "競争",
       "home.instructions.compete.desc": "結果発表とともにランキングを確認",
 
+      // Match Results
+      "nav.matchResults": "試合結果",
+      "matchResults.header": "公式試合結果",
+      "matchResults.viewAll": "確定したすべての大会結果を表示",
+      "matchResults.third.advance": "これらの3位チームがベスト32に進出しました",
+      "matchResults.third.advance.2": "3位から8チームが進出",
+      "matchResults.third.finisher": "3位",
+      "matchResults.notPublished": "グループステージの結果はまだ公開されていません。",
+      "matchResults.third.notPublished": "3位通過チームはまだ公開されていません。",
+      "matchResults.knockout.notPublished": "決勝トーナメントはまだ生成されていません。",
+      "matchResults.knockout.match": "試合 {{id}}",
+
       // Login & Register
       "login.subtitle": "ログインして予想を作成しましょう",
       "username": "ユーザー名",
@@ -2409,6 +2587,14 @@ const resources = {
       "lead.joined": "参加日",
       "lead.loading": "ランキングを読み込み中...",
       "lead.noUsers": "ユーザーが見つかりません",
+      "lead.completed": "完了",
+      "lead.submitted": "提出済み",
+      "lead.noPlayerRemain": "🎯 完璧な予想を維持しているプレイヤーはいません！",
+      "lead.noPredictions": "📝 まだ予想が提出されていません。最初の一人になりましょう！",
+      "lead.allElminated": "すべてのプレイヤーが脱落しました！最終順位は総合ランキングをご確認ください。",
+      "lead.matches": "{{no_matches}} 試合",
+      "lead.you": "あなた",
+      "lead.eliminated": "脱落",
       
       // Error
       "error.failedSaveRanking": "ランキングの保存に失敗しました",
@@ -2420,6 +2606,7 @@ const resources = {
       "error.failedSubmitPred": "予想の提出に失敗しました",
       "error.unableCaptureBracket": "トーナメント表を取得できませんでした。再試行してください。",
       "error.failedExport": "❌ エクスポートに失敗しました:",
+      "Prediction deadline has passed.": "予想の締切は終了しました。",
       "User predictions are not available yet": "このユーザーの予想はまだ利用できません",
 
       // Alert
@@ -2556,6 +2743,18 @@ const resources = {
       "home.instructions.compete": "경쟁",
       "home.instructions.compete.desc": "결과 공개와 함께 리더보드를 확인하세요",
 
+      // Match Results
+      "nav.matchResults": "경기 결과",
+      "matchResults.header": "공식 경기 결과",
+      "matchResults.viewAll": "확정된 모든 토너먼트 결과 보기",
+      "matchResults.third.advance": "다음 3위 팀들이 32강에 진출했습니다",
+      "matchResults.third.advance.2": "3위에서 8팀이 진출",
+      "matchResults.third.finisher": "조 3위",
+      "matchResults.notPublished": "조별 리그 결과가 아직 공개되지 않았습니다.",
+      "matchResults.third.notPublished": "3위 진출 팀이 아직 공개되지 않았습니다.",
+      "matchResults.knockout.notPublished": "토너먼트 대진표가 아직 생성되지 않았습니다.",
+      "matchResults.knockout.match": "경기 {{id}}",
+
       // Login & Register
       "login.subtitle": "로그인하여 예측을 진행하세요",
       "username": "사용자 이름",
@@ -2687,6 +2886,14 @@ const resources = {
       "lead.joined": "가입일",
       "lead.loading": "리더보드 불러오는 중...",
       "lead.noUsers": "사용자를 찾을 수 없습니다",
+      "lead.completed": "완료됨",
+      "lead.submitted": "제출됨",
+      "lead.noPlayerRemain": "🎯 완벽한 예측을 유지한 플레이어가 없습니다!",
+      "lead.noPredictions": "📝 아직 제출된 예측이 없습니다. 가장 먼저 참여하세요!",
+      "lead.allElminated": "모든 플레이어가 탈락했습니다! 최종 순위는 종합 순위표를 확인하세요.",
+      "lead.matches": "{{no_matches}} 경기",
+      "lead.you": "나",
+      "lead.eliminated": "탈락",
       
       // Error
       "error.failedSaveRanking": "순위 저장에 실패했습니다",
@@ -2698,6 +2905,7 @@ const resources = {
       "error.failedSubmitPred": "예측 제출에 실패했습니다",
       "error.unableCaptureBracket": "대진표를 캡처할 수 없습니다. 다시 시도해주세요.",
       "error.failedExport": "❌ 내보내기 실패:",
+      "Prediction deadline has passed.": "예측 마감 시간이 지났습니다.",
       "User predictions are not available yet": "해당 사용자의 예측은 아직 사용할 수 없습니다",
 
 
@@ -2835,6 +3043,18 @@ const resources = {
       "home.instructions.compete": "Yarış",
       "home.instructions.compete.desc": "Sonuçlar açıklandıkça sıralamayı izleyin",
 
+      // Match Results
+      "nav.matchResults": "Sonuçlar",
+      "matchResults.header": "Resmi maç sonuçları",
+      "matchResults.viewAll": "Onaylanan tüm turnuva sonuçlarını görüntüle",
+      "matchResults.third.advance": "Bu üçüncüler Son 32 Turu'na yükseldi",
+      "matchResults.third.advance.2": "Üçüncülükten 8 takım yükseldi",
+      "matchResults.third.finisher": "Üçüncü",
+      "matchResults.notPublished": "Grup aşaması sonuçları henüz yayınlanmadı.",
+      "matchResults.third.notPublished": "Üçüncü sıradan çıkan takımlar henüz yayınlanmadı.",
+      "matchResults.knockout.notPublished": "Eleme turu henüz oluşturulmadı.",
+      "matchResults.knockout.match": "Maç {{id}}",
+
       // Login & Register
       "login.subtitle": "Tahmin yapmak için giriş yapın!",
       "username": "Kullanıcı Adı",
@@ -2967,6 +3187,14 @@ const resources = {
       "lead.joined": "Katıldı",
       "lead.loading": "Sıralama yükleniyor...",
       "lead.noUsers": "Kullanıcı bulunamadı",
+      "lead.completed": "Tamamlandı",
+      "lead.submitted": "Gönderildi",
+      "lead.noPlayerRemain": "🎯 Mükemmel tahmini olan oyuncu kalmadı!",
+      "lead.noPredictions": "📝 Henüz tahmin gönderilmedi. İlk sen ol!",
+      "lead.allElminated": "Tüm oyuncular elendi! Nihai sıralamayı görmek için genel tabloya bakın.",
+      "lead.matches": "{{no_matches}} maç",
+      "lead.you": "Sen",
+      "lead.eliminated": "Elendi",
       
       // Error
       "error.failedSaveRanking": "Sıralama kaydedilemedi",
@@ -2978,6 +3206,7 @@ const resources = {
       "error.failedSubmitPred": "Tahminler gönderilemedi",
       "error.unableCaptureBracket": "Fikstür yakalanamadı. Lütfen tekrar deneyin.",
       "error.failedExport": "❌ Dışa aktarma başarısız:",
+      "Prediction deadline has passed.": "Tahmin süresi doldu.",
       "User predictions are not available yet": "Kullanıcının tahminleri henüz mevcut değil",
 
       // Alert
@@ -3114,6 +3343,18 @@ const resources = {
       "home.instructions.compete": "प्रतिस्पर्धा",
       "home.instructions.compete.desc": "जैसे-जैसे परिणाम आएँ, लीडरबोर्ड देखें",
 
+      // Match Results
+      "nav.matchResults": "मैच परिणाम",
+      "matchResults.header": "आधिकारिक मैच परिणाम",
+      "matchResults.viewAll": "सभी पुष्टि किए गए टूर्नामेंट परिणाम देखें",
+      "matchResults.third.advance": "ये तीसरे स्थान की टीमें अंतिम 32 में पहुंचीं",
+      "matchResults.third.advance.2": "तीसरे स्थान से 8 टीमें आगे बढ़ीं",
+      "matchResults.third.finisher": "तीसरा स्थान",
+      "matchResults.notPublished": "ग्रुप चरण के परिणाम अभी प्रकाशित नहीं हुए हैं।",
+      "matchResults.third.notPublished": "तीसरे स्थान से आगे बढ़ने वाली टीमें अभी प्रकाशित नहीं हुई हैं।",
+      "matchResults.knockout.notPublished": "नॉकआउट ब्रैकेट अभी तैयार नहीं हुआ है।",
+      "matchResults.knockout.match": "मैच {{id}}",
+
       // Login & Register
       "login.subtitle": "भविष्यवाणी करने के लिए लॉगिन करें!",
       "username": "यूज़रनेम",
@@ -3245,6 +3486,14 @@ const resources = {
       "lead.joined": "शामिल हुए",
       "lead.loading": "लीडरबोर्ड लोड हो रहा है...",
       "lead.noUsers": "कोई उपयोगकर्ता नहीं मिला",
+      "lead.completed": "पूर्ण",
+      "lead.submitted": "जमा किया गया",
+      "lead.noPlayerRemain": "🎯 कोई भी खिलाड़ी परफेक्ट भविष्यवाणी में नहीं है!",
+      "lead.noPredictions": "📝 अभी तक कोई भविष्यवाणी जमा नहीं की गई है। पहले बनें!",
+      "lead.allElminated": "सभी खिलाड़ी बाहर हो चुके हैं! अंतिम रैंकिंग देखने के लिए सामान्य लीडरबोर्ड देखें।",
+      "lead.matches": "{{no_matches}} मैच",
+      "lead.you": "आप",
+      "lead.eliminated": "बाहर",
       
       // Error
       "error.failedSaveRanking": "रैंकिंग सहेजने में विफल",
@@ -3256,6 +3505,7 @@ const resources = {
       "error.failedSubmitPred": "भविष्यवाणियाँ सबमिट करने में विफल",
       "error.unableCaptureBracket": "ब्रैकेट कैप्चर नहीं हो सका। कृपया पुनः प्रयास करें।",
       "error.failedExport": "❌ एक्सपोर्ट विफल:",
+      "Prediction deadline has passed.": "भविष्यवाणी की समय-सीमा समाप्त हो चुकी है।",
       "User predictions are not available yet": "उपयोगकर्ता की भविष्यवाणियाँ अभी उपलब्ध नहीं हैं",
 
       // Alert
@@ -3393,6 +3643,18 @@ const resources = {
       "home.instructions.compete": "แข่งขัน",
       "home.instructions.compete.desc": "ดูตารางคะแนนเมื่อผลการแข่งขันเริ่มออก",
 
+      // Match Results
+      "nav.matchResults": "ผลการแข่งขัน",
+      "matchResults.header": "ผลการแข่งขันอย่างเป็นทางการ",
+      "matchResults.viewAll": "ดูผลการแข่งขันที่ยืนยันแล้วทั้งหมด",
+      "matchResults.third.advance": "ทีมอันดับสามเหล่านี้ผ่านเข้าสู่รอบ 32 ทีม",
+      "matchResults.third.advance.2": "8 ทีมผ่านเข้ารอบจากอันดับสาม",
+      "matchResults.third.finisher": "อันดับสาม",
+      "matchResults.notPublished": "ผลรอบแบ่งกลุ่มยังไม่ถูกเผยแพร่",
+      "matchResults.third.notPublished": "ทีมที่ผ่านจากอันดับสามยังไม่ถูกเผยแพร่",
+      "matchResults.knockout.notPublished": "รอบน็อกเอาต์ยังไม่ถูกสร้าง",
+      "matchResults.knockout.match": "แมตช์ {{id}}",
+
       // Login & Register
       "login.subtitle": "เข้าสู่ระบบเพื่อเริ่มทำนาย!",
       "username": "ชื่อผู้ใช้",
@@ -3526,6 +3788,14 @@ const resources = {
       "lead.joined": "เข้าร่วมเมื่อ",
       "lead.loading": "กำลังโหลดตารางคะแนน...",
       "lead.noUsers": "ไม่พบผู้ใช้",
+      "lead.completed": "เสร็จสิ้น",
+      "lead.submitted": "ส่งแล้ว",
+      "lead.noPlayerRemain": "🎯 ไม่มีผู้เล่นที่ทำนายถูกทั้งหมดอีกต่อไป!",
+      "lead.noPredictions": "📝 ยังไม่มีการส่งคำทำนาย มาเป็นคนแรกสิ!",
+      "lead.allElminated": "ผู้เล่นทั้งหมดถูกคัดออกแล้ว! ตรวจสอบอันดับรวมเพื่อดูผลสุดท้าย",
+      "lead.matches": "{{no_matches}} แมตช์",
+      "lead.you": "คุณ",
+      "lead.eliminated": "ตกรอบ",
 
       // Error
       "error.failedSaveRanking": "ไม่สามารถบันทึกอันดับได้",
@@ -3537,6 +3807,7 @@ const resources = {
       "error.failedSubmitPred": "ไม่สามารถส่งการทำนายได้",
       "error.unableCaptureBracket": "ไม่สามารถจับภาพบรากเก็ตได้ กรุณาลองใหม่",
       "error.failedExport": "❌ การส่งออกล้มเหลว:",
+      "Prediction deadline has passed.": "หมดเขตการทำนายแล้ว",
       "User predictions are not available yet": "การทำนายของผู้ใช้ยังไม่พร้อมใช้งาน",
 
       // Alert
@@ -3675,6 +3946,18 @@ const resources = {
       "home.instructions.compete": "Thi Đấu",
       "home.instructions.compete.desc": "Theo dõi bảng xếp hạng khi các kết quả được công bố",
 
+      // Match Results
+      "nav.matchResults": "Kết quả",
+      "matchResults.header": "Kết quả trận đấu chính thức",
+      "matchResults.viewAll": "Xem tất cả kết quả giải đấu đã được xác nhận",
+      "matchResults.third.advance": "Những đội xếp thứ ba này đã vào vòng loại trực tiếp",
+      "matchResults.third.advance.2": "8 đội đi tiếp từ vị trí thứ ba",
+      "matchResults.third.finisher": "Hạng ba",
+      "matchResults.notPublished": "Kết quả vòng bảng chưa được công bố.",
+      "matchResults.third.notPublished": "Các đội đi tiếp từ vị trí thứ ba chưa được công bố.",
+      "matchResults.knockout.notPublished": "Vòng loại trực tiếp chưa được tạo.",
+      "matchResults.knockout.match": "Trận {{id}}",
+
       // Login & Register
       "login.subtitle": "Đăng nhập để bắt đầu dự đoán!",
       "username": "Tên Người Dùng",
@@ -3806,6 +4089,14 @@ const resources = {
       "lead.joined": "Ngày Tham Gia",
       "lead.loading": "Đang tải bảng xếp hạng...",
       "lead.noUsers": "Không tìm thấy người dùng",
+      "lead.completed": "Hoàn thành",
+      "lead.submitted": "Đã gửi",
+      "lead.noPlayerRemain": "🎯 Không còn người chơi nào giữ được dự đoán hoàn hảo!",
+      "lead.noPredictions": "📝 Chưa có dự đoán nào được gửi. Hãy là người đầu tiên!",
+      "lead.allElminated": "Tất cả người chơi đã bị loại! Xem bảng xếp hạng chung để biết kết quả cuối cùng.",
+      "lead.matches": "{{no_matches}} trận đấu",
+      "lead.you": "Bạn",
+      "lead.eliminated": "Bị loại",
 
       // Error
       "error.failedSaveRanking": "Không thể lưu bảng xếp hạng",
@@ -3817,6 +4108,7 @@ const resources = {
       "error.failedSubmitPred": "Không thể gửi dự đoán",
       "error.unableCaptureBracket": "Không thể chụp sơ đồ. Vui lòng thử lại.",
       "error.failedExport": "❌ Xuất dữ liệu thất bại:",
+      "Prediction deadline has passed.": "Đã hết hạn dự đoán.",
       "User predictions are not available yet": "Dự đoán của người dùng hiện chưa có",
 
       // Alert

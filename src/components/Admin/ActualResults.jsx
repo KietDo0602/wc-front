@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { adminAPI } from '../../api/adminApi';
 import { predictionAPI } from '../../api/api';
 import { Card } from '../UI/Card';
 import { Button } from '../UI/Button';
-import { FlagIcon } from '../../utils/helpers';
+import { FlagIcon, getFlagCode } from '../../utils/helpers';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -559,31 +559,495 @@ const ThirdPlaceResults = ({ teams }) => {
 
 // Knockout Results Sub-component
 const KnockoutResults = ({ bracket, teams, onUpdate }) => {
+  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const [camera, setCamera] = useState({ x: 0, y: 0, zoom: 1 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [flagImages, setFlagImages] = useState({});
+  const [hoveredMatch, setHoveredMatch] = useState(null);
+  const matchBoxesRef = useRef([]); // Changed from state to ref
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [winnerId, setWinnerId] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  // Convert bracket object to array and group by round
   const matches = Object.values(bracket);
-  
-  const groupedMatches = matches.reduce((acc, match) => {
-    if (!acc[match.round]) acc[match.round] = [];
-    acc[match.round].push(match);
-    return acc;
-  }, {});
 
-  const roundOrder = ['R32', 'R16', 'QF', 'SF', 'F'];
-  const roundNames = {
-    'R32': 'Round of 32',
-    'R16': 'Round of 16',
-    'QF': 'Quarter Finals',
-    'SF': 'Semi Finals',
-    'F': 'Final'
+  // Preload flag images
+  useEffect(() => {
+    const loadFlags = async () => {
+      const uniqueCodes = new Set(teams.map(t => t.fifa_code));
+      const flags = {};
+      
+      await Promise.all(
+        Array.from(uniqueCodes).map(async (fifaCode) => {
+          const iso = getFlagCode(fifaCode) || 'un';
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
+          
+          await new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+          
+          if (img.naturalWidth > 0) {
+            flags[fifaCode] = img;
+          }
+        })
+      );
+      
+      setFlagImages(flags);
+    };
+
+    if (teams.length > 0) {
+      loadFlags();
+    }
+  }, [teams]);
+
+const drawBracket = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || matches.length === 0) return;
+
+    const ctx = canvas.getContext('2d');
+    const { width, height } = canvas;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#f9fafb';
+    ctx.fillRect(0, 0, width, height);
+
+    // Apply camera transform
+    ctx.save();
+    ctx.translate(camera.x, camera.y);
+    ctx.scale(camera.zoom, camera.zoom);
+
+    // Layout parameters
+    const baseX = 100;
+    const baseY = 100;
+    const cardW = 220;
+    const cardH = 140;
+    const colGap = 240;
+    const rowGap = 180;
+
+    const boxes = [];
+
+    const drawMatch = (x, y, match, label, isFinal = false) => {
+      const team1 = teams.find(t => t.id === match.team1_id);
+      const team2 = teams.find(t => t.id === match.team2_id);
+      const hasTeams = team1 && team2;
+      const h = hasTeams ? cardH : 100;
+      const isHovered = hoveredMatch === match.match_id;
+
+      // Background
+      if (isFinal) {
+        ctx.fillStyle = 'rgba(245,158,11,0.15)';
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+      } else if (match.winner_id) {
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2;
+      } else if (isHovered) {
+        ctx.fillStyle = '#e0f2fe';
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 3;
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#9ca3af';
+        ctx.lineWidth = 2;
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(x, y, cardW, h, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = isFinal ? '#f59e0b' : (match.winner_id ? '#10b981' : '#667eea');
+      ctx.font = 'bold 16px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x + cardW / 2, y + 24);
+
+      // Click indicator for matches without results
+      if (!match.winner_id && hasTeams) {
+        ctx.fillStyle = '#667eea';
+        ctx.font = '12px Arial';
+        ctx.fillText('Click to set result', x + cardW / 2, y + h - 10);
+      }
+
+      if (!hasTeams) {
+        ctx.fillStyle = '#9ca3af';
+        ctx.font = '16px Arial';
+        ctx.fillText('TBD', x + cardW / 2, y + 60);
+      } else {
+        [team1, team2].forEach((team, idx) => {
+          const ty = y + 54 + idx * 44;
+          const isWinner = team.id === match.winner_id;
+
+          // Team background
+          if (isWinner) {
+            ctx.fillStyle = '#d1fae5';
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(x + 10, ty - 20, cardW - 20, 40, 6);
+            ctx.fill();
+            ctx.stroke();
+          }
+
+          // Flag
+          const flag = flagImages[team.fifa_code];
+          if (flag) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x + 24, ty, 10, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(flag, x + 14, ty - 10, 20, 20);
+            ctx.restore();
+          }
+
+          // Team name
+          ctx.fillStyle = isWinner ? '#065f46' : '#1f2937';
+          ctx.font = isWinner ? 'bold 15px Arial' : '15px Arial';
+          ctx.textAlign = 'left';
+          const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : team.name;
+          ctx.fillText(name, x + 40, ty + 4);
+
+          // Checkmark
+          if (isWinner) {
+            ctx.fillStyle = '#10b981';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✓', x + cardW - 14, ty);
+            ctx.textBaseline = 'alphabetic';
+          }
+        });
+      }
+
+      // Store box for click detection
+      boxes.push({
+        matchId: match.match_id,
+        match: match,
+        x,
+        y,
+        w: cardW,
+        h
+      });
+
+      return { x, y, w: cardW, h };
+    };
+
+    const drawConnection = (x1, y1, x2, y2) => {
+      const midX = (x1 + x2) / 2;
+      ctx.strokeStyle = '#9ca3af';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(midX, y1);
+      ctx.lineTo(midX, y2);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    };
+
+    // Get matches by ID
+    const getMatch = (id) => matches.find(m => m.match_id === id);
+
+    // LEFT SIDE - R32 (Matches 1-8)
+    let y = baseY;
+    const r32LeftPos = [];
+    for (let i = 1; i <= 8; i++) {
+      const match = getMatch(i);
+      if (match) {
+        drawMatch(baseX, y, match, `M${i}`);
+        r32LeftPos.push({ x: baseX + cardW, y: y + cardH / 2 });
+      }
+      y += rowGap;
+    }
+
+    // LEFT - R16 (Matches 17-20)
+    y = baseY + rowGap / 2;
+    const r16LeftPos = [];
+    for (let i = 17; i <= 20; i++) {
+      const match = getMatch(i);
+      if (match) {
+        drawMatch(baseX + colGap, y, match, `M${i}`);
+        r16LeftPos.push({ x: baseX + colGap + cardW, y: y + cardH / 2 });
+      }
+      y += rowGap * 2;
+    }
+
+    // Connections R32 -> R16 (left)
+    for (let i = 0; i < 4; i++) {
+      if (r32LeftPos[i * 2] && r32LeftPos[i * 2 + 1] && r16LeftPos[i]) {
+        const p1 = r32LeftPos[i * 2];
+        const p2 = r32LeftPos[i * 2 + 1];
+        const target = r16LeftPos[i];
+        drawConnection(p1.x, p1.y, target.x - cardW, target.y);
+        drawConnection(p2.x, p2.y, target.x - cardW, target.y);
+      }
+    }
+
+    // LEFT - QF (Matches 25-26)
+    y = baseY + rowGap * 1.5;
+    const qfLeftPos = [];
+    for (let i = 25; i <= 26; i++) {
+      const match = getMatch(i);
+      if (match) {
+        drawMatch(baseX + colGap * 2, y, match, `QF${i - 24}`);
+        qfLeftPos.push({ x: baseX + colGap * 2 + cardW, y: y + cardH / 2 });
+      }
+      y += rowGap * 4;
+    }
+
+    // Connections R16 -> QF (left)
+    for (let i = 0; i < 2; i++) {
+      if (r16LeftPos[i * 2] && r16LeftPos[i * 2 + 1] && qfLeftPos[i]) {
+        const p1 = r16LeftPos[i * 2];
+        const p2 = r16LeftPos[i * 2 + 1];
+        const target = qfLeftPos[i];
+        drawConnection(p1.x, p1.y, target.x - cardW, target.y);
+        drawConnection(p2.x, p2.y, target.x - cardW, target.y);
+      }
+    }
+
+    // LEFT - SF (Match 29)
+    const sf1Y = baseY + rowGap * 3.5;
+    const match29 = getMatch(29);
+    if (match29) {
+      drawMatch(baseX + colGap * 3, sf1Y, match29, 'SF1');
+      const sf1Pos = { x: baseX + colGap * 3 + cardW, y: sf1Y + cardH / 2 };
+
+      // Connections QF -> SF1
+      if (qfLeftPos[0] && qfLeftPos[1]) {
+        drawConnection(qfLeftPos[0].x, qfLeftPos[0].y, sf1Pos.x - cardW, sf1Pos.y);
+        drawConnection(qfLeftPos[1].x, qfLeftPos[1].y, sf1Pos.x - cardW, sf1Pos.y);
+      }
+
+      // CENTER - FINAL
+      const finalX = baseX + colGap * 4;
+      const finalY = baseY + rowGap * 3.5;
+      const match31 = getMatch(31);
+
+      if (match31) {
+        const champion = teams.find(t => t.id === match31.winner_id);
+        
+        if (champion) {
+          ctx.fillStyle = '#f59e0b';
+          ctx.font = 'bold 24px Arial';
+          ctx.textAlign = 'center';
+          ctx.fillText('🏆 CHAMPION', finalX + cardW / 2, finalY - 45);
+          ctx.font = 'bold 20px Arial';
+          ctx.fillText(champion.name, finalX + cardW / 2, finalY - 18);
+        }
+
+        drawMatch(finalX, finalY, match31, 'FINAL', true);
+        const finalPos = { x: finalX + cardW, y: finalY + cardH / 2 };
+
+        // Connection SF1 -> Final
+        drawConnection(sf1Pos.x, sf1Pos.y, finalX, finalPos.y);
+
+        // RIGHT - SF2 (Match 30)
+        const match30 = getMatch(30);
+        if (match30) {
+          drawMatch(baseX + colGap * 5, sf1Y, match30, 'SF2');
+          const sf2Pos = { x: baseX + colGap * 5, y: sf1Y + cardH / 2 };
+
+          // Connection Final -> SF2
+          drawConnection(finalPos.x, finalPos.y, sf2Pos.x, sf2Pos.y);
+
+          // RIGHT - QF (Matches 27-28)
+          y = baseY + rowGap * 1.5;
+          const qfRightPos = [];
+          for (let i = 27; i <= 28; i++) {
+            const match = getMatch(i);
+            if (match) {
+              drawMatch(baseX + colGap * 6, y, match, `QF${i - 24}`);
+              qfRightPos.push({ x: baseX + colGap * 6, y: y + cardH / 2 });
+            }
+            y += rowGap * 4;
+          }
+
+          // Connections SF2 -> QF (right)
+          if (qfRightPos[0] && qfRightPos[1]) {
+            drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[0].x, qfRightPos[0].y);
+            drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[1].x, qfRightPos[1].y);
+          }
+
+          // RIGHT - R16 (Matches 21-24)
+          y = baseY + rowGap / 2;
+          const r16RightPos = [];
+          for (let i = 21; i <= 24; i++) {
+            const match = getMatch(i);
+            if (match) {
+              drawMatch(baseX + colGap * 7, y, match, `M${i}`);
+              r16RightPos.push({ x: baseX + colGap * 7, y: y + cardH / 2 });
+            }
+            y += rowGap * 2;
+          }
+
+          // Connections QF -> R16 (right)
+          for (let i = 0; i < 2; i++) {
+            if (r16RightPos[i * 2] && r16RightPos[i * 2 + 1] && qfRightPos[i]) {
+              const p1 = r16RightPos[i * 2];
+              const p2 = r16RightPos[i * 2 + 1];
+              const target = qfRightPos[i];
+              drawConnection(target.x + cardW, target.y, p1.x, p1.y);
+              drawConnection(target.x + cardW, target.y, p2.x, p2.y);
+            }
+          }
+
+          // RIGHT - R32 (Matches 9-16)
+          y = baseY;
+          const r32RightPos = [];
+          for (let i = 9; i <= 16; i++) {
+            const match = getMatch(i);
+            if (match) {
+              drawMatch(baseX + colGap * 8, y, match, `M${i}`);
+              r32RightPos.push({ x: baseX + colGap * 8, y: y + cardH / 2 });
+            }
+            y += rowGap;
+          }
+
+          // Connections R16 -> R32 (right)
+          for (let i = 0; i < 4; i++) {
+            if (r32RightPos[i * 2] && r32RightPos[i * 2 + 1] && r16RightPos[i]) {
+              const p1 = r32RightPos[i * 2];
+              const p2 = r32RightPos[i * 2 + 1];
+              const target = r16RightPos[i];
+              drawConnection(target.x + cardW, target.y, p1.x, p1.y);
+              drawConnection(target.x + cardW, target.y, p2.x, p2.y);
+            }
+          }
+        }
+      }
+    }
+
+    ctx.restore();
+    matchBoxesRef.current = boxes; // Store in ref instead of state
+  }, [camera, matches, teams, flagImages, hoveredMatch]);
+
+  useEffect(() => {
+    if (matches.length > 0) {
+      drawBracket();
+    }
+  }, [drawBracket]);
+
+  // Resize handler
+  useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      if (!canvas || !container) return;
+
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      drawBracket();
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [drawBracket]);
+
+  // Mouse handlers
+  const getMousePos = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left - camera.x) / camera.zoom,
+      y: (e.clientY - rect.top - camera.y) / camera.zoom
+    };
   };
 
-  const handleMatchSelect = (match) => {
-    setSelectedMatch(match);
-    setWinnerId(match.winner_id?.toString() || '');
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - camera.x, y: e.clientY - camera.y });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setCamera(prev => ({
+        ...prev,
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      }));
+    } else {
+      // Hover detection
+      const pos = getMousePos(e);
+      let foundMatch = null;
+
+      for (const box of matchBoxesRef.current) { // Use ref
+        if (pos.x >= box.x && pos.x <= box.x + box.w &&
+            pos.y >= box.y && pos.y <= box.y + box.h) {
+          foundMatch = box.matchId;
+          break;
+        }
+      }
+
+      setHoveredMatch(foundMatch);
+      canvasRef.current.style.cursor = foundMatch ? 'pointer' : (isDragging ? 'grabbing' : 'grab');
+    }
+  };
+
+  const handleMouseUp = (e) => {
+    setIsDragging(false);
+
+    // Click detection
+    const pos = getMousePos(e);
+    
+    for (const box of matchBoxesRef.current) { // Use ref
+      if (pos.x >= box.x && pos.x <= box.x + box.w &&
+          pos.y >= box.y && pos.y <= box.y + box.h) {
+        // Only allow clicking on matches with teams but no winner
+        if (box.match.team1_id && box.match.team2_id && !box.match.winner_id) {
+          setSelectedMatch(box.match);
+          setWinnerId('');
+        }
+        break;
+      }
+    }
+  };
+
+  // Wheel zoom
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * delta));
+      
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      const worldX = (mouseX - camera.x) / camera.zoom;
+      const worldY = (mouseY - camera.y) / camera.zoom;
+      
+      setCamera({
+        x: mouseX - worldX * newZoom,
+        y: mouseY - worldY * newZoom,
+        zoom: newZoom
+      });
+    };
+
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    return () => canvas.removeEventListener('wheel', handleWheel);
+  }, [camera]);
+
+  const handleZoomIn = () => {
+    setCamera(prev => ({ ...prev, zoom: Math.min(3, prev.zoom * 1.2) }));
+  };
+
+  const handleZoomOut = () => {
+    setCamera(prev => ({ ...prev, zoom: Math.max(0.4, prev.zoom / 1.2) }));
+  };
+
+  const handleResetView = () => {
+    setCamera({ x: 0, y: 0, zoom: 1 });
   };
 
   const handleSave = async () => {
@@ -592,12 +1056,12 @@ const KnockoutResults = ({ bracket, teams, onUpdate }) => {
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
     try {
       await adminAPI.updateActualKnockoutResult(selectedMatch.match_id, parseInt(winnerId));
       alert('Match result saved successfully!');
       
-      // Reload bracket to show updated matches
+      // Reload bracket
       await onUpdate();
       
       setSelectedMatch(null);
@@ -606,7 +1070,7 @@ const KnockoutResults = ({ bracket, teams, onUpdate }) => {
       console.error('Failed to save knockout result:', error);
       alert(error.response?.data?.error || 'Failed to save knockout result');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -623,48 +1087,41 @@ const KnockoutResults = ({ bracket, teams, onUpdate }) => {
     );
   }
 
+  const roundNames = {
+    'R32': 'Round of 32',
+    'R16': 'Round of 16',
+    'QF': 'Quarter Finals',
+    'SF': 'Semi Finals',
+    'F': 'Final'
+  };
+
   return (
     <div className="knockout-results">
-      <div className="rounds-list">
-        {roundOrder.map(round => {
-          const roundMatches = groupedMatches[round] || [];
-          if (roundMatches.length === 0) return null;
-
-          return (
-            <Card key={round} className="round-card">
-              <h3>{roundNames[round]}</h3>
-              <div className="matches-grid">
-                {roundMatches.sort((a, b) => a.match_id - b.match_id).map(match => (
-                  <button
-                    key={match.match_id}
-                    className={`match-button ${selectedMatch?.match_id === match.match_id ? 'active' : ''} ${match.winner_id ? 'completed' : ''}`}
-                    onClick={() => handleMatchSelect(match)}
-                  >
-                    <div className="match-info">
-                      <div className="match-number">Match {match.match_id}</div>
-                      <div className="match-teams">
-                        <div className="match-team">
-                          <FlagIcon fifaCode={match.team1_fifa_code} size="small" />
-                          <span>{match.team1_name}</span>
-                        </div>
-                        <span className="vs">vs</span>
-                        <div className="match-team">
-                          <FlagIcon fifaCode={match.team2_fifa_code} size="small" />
-                          <span>{match.team2_name}</span>
-                        </div>
-                      </div>
-                      {match.winner_id && <span className="completed-badge">✓</span>}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </Card>
-          );
-        })}
+      <div className="knockout-bracket-container">
+        <div className="bracket-canvas-wrapper" ref={containerRef}>
+          <canvas
+            ref={canvasRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={() => setIsDragging(false)}
+            style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+          />
+          <div className="bracket-controls">
+            <button onClick={handleZoomIn} title="Zoom In">+</button>
+            <button onClick={handleZoomOut} title="Zoom Out">−</button>
+            <button onClick={handleResetView} title="Reset View">⟲</button>
+            <span className="zoom-level">{Math.round(camera.zoom * 100)}%</span>
+          </div>
+        </div>
+        
+        <div className="bracket-instructions">
+          <p>🖱️ Click on a match to set the winner | 🖐️ Drag to pan | 🔍 Scroll to zoom</p>
+        </div>
       </div>
 
       {selectedMatch && (
-        <Card className="match-result-card">
+        <Card className="match-result-modal">
           <h3>Match {selectedMatch.match_id} - {roundNames[selectedMatch.round]}</h3>
           <div className="match-teams-display">
             <div className="team-display">
@@ -707,7 +1164,7 @@ const KnockoutResults = ({ bracket, teams, onUpdate }) => {
           </div>
 
           <div className="card-actions">
-            <Button onClick={handleSave} disabled={!winnerId || loading} loading={loading}>
+            <Button onClick={handleSave} disabled={!winnerId || saving} loading={saving}>
               💾 Save Match Result
             </Button>
             <Button variant="outline" onClick={() => setSelectedMatch(null)}>
@@ -719,3 +1176,4 @@ const KnockoutResults = ({ bracket, teams, onUpdate }) => {
     </div>
   );
 };
+

@@ -12,7 +12,7 @@ import { LeaderboardPage } from './pages/LeaderboardPage';
 import { AuthCallbackPage } from './pages/AuthCallbackPage';
 import { CompleteSignupPage } from './pages/CompleteSignupPage';
 import { AdminDashboard } from './pages/AdminDashboard';
-
+import { MatchResultsPage } from './pages/MatchResultsPage';
 
 
 function App() {
@@ -42,6 +42,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <LeaderboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/results"
+                element={
+                  <ProtectedRoute>
+                    <MatchResultsPage />
                   </ProtectedRoute>
                 }
               />
