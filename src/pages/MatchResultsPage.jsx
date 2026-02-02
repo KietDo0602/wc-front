@@ -210,15 +210,15 @@ const ThirdPlaceResults = ({ thirdPlaceResults, getTeamById }) => {
   }
 
   return (
-    <div className="third-place-container">
-      <Card className="third-place-card">
+    <div className="results-third-place-container">
+      <Card className="results-third-place-card">
         <h3>{t('matchResults.third.advance.2')}</h3>
         <p className="description">
           {t("matchResults.third.advance")}
         </p>
-        <div className="third-place-grid">
+        <div className="results-third-place-grid">
           {thirdPlaceResults.map((team, index) => (
-            <div key={team.id} className="third-place-team">
+            <div key={team.id} className="results-third-place-team">
               <div className="team-number">{index + 1}</div>
               <div className="team-details">
                 <FlagIcon fifaCode={team.fifa_code} size="large" />
@@ -288,7 +288,7 @@ const KnockoutResults = ({ bracket, teams }) => {
 
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#f9fafb';
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--background') || '#ffffff';
     ctx.fillRect(0, 0, width, height);
 
     // Apply camera transform
@@ -315,13 +315,9 @@ const KnockoutResults = ({ bracket, teams }) => {
         ctx.fillStyle = 'rgba(245,158,11,0.15)';
         ctx.strokeStyle = '#f59e0b';
         ctx.lineWidth = 3;
-      } else if (match.winner_id) {
-        ctx.fillStyle = '#ffffff';
-        ctx.strokeStyle = '#10b981';
-        ctx.lineWidth = 2;
       } else {
-        ctx.fillStyle = '#ffffff';
-        ctx.strokeStyle = '#9ca3af';
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#ffffff';
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#636363';
         ctx.lineWidth = 2;
       }
 
@@ -331,7 +327,7 @@ const KnockoutResults = ({ bracket, teams }) => {
       ctx.stroke();
 
       // Label
-      ctx.fillStyle = isFinal ? '#f59e0b' : (match.winner_id ? '#10b981' : '#667eea');
+      ctx.fillStyle = isFinal ? '#f59e0b' : (match.winner_id ? getComputedStyle(document.documentElement).getPropertyValue('--primary') : '#667eea');
       ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.fillText(label, x + cardW / 2, y + 24);
@@ -368,7 +364,8 @@ const KnockoutResults = ({ bracket, teams }) => {
           }
 
           // Team name
-          ctx.fillStyle = isWinner ? '#065f46' : '#1f2937';
+          const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#1f2937';
+          ctx.fillStyle = isWinner ? '#065f46' : textColor;
           ctx.font = isWinner ? 'bold 15px Arial' : '15px Arial';
           ctx.textAlign = 'left';
           const name = team.name.length > 16 ? team.name.slice(0, 14) + '...' : t(team.fifa_code);
@@ -391,7 +388,7 @@ const KnockoutResults = ({ bracket, teams }) => {
 
     const drawConnection = (x1, y1, x2, y2) => {
       const midX = (x1 + x2) / 2;
-      ctx.strokeStyle = '#9ca3af';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#636363';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(x1, y1);

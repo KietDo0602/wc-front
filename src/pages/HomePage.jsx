@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/UI/Button';
 import './HomePage.css';
+import Logo from '/src/logo.svg';
 
 export const HomePage = () => {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ export const HomePage = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
-            <span className="hero-icon">🏆</span>
+            <img src={Logo} className="hero-icon" alt="Logo" />
             World Cup Brackets
           </h1>
           <p className="hero-subtitle">

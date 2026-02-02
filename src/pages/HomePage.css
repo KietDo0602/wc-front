@@ -24,8 +24,9 @@
 }
 
 .hero-icon {
-  font-size: 5rem;
+  width: 150px;
   display: block;
+  margin: 0 auto;
   margin-bottom: 1rem;
   animation: bounce 2s infinite;
 }

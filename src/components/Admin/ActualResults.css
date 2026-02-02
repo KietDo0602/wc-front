@@ -415,9 +415,9 @@
 .third-place-card {
   position: relative;
   padding: 1.5rem;
-  border: 2px solid #dee2e6;
+  border: 2px solid var(--primary);
   border-radius: 8px;
-  background: white;
+  background: var(--background);
   transition: all 0.2s;
 }
 

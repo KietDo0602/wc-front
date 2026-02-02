@@ -4094,7 +4094,7 @@ const resources = {
       "lead.noPlayerRemain": "🎯 Không còn người chơi nào giữ được dự đoán hoàn hảo!",
       "lead.noPredictions": "📝 Chưa có dự đoán nào được gửi. Hãy là người đầu tiên!",
       "lead.allElminated": "Tất cả người chơi đã bị loại! Xem bảng xếp hạng chung để biết kết quả cuối cùng.",
-      "lead.matches": "{{no_matches}} trận đấu",
+      "lead.matches": "{{no_matches}} trận",
       "lead.you": "Bạn",
       "lead.eliminated": "Bị loại",
 

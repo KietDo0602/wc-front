@@ -174,7 +174,7 @@ export const LeaderboardPage = () => {
                     </td>
                     <td>
                       <span className="matches-badge">
-                        {user.completed_matches} matches
+                        {t('lead.matches', {no_matches: user.completed_matches})} 
                       </span>
                     </td>
                     <td className="date-cell">
