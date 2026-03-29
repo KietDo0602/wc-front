@@ -23,6 +23,9 @@ export const authAPI = {
   register: (data) => api.post('/users/register', data),
   login: (data) => api.post('/users/login', data),
   getProfile: () => api.get('/users/profile'),
+  forgotPassword: (email) => api.post('/users/forgot-password', { email }),
+  resetPassword: (token, newPassword) => 
+    api.post('/users/reset-password', { token, newPassword }),
   completeGoogleSignup: (data, tempToken) => 
   api.post('/users/auth/google/complete-signup', data, {
     headers: { Authorization: `Bearer ${tempToken}` }

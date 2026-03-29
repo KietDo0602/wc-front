@@ -13,6 +13,8 @@ import { AuthCallbackPage } from './pages/AuthCallbackPage';
 import { CompleteSignupPage } from './pages/CompleteSignupPage';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { MatchResultsPage } from './pages/MatchResultsPage';
+import { ForgotPassword } from './components/Auth/ForgotPassword';
+import { ResetPassword } from './components/Auth/ResetPassword';
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
               <Route path="/auth/complete-signup" element={<CompleteSignupPage />} />
               <Route path="/admin" element={<AdminDashboard />} />

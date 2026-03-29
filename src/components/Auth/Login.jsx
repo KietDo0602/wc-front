@@ -64,7 +64,12 @@ export const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">{t('auth.password')}</label>
+            <div className="password-header">
+              <label htmlFor="password">{t('auth.password')}</label>
+              <Link to="/forgot-password" className="forgot-password-link">
+                {t('auth.forgotPassword')}
+              </Link>
+            </div>
             <input
               type="password"
               id="password"

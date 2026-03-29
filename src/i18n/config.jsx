@@ -217,6 +217,32 @@ const resources = {
       "confirm.submit": "Are you sure you want to submit? You cannot make changes after submission.",
       "confirm.submit.success": "✅ Predictions submitted successfully! Good luck!",
 
+      "auth": {
+        "forgotPassword": "Forgot Password?",
+        "forgotPasswordSubtitle": "Enter your email and we'll send you a password reset link (if your account exists)",
+        "sendResetLink": "Send Password Reset Link",
+        "sending": "Sending...",
+        "checkEmail": "Check Your Email",
+        "resetEmailSent": "We've sent a password reset link to your email",
+        "didntReceive": "Didn't receive the email?",
+        "tryAgain": "Try again",
+        "backToLogin": "Back to Login",
+        "resetPassword": "Reset Password",
+        "resetPasswordSubtitle": "Enter your new password below",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "resetPasswordButton": "Reset Password",
+        "resetting": "Resetting...",
+        "passwordMismatch": "Passwords do not match",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordResetSuccess": "Password reset successfully! You can now login.",
+        "passwordResetFailed": "Failed to reset password",
+        "invalidToken": "Invalid Reset Link",
+        "invalidTokenMessage": "This password reset link is invalid or has expired. Please request a new one.",
+        "invalidResetToken": "Invalid or expired reset link",
+        "requestNewLink": "Request New Reset Link"
+      },
+
       // Themes
       "theme.light": "Light",
       "theme.dark": "Dark",

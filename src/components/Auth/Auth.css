@@ -163,3 +163,64 @@
   margin-right: 8px;
 }
 
+
+/* Password header with forgot link */
+.password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.forgot-password-link {
+  color: var(--primary, #667eea);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.forgot-password-link:hover {
+  color: var(--primary-dark, #764ba2);
+  text-decoration: underline;
+}
+
+/* Success and error states */
+.success-icon,
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.success-message,
+.error-message {
+  color: var(--text-secondary, #6b7280);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: #dc2626;
+}
+
+.auth-footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--primary, #667eea);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.link-button:hover {
+  color: var(--primary-dark, #764ba2);
+}
