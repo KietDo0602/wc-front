@@ -128,7 +128,7 @@
 }
 
 .settings-info-card {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  background: var(--background);
 }
 
 .settings-info-card h3 {

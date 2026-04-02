@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { resultsAPI, predictionAPI } from '../api/api';
 import { Card } from '../components/UI/Card';
-import { FlagIcon, getFlagCode } from '../utils/helpers';
+import { FlagIcon, getLocalFlagUrl } from '../utils/helpers';
 import './MatchResultsPage.css';
 
 export const MatchResultsPage = () => {
@@ -255,10 +255,12 @@ const KnockoutResults = ({ bracket, teams }) => {
       
       await Promise.all(
         Array.from(uniqueCodes).map(async (fifaCode) => {
-          const iso = getFlagCode(fifaCode) || 'un';
+          const src = getLocalFlagUrl(fifaCode);
+          if (!src) return;
+
           const img = new Image();
           img.crossOrigin = 'anonymous';
-          img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
+          img.src = src;
           
           await new Promise((resolve) => {
             img.onload = resolve;
