@@ -105,6 +105,20 @@ export const FlagIcon = ({ fifaCode, size = 'normal' }) => {
   return <span className={`fi fi-${countryCode} ${sizeClass}`}></span>;
 };
 
+export const getLocalFlagUrl = (fifaCode) => {
+  const iso = getFlagCode(fifaCode);
+  if (!iso) return null;
+
+  try {
+    return new URL(
+      `../../node_modules/flag-icons/flags/4x3/${iso}.svg`,
+      import.meta.url
+    ).href;
+  } catch {
+    return null;
+  }
+};
+
 
 export const getLanguageFlagCode = (languageCode) => {
   const langFlagMap = {

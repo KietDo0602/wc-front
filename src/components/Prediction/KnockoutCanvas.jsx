@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getFlagCode } from '../../utils/helpers';
 import { predictionAPI } from '../../api/api';
 import { Button } from '../UI/Button';
-import { findMatchingElement } from '../../utils/helpers';
+import { findMatchingElement, getLocalFlagUrl } from '../../utils/helpers';
 import './KnockoutCanvas.css';
 
 export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, user }) => {
@@ -76,7 +75,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       });
 
       const sortedGroups = Object.keys(groupsMap).sort((a, b) => parseInt(a) - parseInt(b));
-      
+
       sortedGroups.forEach(groupId => {
         const ranking = groupsMap[groupId];
         if (ranking && ranking.length >= 3) {
@@ -105,14 +104,12 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       const flags = {};
       await Promise.all(
         Array.from(uniqueCodes).map(async (fifaCode) => {
-          let iso = getFlagCode(fifaCode);
-          if (iso === null) {
-            iso = 'un' // UN Flag
-          }
-          
+          const src = getLocalFlagUrl(fifaCode);
+          if (!src) return;
+
           const img = new Image();
           img.crossOrigin = 'anonymous';
-          img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
+          img.src = src;
           
           await new Promise((resolve) => {
             img.onload = resolve;
@@ -812,14 +809,12 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
          Flag drawing
       ============================== */
       const drawFlag = async (fifaCode, x, y, size = 16) => {
-        let iso = getFlagCode(fifaCode);
-        if (iso === null) {
-          iso = 'un' // UN Flag
-        }
+        const src = getLocalFlagUrl(fifaCode);
+        if (!src) return;
 
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.src = `https://corsproxy.io/?https://flagcdn.com/w40/${iso}.png`;
+        img.src = src;
 
         await new Promise((res) => {
           img.onload = res;
