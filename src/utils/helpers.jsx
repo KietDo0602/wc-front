@@ -352,7 +352,7 @@ export const countryNames = {
   NOR: "Norway",
   MKD: "North Macedonia",
   IRL: "Ireland",
-  BIH: "Bosnia and Herzegovina",
+  BIH: "Bosnia",
   NIR: "Northern Ireland",
   WAL: "Wales",
   KVX: "Kosovo",
@@ -394,6 +394,6 @@ export const countryNames = {
   // Others
   BOL: "Bolivia",
   SUR: "Suriname",
-  COD: "Democratic Republic of the Congo",
+  COD: "Congo DR",
   NCL: "New Caledonia"
 };
