@@ -66,9 +66,6 @@ export const Login = () => {
           <div className="form-group">
             <div className="password-header">
               <label htmlFor="password">{t('auth.password')}</label>
-              <Link to="/forgot-password" className="forgot-password-link">
-                {t('auth.forgotPassword')}
-              </Link>
             </div>
             <input
               type="password"
@@ -78,6 +75,9 @@ export const Login = () => {
               placeholder={t('placeholder.enterPassword')}
               required
             />
+            <Link to="/forgot-password" className="forgot-password-link">
+              {t('auth.forgotPassword')}
+            </Link>
           </div>
 
           <Button type="submit" size="large" className="w-full" loading={loading} fullwidth="true">
