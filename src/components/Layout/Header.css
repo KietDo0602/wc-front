@@ -100,8 +100,8 @@
 }
 
 .nav-link.active {
-  color: var(--text);
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
 }
 
 .admin-link {
