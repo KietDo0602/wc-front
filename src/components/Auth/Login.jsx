@@ -9,6 +9,8 @@ import './Auth.css';
 export const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const { login } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -19,18 +21,34 @@ export const Login = () => {
     const params = new URLSearchParams(location.search);
     const error = params.get('error');
     if (error === 'auth_failed' || error === 'google_auth_failed') {
-      alert('Authentication failed. Please try again.');
+      setErrorMessage('Authentication failed. Please try again.');
     }
   }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Reset previous error
+    setErrorMessage("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      setErrorMessage("auth.invalidEmailFormat");
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setErrorMessage("auth.passwordTooShort");
+      return;
+    }
+
     setLoading(true);
     try {
       await login(formData);
       navigate('/predictions');
     } catch (error) {
-      alert(error.response?.data?.error || 'Login failed');
+      setErrorMessage(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -79,6 +97,13 @@ export const Login = () => {
               {t('auth.forgotPassword')}
             </Link>
           </div>
+
+          {errorMessage && (
+            <div className="auth-error">
+              {t(errorMessage)}
+            </div>
+          )}
+
 
           <Button type="submit" size="large" className="w-full" loading={loading} fullwidth="true">
             {loading ? t('auth.loggingIn') : t('nav.login')}

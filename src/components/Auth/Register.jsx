@@ -27,15 +27,15 @@ export const Register = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return t('Invalid email format');
+      return t('auth.invalidEmailFormat');
     }
 
     if (password.length < 8) {
-      return t('Password must be at least 8 characters');
+      return t('auth.passwordTooShort');
     }
 
     if (password !== confirmPassword) {
-      return t('Passwords do not match');
+      return t('auth.passwordMismatch');
     }
 
     return null;
@@ -64,9 +64,9 @@ export const Register = () => {
       const errorData = err.response?.data;
       
       if (errorData?.authMethod === 'google') {
-        setError(errorData.error || t('An account with this email already exists. Please sign in with Google instead.'));
+        setError(t(errorData.error) || t('An account with this email already exists. Please sign in with Google instead.'));
       } else {
-        setError(errorData?.error || t('Failed to send verification code'));
+        setError(t(errorData?.error) || t('Failed to send verification code'));
       }
     } finally {
       setLoading(false);
@@ -90,7 +90,7 @@ export const Register = () => {
       navigate('/predictions');
     } catch (error) {
       console.error('Verification failed:', error);
-      setError(error.response?.data?.error || t('Verification failed'));
+      setError(t(error.response?.data?.error) || t('Verification failed'));
     } finally {
       setIsVerifying(false);
     }
@@ -164,7 +164,7 @@ export const Register = () => {
           </div>
 
           {error && (
-            <div className="error-message">{error}</div>
+            <div className="error-message">{t(error)}</div>
           )}
 
           <Button type="submit" loading={loading} size="large" fullwidth="true">

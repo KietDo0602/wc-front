@@ -77,7 +77,7 @@ const resources = {
       "error.faileCreateAccount": "Failed to create account",
       "placeholder.email": "your@email.com",
       "placeholder.enterPassword": "Enter your password",
-      "placeholder.enterPasswordMin": "Enter your password (min 6 characters)",
+      "placeholder.enterPasswordMin": "Enter your password (min 8 characters)",
       "placeholder.confirmPassword": "Confirm your password",
       
       // Auth
@@ -216,12 +216,45 @@ const resources = {
       "confirm.submit": "Are you sure you want to submit? You cannot make changes after submission.",
       "confirm.submit.success": "✅ Predictions submitted successfully! Good luck!",
 
+      "INVALID_EMAIL_FORMAT": "Invalid email format",
+      "PASSWORD_TOO_SHORT_8": "Password must be at least 8 characters long",
+      "EMAIL_ALREADY_REGISTERED": "This email is already registered",
+      "VERIFICATION_CODE_SENT": "A verification code has been sent to your email",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Verification code not found",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Verification code has expired. Please register again",
+      "INVALID_VERIFICATION_CODE": "The verification code you entered is incorrect",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Your email has been successfully verified",
+
+      "NO_PENDING_VERIFICATION": "No pending verification found for this email",
+      "VERIFICATION_CODE_RESENT": "A new verification code has been sent to your email",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Invalid email or password",
+      "GOOGLE_LOGIN_REQUIRED": "This account uses Google login. Please sign in with Google",
+      "LOGIN_SUCCESSFUL": "Login successful",
+
+      "USER_NOT_FOUND": "User not found",
+
+      "PASSWORD_RESET_EMAIL_SENT": "If an account exists with this email, a reset code will be sent",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Invalid or expired reset token",
+      "PASSWORD_RESET_SUCCESS": "Your password has been reset successfully",
+
+      "REGISTRATION_FAILED": "Failed to complete registration",
+      "EMAIL_VERIFICATION_FAILED": "Failed to verify email",
+      "RESEND_VERIFICATION_FAILED": "Failed to resend verification code",
+      "LOGIN_FAILED": "Failed to log in",
+      "PROFILE_FETCH_FAILED": "Failed to load user profile",
+      "PASSWORD_RESET_REQUEST_FAILED": "Failed to process password reset request",
+      "PASSWORD_RESET_FAILED": "Failed to reset password",
+      "INTERNAL_SERVER_ERROR": "An unexpected error occurred. Please try again later",
+
       "auth": {
         "forgotPassword": "Forgot Password?",
         "forgotPasswordSubtitle": "Enter your email and we'll send you a password reset link (if your account exists)",
         "sendResetLink": "Send Password Reset Link",
         "sending": "Sending...",
         "checkEmail": "Check Your Email",
+        "invalidEmailFormat": "Invalid Email Format",
         "resetEmailSent": "We've sent a password reset link to your email",
         "didntReceive": "Didn't receive the email?",
         "tryAgain": "Try again",
@@ -233,7 +266,7 @@ const resources = {
         "resetPasswordButton": "Reset Password",
         "resetting": "Resetting...",
         "passwordMismatch": "Passwords do not match",
-        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordTooShort": "Password must be at least 8 characters",
         "passwordResetSuccess": "Password reset successfully! You can now login.",
         "passwordResetFailed": "Failed to reset password",
         "invalidToken": "Invalid Reset Link",
@@ -552,12 +585,45 @@ const resources = {
       "confirm.submit": "¿Está seguro de que desea enviar? No podrá realizar cambios después del envío.",
       "confirm.submit.success": "✅ ¡Predicciones enviadas correctamente! ¡Buena suerte!",
 
+      "INVALID_EMAIL_FORMAT": "Formato de correo electrónico no válido",
+      "PASSWORD_TOO_SHORT_8": "La contraseña debe tener al menos 8 caracteres",
+      "EMAIL_ALREADY_REGISTERED": "Este correo electrónico ya está registrado",
+      "VERIFICATION_CODE_SENT": "Se ha enviado un código de verificación a su correo electrónico",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Código de verificación no encontrado",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "El código de verificación ha expirado. Por favor, regístrese nuevamente",
+      "INVALID_VERIFICATION_CODE": "El código de verificación ingresado es incorrecto",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Su correo electrónico ha sido verificado con éxito",
+
+      "NO_PENDING_VERIFICATION": "No hay verificación pendiente para este correo electrónico",
+      "VERIFICATION_CODE_RESENT": "Se ha enviado un nuevo código de verificación a su correo electrónico",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Correo electrónico o contraseña inválidos",
+      "GOOGLE_LOGIN_REQUIRED": "Esta cuenta usa inicio de sesión con Google. Por favor, inicie sesión con Google",
+      "LOGIN_SUCCESSFUL": "Inicio de sesión exitoso",
+
+      "USER_NOT_FOUND": "Usuario no encontrado",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Si existe una cuenta con este correo, se enviará un código de restablecimiento",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Token de restablecimiento inválido o expirado",
+      "PASSWORD_RESET_SUCCESS": "Su contraseña ha sido restablecida con éxito",
+
+      "REGISTRATION_FAILED": "Error al completar el registro",
+      "EMAIL_VERIFICATION_FAILED": "Error al verificar el correo electrónico",
+      "RESEND_VERIFICATION_FAILED": "Error al reenviar el código de verificación",
+      "LOGIN_FAILED": "Error al iniciar sesión",
+      "PROFILE_FETCH_FAILED": "Error al cargar el perfil del usuario",
+      "PASSWORD_RESET_REQUEST_FAILED": "Error al procesar la solicitud de restablecimiento de contraseña",
+      "PASSWORD_RESET_FAILED": "Error al restablecer la contraseña",
+      "INTERNAL_SERVER_ERROR": "Ocurrió un error inesperado. Por favor, inténtelo más tarde",
+
       "auth": {
         "forgotPassword": "¿Olvidaste tu contraseña?",
         "forgotPasswordSubtitle": "Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña (si tu cuenta existe)",
         "sendResetLink": "Enviar enlace de restablecimiento",
         "sending": "Enviando...",
         "checkEmail": "Revisa tu correo electrónico",
+        "invalidEmailFormat": "Formato de correo electrónico no válido",
         "resetEmailSent": "Hemos enviado un enlace para restablecer la contraseña a tu correo electrónico",
         "didntReceive": "¿No recibiste el correo?",
         "tryAgain": "Inténtalo de nuevo",
@@ -569,7 +635,7 @@ const resources = {
         "resetPasswordButton": "Restablecer contraseña",
         "resetting": "Restableciendo...",
         "passwordMismatch": "Las contraseñas no coinciden",
-        "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
         "passwordResetSuccess": "¡Contraseña restablecida correctamente! Ahora puedes iniciar sesión.",
         "passwordResetFailed": "Error al restablecer la contraseña",
         "invalidToken": "Enlace de restablecimiento no válido",
@@ -877,12 +943,45 @@ const resources = {
       "confirm.submit": "Êtes-vous sûr de vouloir soumettre ? Vous ne pourrez plus effectuer de modifications après l’envoi.",
       "confirm.submit.success": "✅ Pronostics envoyés avec succès ! Bonne chance !",
 
+      "INVALID_EMAIL_FORMAT": "Format d'email invalide",
+      "PASSWORD_TOO_SHORT_8": "Le mot de passe doit contenir au moins 8 caractères",
+      "EMAIL_ALREADY_REGISTERED": "Cet email est déjà enregistré",
+      "VERIFICATION_CODE_SENT": "Un code de vérification a été envoyé à votre email",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Code de vérification introuvable",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Le code de vérification a expiré. Veuillez vous inscrire à nouveau",
+      "INVALID_VERIFICATION_CODE": "Le code de vérification saisi est incorrect",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Votre email a été vérifié avec succès",
+
+      "NO_PENDING_VERIFICATION": "Aucune vérification en attente pour cet email",
+      "VERIFICATION_CODE_RESENT": "Un nouveau code de vérification a été envoyé à votre email",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Email ou mot de passe invalide",
+      "GOOGLE_LOGIN_REQUIRED": "Ce compte utilise la connexion Google. Veuillez vous connecter avec Google",
+      "LOGIN_SUCCESSFUL": "Connexion réussie",
+
+      "USER_NOT_FOUND": "Utilisateur introuvable",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Si un compte existe avec cet email, un code de réinitialisation sera envoyé",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Jeton de réinitialisation invalide ou expiré",
+      "PASSWORD_RESET_SUCCESS": "Votre mot de passe a été réinitialisé avec succès",
+
+      "REGISTRATION_FAILED": "Échec de l'inscription",
+      "EMAIL_VERIFICATION_FAILED": "Échec de la vérification de l'email",
+      "RESEND_VERIFICATION_FAILED": "Échec du renvoi du code de vérification",
+      "LOGIN_FAILED": "Échec de la connexion",
+      "PROFILE_FETCH_FAILED": "Échec du chargement du profil utilisateur",
+      "PASSWORD_RESET_REQUEST_FAILED": "Échec du traitement de la demande de réinitialisation",
+      "PASSWORD_RESET_FAILED": "Échec de la réinitialisation du mot de passe",
+      "INTERNAL_SERVER_ERROR": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard",
+
       "auth": {
         "forgotPassword": "Mot de passe oublié ?",
         "forgotPasswordSubtitle": "Entrez votre email et nous vous enverrons un lien de réinitialisation (si votre compte existe)",
         "sendResetLink": "Envoyer le lien de réinitialisation",
         "sending": "Envoi...",
         "checkEmail": "Vérifiez votre email",
+        "invalidEmailFormat": "Format d'email invalide",
         "resetEmailSent": "Nous avons envoyé un lien de réinitialisation à votre adresse email",
         "didntReceive": "Vous n’avez pas reçu l’email ?",
         "tryAgain": "Réessayer",
@@ -894,7 +993,7 @@ const resources = {
         "resetPasswordButton": "Réinitialiser le mot de passe",
         "resetting": "Réinitialisation...",
         "passwordMismatch": "Les mots de passe ne correspondent pas",
-        "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
         "passwordResetSuccess": "Mot de passe réinitialisé avec succès ! Vous pouvez maintenant vous connecter.",
         "passwordResetFailed": "Échec de la réinitialisation du mot de passe",
         "invalidToken": "Lien de réinitialisation invalide",
@@ -1201,12 +1300,45 @@ const resources = {
       "confirm.submit": "您确定要提交吗？提交后将无法进行任何修改。",
       "confirm.submit.success": "✅ 预测提交成功！祝您好运！",
 
+      "INVALID_EMAIL_FORMAT": "电子邮件格式无效",
+      "PASSWORD_TOO_SHORT_8": "密码必须至少为8个字符",
+      "EMAIL_ALREADY_REGISTERED": "该邮箱已被注册",
+      "VERIFICATION_CODE_SENT": "验证码已发送到您的邮箱",
+
+      "VERIFICATION_CODE_NOT_FOUND": "未找到验证码",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "验证码已过期，请重新注册",
+      "INVALID_VERIFICATION_CODE": "您输入的验证码不正确",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "您的邮箱已成功验证",
+
+      "NO_PENDING_VERIFICATION": "该邮箱没有待处理的验证",
+      "VERIFICATION_CODE_RESENT": "新的验证码已发送到您的邮箱",
+
+      "INVALID_EMAIL_OR_PASSWORD": "邮箱或密码无效",
+      "GOOGLE_LOGIN_REQUIRED": "该账户使用Google登录，请使用Google登录",
+      "LOGIN_SUCCESSFUL": "登录成功",
+
+      "USER_NOT_FOUND": "未找到用户",
+
+      "PASSWORD_RESET_EMAIL_SENT": "如果该邮箱存在账户，将发送重置代码",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "重置令牌无效或已过期",
+      "PASSWORD_RESET_SUCCESS": "您的密码已成功重置",
+
+      "REGISTRATION_FAILED": "注册失败",
+      "EMAIL_VERIFICATION_FAILED": "邮箱验证失败",
+      "RESEND_VERIFICATION_FAILED": "重新发送验证码失败",
+      "LOGIN_FAILED": "登录失败",
+      "PROFILE_FETCH_FAILED": "加载用户资料失败",
+      "PASSWORD_RESET_REQUEST_FAILED": "处理密码重置请求失败",
+      "PASSWORD_RESET_FAILED": "密码重置失败",
+      "INTERNAL_SERVER_ERROR": "发生未知错误，请稍后再试",
+
       "auth": {
         "forgotPassword": "忘记密码？",
         "forgotPasswordSubtitle": "输入您的邮箱，我们将发送重置密码链接（如果账户存在）",
         "sendResetLink": "发送重置链接",
         "sending": "发送中...",
         "checkEmail": "请检查您的邮箱",
+        "invalidEmailFormat": "电子邮件格式无效",
         "resetEmailSent": "我们已向您的邮箱发送重置密码链接",
         "didntReceive": "没有收到邮件？",
         "tryAgain": "重试",
@@ -1218,7 +1350,7 @@ const resources = {
         "resetPasswordButton": "重置密码",
         "resetting": "重置中...",
         "passwordMismatch": "两次输入的密码不一致",
-        "passwordTooShort": "密码至少需要6个字符",
+        "passwordTooShort": "密码至少需要8个字符",
         "passwordResetSuccess": "密码重置成功！您现在可以登录了。",
         "passwordResetFailed": "密码重置失败",
         "invalidToken": "无效的重置链接",
@@ -1525,12 +1657,45 @@ const resources = {
       "confirm.submit": "Tem certeza de que deseja enviar? Após o envio, não será possível fazer alterações.",
       "confirm.submit.success": "✅ Palpites enviados com sucesso! Boa sorte!",
 
+      "INVALID_EMAIL_FORMAT": "Formato de email inválido",
+      "PASSWORD_TOO_SHORT_8": "A senha deve ter pelo menos 8 caracteres",
+      "EMAIL_ALREADY_REGISTERED": "Este email já está registrado",
+      "VERIFICATION_CODE_SENT": "Um código de verificação foi enviado para o seu email",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Código de verificação não encontrado",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "O código de verificação expirou. Por favor, registre-se novamente",
+      "INVALID_VERIFICATION_CODE": "O código de verificação inserido está incorreto",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Seu email foi verificado com sucesso",
+
+      "NO_PENDING_VERIFICATION": "Nenhuma verificação pendente encontrada para este email",
+      "VERIFICATION_CODE_RESENT": "Um novo código de verificação foi enviado para o seu email",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Email ou senha inválidos",
+      "GOOGLE_LOGIN_REQUIRED": "Esta conta usa login do Google. Faça login com o Google",
+      "LOGIN_SUCCESSFUL": "Login realizado com sucesso",
+
+      "USER_NOT_FOUND": "Usuário não encontrado",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Se existir uma conta com este email, um código de redefinição será enviado",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Token de redefinição inválido ou expirado",
+      "PASSWORD_RESET_SUCCESS": "Sua senha foi redefinida com sucesso",
+
+      "REGISTRATION_FAILED": "Falha ao concluir o registro",
+      "EMAIL_VERIFICATION_FAILED": "Falha ao verificar o email",
+      "RESEND_VERIFICATION_FAILED": "Falha ao reenviar o código de verificação",
+      "LOGIN_FAILED": "Falha ao fazer login",
+      "PROFILE_FETCH_FAILED": "Falha ao carregar o perfil do usuário",
+      "PASSWORD_RESET_REQUEST_FAILED": "Falha ao processar a solicitação de redefinição de senha",
+      "PASSWORD_RESET_FAILED": "Falha ao redefinir a senha",
+      "INTERNAL_SERVER_ERROR": "Ocorreu um erro inesperado. Tente novamente mais tarde",
+
       "auth": {
         "forgotPassword": "Esqueceu a senha?",
         "forgotPasswordSubtitle": "Digite seu email e enviaremos um link para redefinir sua senha (se sua conta existir)",
         "sendResetLink": "Enviar link de redefinição",
         "sending": "Enviando...",
         "checkEmail": "Verifique seu email",
+        "invalidEmailFormat": "Formato de email inválido",
         "resetEmailSent": "Enviamos um link de redefinição para o seu email",
         "didntReceive": "Não recebeu o email?",
         "tryAgain": "Tente novamente",
@@ -1542,7 +1707,7 @@ const resources = {
         "resetPasswordButton": "Redefinir senha",
         "resetting": "Redefinindo...",
         "passwordMismatch": "As senhas não coincidem",
-        "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+        "passwordTooShort": "A senha deve ter pelo menos 8 caracteres",
         "passwordResetSuccess": "Senha redefinida com sucesso! Agora você pode fazer login.",
         "passwordResetFailed": "Falha ao redefinir a senha",
         "invalidToken": "Link de redefinição inválido",
@@ -1846,12 +2011,44 @@ const resources = {
       "confirm.unSaved": "هل أنت متأكد أنك تريد تعديل اختياراتك؟ سيؤدي ذلك إلى إلغاء حفظها.",
       "confirm.submit": "هل أنت متأكد أنك تريد الإرسال؟ لن تتمكن من إجراء أي تغييرات بعد الإرسال.",
       "confirm.submit.success": "✅ تم إرسال التوقعات بنجاح! حظًا موفقًا!",
+      "INVALID_EMAIL_FORMAT": "تنسيق البريد الإلكتروني غير صالح",
+      "PASSWORD_TOO_SHORT_8": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+      "EMAIL_ALREADY_REGISTERED": "هذا البريد الإلكتروني مسجل بالفعل",
+      "VERIFICATION_CODE_SENT": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+
+      "VERIFICATION_CODE_NOT_FOUND": "رمز التحقق غير موجود",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "انتهت صلاحية رمز التحقق. يرجى التسجيل مرة أخرى",
+      "INVALID_VERIFICATION_CODE": "رمز التحقق الذي أدخلته غير صحيح",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "تم التحقق من بريدك الإلكتروني بنجاح",
+
+      "NO_PENDING_VERIFICATION": "لا يوجد تحقق معلق لهذا البريد الإلكتروني",
+      "VERIFICATION_CODE_RESENT": "تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني",
+
+      "INVALID_EMAIL_OR_PASSWORD": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      "GOOGLE_LOGIN_REQUIRED": "يستخدم هذا الحساب تسجيل الدخول عبر Google. يرجى تسجيل الدخول باستخدام Google",
+      "LOGIN_SUCCESSFUL": "تم تسجيل الدخول بنجاح",
+
+      "USER_NOT_FOUND": "المستخدم غير موجود",
+
+      "PASSWORD_RESET_EMAIL_SENT": "إذا كان هناك حساب مرتبط بهذا البريد الإلكتروني، فسيتم إرسال رمز إعادة التعيين",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "رمز إعادة التعيين غير صالح أو منتهي الصلاحية",
+      "PASSWORD_RESET_SUCCESS": "تمت إعادة تعيين كلمة المرور بنجاح",
+
+      "REGISTRATION_FAILED": "فشل في إتمام التسجيل",
+      "EMAIL_VERIFICATION_FAILED": "فشل في التحقق من البريد الإلكتروني",
+      "RESEND_VERIFICATION_FAILED": "فشل في إعادة إرسال رمز التحقق",
+      "LOGIN_FAILED": "فشل في تسجيل الدخول",
+      "PROFILE_FETCH_FAILED": "فشل في تحميل ملف المستخدم",
+      "PASSWORD_RESET_REQUEST_FAILED": "فشل في معالجة طلب إعادة تعيين كلمة المرور",
+      "PASSWORD_RESET_FAILED": "فشل في إعادة تعيين كلمة المرور",
+      "INTERNAL_SERVER_ERROR": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا",
 
       "auth": {
         "forgotPassword": "هل نسيت كلمة المرور؟",
         "forgotPasswordSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور (إذا كان حسابك موجودًا)",
         "sending": "جارٍ الإرسال...",
         "checkEmail": "تحقق من بريدك الإلكتروني",
+        "invalidEmailFormat": "تنسيق البريد الإلكتروني غير صالح",
         "resetEmailSent": "لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
         "didntReceive": "لم تستلم البريد الإلكتروني؟",
         "tryAgain": "حاول مرة أخرى",
@@ -1863,7 +2060,7 @@ const resources = {
         "resetPasswordButton": "إعادة تعيين كلمة المرور",
         "resetting": "جارٍ إعادة التعيين...",
         "passwordMismatch": "كلمتا المرور غير متطابقتين",
-        "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+        "passwordTooShort": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
         "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.",
         "passwordResetFailed": "فشل في إعادة تعيين كلمة المرور",
         "invalidToken": "رابط إعادة التعيين غير صالح",
@@ -2170,11 +2367,44 @@ const resources = {
       "confirm.submit": "Sind Sie sicher, dass Sie absenden möchten? Nach dem Absenden können keine Änderungen mehr vorgenommen werden.",
       "confirm.submit.success": "✅ Tipps erfolgreich übermittelt! Viel Glück!",
 
+      "INVALID_EMAIL_FORMAT": "Ungültiges E-Mail-Format",
+      "PASSWORD_TOO_SHORT_8": "Das Passwort muss mindestens 8 Zeichen lang sein",
+      "EMAIL_ALREADY_REGISTERED": "Diese E-Mail ist bereits registriert",
+      "VERIFICATION_CODE_SENT": "Ein Bestätigungscode wurde an Ihre E-Mail gesendet",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Bestätigungscode nicht gefunden",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Der Bestätigungscode ist abgelaufen. Bitte registrieren Sie sich erneut",
+      "INVALID_VERIFICATION_CODE": "Der eingegebene Bestätigungscode ist falsch",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Ihre E-Mail wurde erfolgreich bestätigt",
+
+      "NO_PENDING_VERIFICATION": "Keine ausstehende Bestätigung für diese E-Mail gefunden",
+      "VERIFICATION_CODE_RESENT": "Ein neuer Bestätigungscode wurde gesendet",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Ungültige E-Mail oder Passwort",
+      "GOOGLE_LOGIN_REQUIRED": "Dieses Konto verwendet Google-Login. Bitte melden Sie sich mit Google an",
+      "LOGIN_SUCCESSFUL": "Erfolgreich angemeldet",
+
+      "USER_NOT_FOUND": "Benutzer nicht gefunden",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Falls ein Konto mit dieser E-Mail existiert, wird ein Reset-Code gesendet",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Ungültiges oder abgelaufenes Reset-Token",
+      "PASSWORD_RESET_SUCCESS": "Ihr Passwort wurde erfolgreich zurückgesetzt",
+
+      "REGISTRATION_FAILED": "Registrierung fehlgeschlagen",
+      "EMAIL_VERIFICATION_FAILED": "E-Mail-Verifizierung fehlgeschlagen",
+      "RESEND_VERIFICATION_FAILED": "Erneutes Senden fehlgeschlagen",
+      "LOGIN_FAILED": "Anmeldung fehlgeschlagen",
+      "PROFILE_FETCH_FAILED": "Benutzerprofil konnte nicht geladen werden",
+      "PASSWORD_RESET_REQUEST_FAILED": "Reset-Anfrage fehlgeschlagen",
+      "PASSWORD_RESET_FAILED": "Passwort konnte nicht zurückgesetzt werden",
+      "INTERNAL_SERVER_ERROR": "Ein unerwarteter Fehler ist aufgetreten. Bitte später erneut versuchen",
+
       "auth": {
         "forgotPassword": "Passwort vergessen?",
         "forgotPasswordSubtitle": "Geben Sie Ihre E-Mail ein, und wir senden Ihnen einen Link zum Zurücksetzen (falls Ihr Konto existiert)",
         "sending": "Wird gesendet...",
         "checkEmail": "Überprüfen Sie Ihre E-Mails",
+        "invalidEmailFormat": "Ungültiges E-Mail-Format",
         "resetEmailSent": "Wir haben Ihnen einen Link zum Zurücksetzen gesendet",
         "didntReceive": "Keine E-Mail erhalten?",
         "tryAgain": "Erneut versuchen",
@@ -2186,7 +2416,7 @@ const resources = {
         "resetPasswordButton": "Passwort zurücksetzen",
         "resetting": "Wird zurückgesetzt...",
         "passwordMismatch": "Passwörter stimmen nicht überein",
-        "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
+        "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
         "passwordResetSuccess": "Passwort erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.",
         "passwordResetFailed": "Zurücksetzen fehlgeschlagen",
         "invalidToken": "Ungültiger Link",
@@ -2491,12 +2721,45 @@ const resources = {
       "confirm.submit": "Sei sicuro di voler inviare? Dopo l’invio non sarà più possibile apportare modifiche.",
       "confirm.submit.success": "✅ Pronostici inviati con successo! Buona fortuna!",
 
+      "INVALID_EMAIL_FORMAT": "Formato email non valido",
+      "PASSWORD_TOO_SHORT_8": "La password deve contenere almeno 8 caratteri",
+      "EMAIL_ALREADY_REGISTERED": "Questa email è già registrata",
+      "VERIFICATION_CODE_SENT": "Un codice di verifica è stato inviato alla tua email",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Codice di verifica non trovato",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Il codice di verifica è scaduto. Registrati di nuovo",
+      "INVALID_VERIFICATION_CODE": "Il codice di verifica inserito non è corretto",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "La tua email è stata verificata con successo",
+
+      "NO_PENDING_VERIFICATION": "Nessuna verifica in sospeso per questa email",
+      "VERIFICATION_CODE_RESENT": "Un nuovo codice di verifica è stato inviato",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Email o password non validi",
+      "GOOGLE_LOGIN_REQUIRED": "Questo account utilizza Google. Accedi con Google",
+      "LOGIN_SUCCESSFUL": "Accesso effettuato con successo",
+
+      "USER_NOT_FOUND": "Utente non trovato",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Se esiste un account con questa email, verrà inviato un codice di reset",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Token di reset non valido o scaduto",
+      "PASSWORD_RESET_SUCCESS": "La password è stata reimpostata con successo",
+
+      "REGISTRATION_FAILED": "Registrazione fallita",
+      "EMAIL_VERIFICATION_FAILED": "Verifica email fallita",
+      "RESEND_VERIFICATION_FAILED": "Invio del codice fallito",
+      "LOGIN_FAILED": "Accesso fallito",
+      "PROFILE_FETCH_FAILED": "Caricamento profilo fallito",
+      "PASSWORD_RESET_REQUEST_FAILED": "Richiesta reset fallita",
+      "PASSWORD_RESET_FAILED": "Reset password fallito",
+      "INTERNAL_SERVER_ERROR": "Si è verificato un errore imprevisto. Riprova più tardi",
+
       "auth": {
         "forgotPassword": "Hai dimenticato la password?",
         "forgotPasswordSubtitle": "Inserisci la tua email e ti invieremo un link per reimpostare la password (se il tuo account esiste)",
         "sendResetLink": "Invia link di reimpostazione",
         "sending": "Invio in corso...",
         "checkEmail": "Controlla la tua email",
+        "invalidEmailFormat": "Formato email non valido",
         "resetEmailSent": "Abbiamo inviato un link per reimpostare la password alla tua email",
         "didntReceive": "Non hai ricevuto l'email?",
         "tryAgain": "Riprova",
@@ -2508,7 +2771,7 @@ const resources = {
         "resetPasswordButton": "Reimposta password",
         "resetting": "Reimpostazione in corso...",
         "passwordMismatch": "Le password non corrispondono",
-        "passwordTooShort": "La password deve contenere almeno 6 caratteri",
+        "passwordTooShort": "La password deve contenere almeno 8 caratteri",
         "passwordResetSuccess": "Password reimpostata con successo! Ora puoi accedere.",
         "passwordResetFailed": "Impossibile reimpostare la password",
         "invalidToken": "Link di reimpostazione non valido",
@@ -2815,11 +3078,44 @@ const resources = {
       "confirm.submit": "本当に送信しますか？送信後は変更できません。",
       "confirm.submit.success": "✅ 予想が正常に送信されました！幸運を祈ります！",
 
+      "INVALID_EMAIL_FORMAT": "メールアドレスの形式が無効です",
+      "PASSWORD_TOO_SHORT_8": "パスワードは8文字以上である必要があります",
+      "EMAIL_ALREADY_REGISTERED": "このメールアドレスは既に登録されています",
+      "VERIFICATION_CODE_SENT": "認証コードをメールに送信しました",
+
+      "VERIFICATION_CODE_NOT_FOUND": "認証コードが見つかりません",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "認証コードの有効期限が切れました。再度登録してください",
+      "INVALID_VERIFICATION_CODE": "入力された認証コードが正しくありません",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "メールアドレスの確認が完了しました",
+
+      "NO_PENDING_VERIFICATION": "このメールに対する未処理の認証はありません",
+      "VERIFICATION_CODE_RESENT": "新しい認証コードを送信しました",
+
+      "INVALID_EMAIL_OR_PASSWORD": "メールアドレスまたはパスワードが無効です",
+      "GOOGLE_LOGIN_REQUIRED": "このアカウントはGoogleログインを使用しています。Googleでログインしてください",
+      "LOGIN_SUCCESSFUL": "ログインに成功しました",
+
+      "USER_NOT_FOUND": "ユーザーが見つかりません",
+
+      "PASSWORD_RESET_EMAIL_SENT": "このメールに対応するアカウントが存在する場合、リセットコードが送信されます",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "無効または期限切れのリセットトークン",
+      "PASSWORD_RESET_SUCCESS": "パスワードのリセットに成功しました",
+
+      "REGISTRATION_FAILED": "登録に失敗しました",
+      "EMAIL_VERIFICATION_FAILED": "メール認証に失敗しました",
+      "RESEND_VERIFICATION_FAILED": "認証コードの再送信に失敗しました",
+      "LOGIN_FAILED": "ログインに失敗しました",
+      "PROFILE_FETCH_FAILED": "ユーザープロフィールの取得に失敗しました",
+      "PASSWORD_RESET_REQUEST_FAILED": "パスワードリセットリクエストの処理に失敗しました",
+      "PASSWORD_RESET_FAILED": "パスワードのリセットに失敗しました",
+      "INTERNAL_SERVER_ERROR": "予期しないエラーが発生しました。後でもう一度お試しください",
+
       "auth": {
         "forgotPassword": "パスワードをお忘れですか？",
         "forgotPasswordSubtitle": "メールアドレスを入力してください。アカウントが存在する場合、リセットリンクを送信します",
         "sending": "送信中...",
         "checkEmail": "メールを確認してください",
+        "invalidEmailFormat": "メールアドレスの形式が無効です",
         "resetEmailSent": "パスワードリセット用のリンクを送信しました",
         "didntReceive": "メールが届きませんか？",
         "tryAgain": "再試行",
@@ -2831,7 +3127,7 @@ const resources = {
         "resetPasswordButton": "パスワードをリセット",
         "resetting": "リセット中...",
         "passwordMismatch": "パスワードが一致しません",
-        "passwordTooShort": "パスワードは6文字以上である必要があります",
+        "passwordTooShort": "パスワードは8文字以上である必要があります",
         "passwordResetSuccess": "パスワードが正常にリセットされました！ログインできます。",
         "passwordResetFailed": "リセットに失敗しました",
         "invalidToken": "無効なリンク",
@@ -3139,11 +3435,44 @@ const resources = {
       "confirm.submit": "정말로 제출하시겠습니까? 제출 후에는 수정할 수 없습니다.",
       "confirm.submit.success": "✅ 예측이 성공적으로 제출되었습니다! 행운을 빕니다!",
 
+      "INVALID_EMAIL_FORMAT": "유효하지 않은 이메일 형식입니다",
+      "PASSWORD_TOO_SHORT_8": "비밀번호는 최소 8자 이상이어야 합니다",
+      "EMAIL_ALREADY_REGISTERED": "이미 등록된 이메일입니다",
+      "VERIFICATION_CODE_SENT": "인증 코드가 이메일로 전송되었습니다",
+
+      "VERIFICATION_CODE_NOT_FOUND": "인증 코드를 찾을 수 없습니다",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "인증 코드가 만료되었습니다. 다시 등록해주세요",
+      "INVALID_VERIFICATION_CODE": "입력한 인증 코드가 올바르지 않습니다",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "이메일이 성공적으로 인증되었습니다",
+
+      "NO_PENDING_VERIFICATION": "해당 이메일에 대한 대기 중인 인증이 없습니다",
+      "VERIFICATION_CODE_RESENT": "새 인증 코드가 전송되었습니다",
+
+      "INVALID_EMAIL_OR_PASSWORD": "이메일 또는 비밀번호가 올바르지 않습니다",
+      "GOOGLE_LOGIN_REQUIRED": "이 계정은 Google 로그인을 사용합니다. Google로 로그인하세요",
+      "LOGIN_SUCCESSFUL": "로그인 성공",
+
+      "USER_NOT_FOUND": "사용자를 찾을 수 없습니다",
+
+      "PASSWORD_RESET_EMAIL_SENT": "해당 이메일에 계정이 존재할 경우 재설정 코드가 전송됩니다",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "유효하지 않거나 만료된 재설정 토큰",
+      "PASSWORD_RESET_SUCCESS": "비밀번호가 성공적으로 재설정되었습니다",
+
+      "REGISTRATION_FAILED": "회원가입 실패",
+      "EMAIL_VERIFICATION_FAILED": "이메일 인증 실패",
+      "RESEND_VERIFICATION_FAILED": "인증 코드 재전송 실패",
+      "LOGIN_FAILED": "로그인 실패",
+      "PROFILE_FETCH_FAILED": "사용자 프로필 로드 실패",
+      "PASSWORD_RESET_REQUEST_FAILED": "비밀번호 재설정 요청 처리 실패",
+      "PASSWORD_RESET_FAILED": "비밀번호 재설정 실패",
+      "INTERNAL_SERVER_ERROR": "예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요",
+
       "auth": {
         "forgotPassword": "비밀번호를 잊으셨나요?",
         "forgotPasswordSubtitle": "이메일을 입력하면 (계정이 존재할 경우) 비밀번호 재설정 링크를 보내드립니다",
         "sending": "전송 중...",
         "checkEmail": "이메일을 확인하세요",
+        "invalidEmailFormat": "유효하지 않은 이메일 형식입니다",
         "resetEmailSent": "비밀번호 재설정 링크를 이메일로 보냈습니다",
         "didntReceive": "이메일을 받지 못하셨나요?",
         "tryAgain": "다시 시도",
@@ -3155,7 +3484,7 @@ const resources = {
         "resetPasswordButton": "비밀번호 재설정",
         "resetting": "재설정 중...",
         "passwordMismatch": "비밀번호가 일치하지 않습니다",
-        "passwordTooShort": "비밀번호는 최소 6자 이상이어야 합니다",
+        "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다",
         "passwordResetSuccess": "비밀번호가 성공적으로 재설정되었습니다! 이제 로그인할 수 있습니다.",
         "passwordResetFailed": "비밀번호 재설정 실패",
         "invalidToken": "유효하지 않은 링크",
@@ -3463,11 +3792,44 @@ const resources = {
       "confirm.submit": "Göndermek istediğinizden emin misiniz? Gönderimden sonra değişiklik yapamazsınız.",
       "confirm.submit.success": "✅ Tahminler başarıyla gönderildi! Bol şans!",
 
+      "INVALID_EMAIL_FORMAT": "Geçersiz e-posta formatı",
+      "PASSWORD_TOO_SHORT_8": "Şifre en az 8 karakter olmalıdır",
+      "EMAIL_ALREADY_REGISTERED": "Bu e-posta zaten kayıtlı",
+      "VERIFICATION_CODE_SENT": "Doğrulama kodu e-postanıza gönderildi",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Doğrulama kodu bulunamadı",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Doğrulama kodunun süresi doldu. Lütfen tekrar kayıt olun",
+      "INVALID_VERIFICATION_CODE": "Girdiğiniz doğrulama kodu yanlış",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "E-posta başarıyla doğrulandı",
+
+      "NO_PENDING_VERIFICATION": "Bu e-posta için bekleyen doğrulama yok",
+      "VERIFICATION_CODE_RESENT": "Yeni doğrulama kodu gönderildi",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Geçersiz e-posta veya şifre",
+      "GOOGLE_LOGIN_REQUIRED": "Bu hesap Google ile giriş kullanıyor. Lütfen Google ile giriş yapın",
+      "LOGIN_SUCCESSFUL": "Giriş başarılı",
+
+      "USER_NOT_FOUND": "Kullanıcı bulunamadı",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Bu e-posta ile bir hesap varsa sıfırlama kodu gönderilecektir",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Geçersiz veya süresi dolmuş sıfırlama kodu",
+      "PASSWORD_RESET_SUCCESS": "Şifreniz başarıyla sıfırlandı",
+
+      "REGISTRATION_FAILED": "Kayıt başarısız",
+      "EMAIL_VERIFICATION_FAILED": "E-posta doğrulama başarısız",
+      "RESEND_VERIFICATION_FAILED": "Doğrulama kodu yeniden gönderilemedi",
+      "LOGIN_FAILED": "Giriş başarısız",
+      "PROFILE_FETCH_FAILED": "Kullanıcı profili yüklenemedi",
+      "PASSWORD_RESET_REQUEST_FAILED": "Şifre sıfırlama isteği başarısız",
+      "PASSWORD_RESET_FAILED": "Şifre sıfırlama başarısız",
+      "INTERNAL_SERVER_ERROR": "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin",
+
       "auth": {
         "forgotPassword": "Şifrenizi mi unuttunuz?",
         "forgotPasswordSubtitle": "E-posta adresinizi girin, hesabınız varsa sıfırlama bağlantısı gönderilecektir",
         "sending": "Gönderiliyor...",
         "checkEmail": "E-postanızı kontrol edin",
+        "invalidEmailFormat": "Geçersiz e-posta formatı",
         "resetEmailSent": "Şifre sıfırlama bağlantısı gönderildi",
         "didntReceive": "E-posta gelmedi mi?",
         "tryAgain": "Tekrar dene",
@@ -3479,7 +3841,7 @@ const resources = {
         "resetPasswordButton": "Şifreyi sıfırla",
         "resetting": "Sıfırlanıyor...",
         "passwordMismatch": "Şifreler eşleşmiyor",
-        "passwordTooShort": "Şifre en az 6 karakter olmalıdır",
+        "passwordTooShort": "Şifre en az 8 karakter olmalıdır",
         "passwordResetSuccess": "Şifre başarıyla sıfırlandı! Artık giriş yapabilirsiniz.",
         "passwordResetFailed": "Şifre sıfırlama başarısız",
         "invalidToken": "Geçersiz bağlantı",
@@ -3786,11 +4148,44 @@ const resources = {
       "confirm.submit": "क्या आप वाकई सबमिट करना चाहते हैं? सबमिट करने के बाद आप कोई बदलाव नहीं कर पाएंगे।",
       "confirm.submit.success": "✅ भविष्यवाणियाँ सफलतापूर्वक सबमिट हो गई हैं! शुभकामनाएँ!",
 
+      "INVALID_EMAIL_FORMAT": "अमान्य ईमेल प्रारूप",
+      "PASSWORD_TOO_SHORT_8": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए",
+      "EMAIL_ALREADY_REGISTERED": "यह ईमेल पहले से पंजीकृत है",
+      "VERIFICATION_CODE_SENT": "सत्यापन कोड आपके ईमेल पर भेजा गया है",
+
+      "VERIFICATION_CODE_NOT_FOUND": "सत्यापन कोड नहीं मिला",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "सत्यापन कोड समाप्त हो गया है। कृपया फिर से पंजीकरण करें",
+      "INVALID_VERIFICATION_CODE": "दर्ज किया गया सत्यापन कोड गलत है",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "आपका ईमेल सफलतापूर्वक सत्यापित हो गया है",
+
+      "NO_PENDING_VERIFICATION": "इस ईमेल के लिए कोई लंबित सत्यापन नहीं मिला",
+      "VERIFICATION_CODE_RESENT": "नया सत्यापन कोड भेजा गया है",
+
+      "INVALID_EMAIL_OR_PASSWORD": "अमान्य ईमेल या पासवर्ड",
+      "GOOGLE_LOGIN_REQUIRED": "यह खाता Google लॉगिन का उपयोग करता है। कृपया Google से साइन इन करें",
+      "LOGIN_SUCCESSFUL": "लॉगिन सफल",
+
+      "USER_NOT_FOUND": "उपयोगकर्ता नहीं मिला",
+
+      "PASSWORD_RESET_EMAIL_SENT": "यदि इस ईमेल से खाता मौजूद है, तो रीसेट कोड भेजा जाएगा",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "अमान्य या समाप्त रीसेट टोकन",
+      "PASSWORD_RESET_SUCCESS": "आपका पासवर्ड सफलतापूर्वक रीसेट हो गया है",
+
+      "REGISTRATION_FAILED": "पंजीकरण विफल",
+      "EMAIL_VERIFICATION_FAILED": "ईमेल सत्यापन विफल",
+      "RESEND_VERIFICATION_FAILED": "सत्यापन कोड पुनः भेजने में विफल",
+      "LOGIN_FAILED": "लॉगिन विफल",
+      "PROFILE_FETCH_FAILED": "उपयोगकर्ता प्रोफ़ाइल लोड करने में विफल",
+      "PASSWORD_RESET_REQUEST_FAILED": "पासवर्ड रीसेट अनुरोध विफल",
+      "PASSWORD_RESET_FAILED": "पासवर्ड रीसेट विफल",
+      "INTERNAL_SERVER_ERROR": "एक अप्रत्याशित त्रुटि हुई। कृपया बाद में पुनः प्रयास करें",
+
       "auth": {
         "forgotPassword": "क्या आप पासवर्ड भूल गए?",
         "forgotPasswordSubtitle": "अपना ईमेल दर्ज करें और हम आपको पासवर्ड रीसेट लिंक भेजेंगे (यदि आपका खाता मौजूद है)",
         "sending": "भेजा जा रहा है...",
         "checkEmail": "अपना ईमेल जांचें",
+        "invalidEmailFormat": "अमान्य ईमेल प्रारूप",
         "resetEmailSent": "हमने आपके ईमेल पर पासवर्ड रीसेट लिंक भेजा है",
         "didntReceive": "ईमेल नहीं मिला?",
         "tryAgain": "फिर से प्रयास करें",
@@ -3802,7 +4197,7 @@ const resources = {
         "resetPasswordButton": "पासवर्ड रीसेट करें",
         "resetting": "रीसेट हो रहा है...",
         "passwordMismatch": "पासवर्ड मेल नहीं खाते",
-        "passwordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
+        "passwordTooShort": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए",
         "passwordResetSuccess": "पासवर्ड सफलतापूर्वक रीसेट हो गया! अब आप लॉगिन कर सकते हैं।",
         "passwordResetFailed": "पासवर्ड रीसेट विफल",
         "invalidToken": "अमान्य लिंक",
@@ -4111,11 +4506,44 @@ const resources = {
       "confirm.submit": "คุณแน่ใจหรือไม่ว่าต้องการส่ง? หลังจากส่งแล้วจะไม่สามารถแก้ไขได้",
       "confirm.submit.success": "✅ ส่งคำทำนายเรียบร้อยแล้ว! ขอให้โชคดี!",
 
+      "INVALID_EMAIL_FORMAT": "รูปแบบอีเมลไม่ถูกต้อง",
+      "PASSWORD_TOO_SHORT_8": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+      "EMAIL_ALREADY_REGISTERED": "อีเมลนี้ถูกลงทะเบียนแล้ว",
+      "VERIFICATION_CODE_SENT": "รหัสยืนยันถูกส่งไปยังอีเมลของคุณแล้ว",
+
+      "VERIFICATION_CODE_NOT_FOUND": "ไม่พบรหัสยืนยัน",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "รหัสยืนยันหมดอายุ กรุณาลงทะเบียนใหม่",
+      "INVALID_VERIFICATION_CODE": "รหัสยืนยันที่คุณป้อนไม่ถูกต้อง",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "ยืนยันอีเมลสำเร็จ",
+
+      "NO_PENDING_VERIFICATION": "ไม่มีการยืนยันที่รอดำเนินการสำหรับอีเมลนี้",
+      "VERIFICATION_CODE_RESENT": "ส่งรหัสยืนยันใหม่แล้ว",
+
+      "INVALID_EMAIL_OR_PASSWORD": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+      "GOOGLE_LOGIN_REQUIRED": "บัญชีนี้ใช้ Google ในการเข้าสู่ระบบ กรุณาเข้าสู่ระบบด้วย Google",
+      "LOGIN_SUCCESSFUL": "เข้าสู่ระบบสำเร็จ",
+
+      "USER_NOT_FOUND": "ไม่พบผู้ใช้",
+
+      "PASSWORD_RESET_EMAIL_SENT": "หากมีบัญชีนี้อยู่ ระบบจะส่งรหัสรีเซ็ตให้",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "โทเค็นรีเซ็ตไม่ถูกต้องหรือหมดอายุ",
+      "PASSWORD_RESET_SUCCESS": "รีเซ็ตรหัสผ่านสำเร็จ",
+
+      "REGISTRATION_FAILED": "ลงทะเบียนไม่สำเร็จ",
+      "EMAIL_VERIFICATION_FAILED": "ยืนยันอีเมลไม่สำเร็จ",
+      "RESEND_VERIFICATION_FAILED": "ส่งรหัสยืนยันใหม่ไม่สำเร็จ",
+      "LOGIN_FAILED": "เข้าสู่ระบบไม่สำเร็จ",
+      "PROFILE_FETCH_FAILED": "โหลดโปรไฟล์ไม่สำเร็จ",
+      "PASSWORD_RESET_REQUEST_FAILED": "คำขอรีเซ็ตรหัสผ่านล้มเหลว",
+      "PASSWORD_RESET_FAILED": "รีเซ็ตรหัสผ่านไม่สำเร็จ",
+      "INTERNAL_SERVER_ERROR": "เกิดข้อผิดพลาดที่ไม่คาดคิด กรุณาลองใหม่ภายหลัง",
+
       "auth": {
         "forgotPassword": "ลืมรหัสผ่าน?",
         "forgotPasswordSubtitle": "กรอกอีเมลของคุณ แล้วเราจะส่งลิงก์รีเซ็ตรหัสผ่านให้ (หากมีบัญชี)",
         "sending": "กำลังส่ง...",
         "checkEmail": "ตรวจสอบอีเมลของคุณ",
+        "invalidEmailFormat": "รูปแบบอีเมลไม่ถูกต้อง",
         "resetEmailSent": "เราได้ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว",
         "didntReceive": "ไม่ได้รับอีเมล?",
         "tryAgain": "ลองอีกครั้ง",
@@ -4127,7 +4555,7 @@ const resources = {
         "resetPasswordButton": "รีเซ็ตรหัสผ่าน",
         "resetting": "กำลังรีเซ็ต...",
         "passwordMismatch": "รหัสผ่านไม่ตรงกัน",
-        "passwordTooShort": "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+        "passwordTooShort": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
         "passwordResetSuccess": "รีเซ็ตรหัสผ่านสำเร็จ! ตอนนี้คุณสามารถเข้าสู่ระบบได้",
         "passwordResetFailed": "รีเซ็ตรหัสผ่านไม่สำเร็จ",
         "invalidToken": "ลิงก์ไม่ถูกต้อง",
@@ -4435,11 +4863,44 @@ const resources = {
       "confirm.submit": "Bạn có chắc chắn muốn gửi không? Sau khi gửi, bạn sẽ không thể chỉnh sửa.",
       "confirm.submit.success": "✅ Dự đoán đã được gửi thành công! Chúc may mắn!",
 
+      "INVALID_EMAIL_FORMAT": "Định dạng email không hợp lệ",
+      "PASSWORD_TOO_SHORT_8": "Mật khẩu phải có ít nhất 8 ký tự",
+      "EMAIL_ALREADY_REGISTERED": "Email này đã được đăng ký",
+      "VERIFICATION_CODE_SENT": "Mã xác minh đã được gửi đến email của bạn",
+
+      "VERIFICATION_CODE_NOT_FOUND": "Không tìm thấy mã xác minh",
+      "VERIFICATION_CODE_EXPIRED_REGISTER_AGAIN": "Mã xác minh đã hết hạn. Vui lòng đăng ký lại",
+      "INVALID_VERIFICATION_CODE": "Mã xác minh bạn nhập không đúng",
+      "EMAIL_VERIFIED_SUCCESSFULLY": "Email của bạn đã được xác minh thành công",
+
+      "NO_PENDING_VERIFICATION": "Không có xác minh đang chờ cho email này",
+      "VERIFICATION_CODE_RESENT": "Mã xác minh mới đã được gửi",
+
+      "INVALID_EMAIL_OR_PASSWORD": "Email hoặc mật khẩu không hợp lệ",
+      "GOOGLE_LOGIN_REQUIRED": "Tài khoản này sử dụng đăng nhập Google. Vui lòng đăng nhập bằng Google",
+      "LOGIN_SUCCESSFUL": "Đăng nhập thành công",
+
+      "USER_NOT_FOUND": "Không tìm thấy người dùng",
+
+      "PASSWORD_RESET_EMAIL_SENT": "Nếu email này tồn tại, mã đặt lại sẽ được gửi",
+      "INVALID_OR_EXPIRED_RESET_TOKEN": "Mã đặt lại không hợp lệ hoặc đã hết hạn",
+      "PASSWORD_RESET_SUCCESS": "Mật khẩu của bạn đã được đặt lại thành công",
+
+      "REGISTRATION_FAILED": "Đăng ký thất bại",
+      "EMAIL_VERIFICATION_FAILED": "Xác minh email thất bại",
+      "RESEND_VERIFICATION_FAILED": "Gửi lại mã xác minh thất bại",
+      "LOGIN_FAILED": "Đăng nhập thất bại",
+      "PROFILE_FETCH_FAILED": "Tải hồ sơ người dùng thất bại",
+      "PASSWORD_RESET_REQUEST_FAILED": "Yêu cầu đặt lại mật khẩu thất bại",
+      "PASSWORD_RESET_FAILED": "Đặt lại mật khẩu thất bại",
+      "INTERNAL_SERVER_ERROR": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau",
+
       "auth": {
         "forgotPassword": "Quên mật khẩu?",
         "forgotPasswordSubtitle": "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu (nếu tài khoản tồn tại)",
         "sending": "Đang gửi...",
         "checkEmail": "Kiểm tra email của bạn",
+        "invalidEmailFormat": "Định dạng email không hợp lệ",
         "resetEmailSent": "Chúng tôi đã gửi liên kết đặt lại mật khẩu đến email của bạn",
         "didntReceive": "Không nhận được email?",
         "tryAgain": "Thử lại",
@@ -4451,7 +4912,7 @@ const resources = {
         "resetPasswordButton": "Đặt lại mật khẩu",
         "resetting": "Đang đặt lại...",
         "passwordMismatch": "Mật khẩu không khớp",
-        "passwordTooShort": "Mật khẩu phải có ít nhất 6 ký tự",
+        "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
         "passwordResetSuccess": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập ngay bây giờ.",
         "passwordResetFailed": "Đặt lại mật khẩu thất bại",
         "invalidToken": "Liên kết không hợp lệ",

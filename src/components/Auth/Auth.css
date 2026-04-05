@@ -78,6 +78,16 @@
   font-size: 0.875rem;
 }
 
+.auth-error {
+  background: #ffe5e5;
+  color: #b30000;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 500;
+}
+
 .auth-link {
   text-align: center;
   color: #6b7280;
