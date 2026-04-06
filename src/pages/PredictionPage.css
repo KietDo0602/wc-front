@@ -1,5 +1,6 @@
 .prediction-page {
   min-height: 100vh;
+  max-width: 100vw;
   background: var(--background);
 }
 
