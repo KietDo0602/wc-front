@@ -1,7 +1,7 @@
 .group-stage {
   max-width: 1400px;
   margin: 0 auto;
-  /* padding: 2rem; */
+  padding: 2rem;
 }
 
 .group-stage-header {
@@ -245,6 +245,9 @@
 }
 
 @media (max-width: 768px) {
+  .group-stage {
+    padding: 0rem;
+  }
   .group-stage-footer {
     flex-direction: column;
     gap: 1rem;
@@ -258,5 +261,12 @@
 
   .groups-grid {
     grid-template-columns: 1fr;
+  }
+  .sortable-team {
+    gap: 0.5rem;
+    padding: 0.7rem;
+  }
+  .group-stage .teams-list .team-name {
+    font-size: 15px;
   }
 }
