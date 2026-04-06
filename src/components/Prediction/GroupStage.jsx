@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {   
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FlagIcon } from '../../utils/helpers';
@@ -37,7 +44,6 @@ const SortableTeam = ({ team, position }) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
       className={`sortable-team position-${position}`}
     >
       <span className="position-badge">{getPositionLabel(position)}</span>
@@ -45,7 +51,7 @@ const SortableTeam = ({ team, position }) => {
         <FlagIcon fifaCode={team.fifa_code} size="normal" />
       </span>
       <span className="team-name">{t(team.fifa_code)}</span>
-      <span className="drag-handle">⋮⋮</span>
+      <span className="drag-handle" {...listeners}>⋮⋮</span>
     </div>
   );
 };
@@ -68,6 +74,12 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150,      // prevents accidental drag while scrolling
+        tolerance: 5,    // small movement allowed before cancel
       },
     })
   );

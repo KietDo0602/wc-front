@@ -77,13 +77,9 @@
   background: var(--background);
   border: 2px solid #e5e7eb;
   border-radius: 8px;
-  cursor: grab;
   transition: all 0.2s ease;
   user-select: none;
-}
-
-.sortable-team:active {
-  cursor: grabbing;
+  touch-action: pan-y;
 }
 
 .sortable-team:hover {
@@ -128,6 +124,7 @@
   color: var(--text-secondary);
   font-size: 1.25rem;
   cursor: grab;
+  touch-action: none;
 }
 
 .save-btn {
