@@ -6,7 +6,8 @@ import {
   PointerSensor,
   TouchSensor,
   useSensor,
-  useSensors
+  useSensors,
+  DragOverlay,
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -62,6 +63,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
   const [saved, setSaved] = useState(!!savedRanking);
   const [isEditing, setIsEditing] = useState(false);
   const { t } = useTranslation();
+  const [activeId, setActiveId] = useState(null);
 
   useEffect(() => {
     if (savedRanking) {
@@ -85,9 +87,17 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
   );
 
   const handleDragEnd = (event) => {
-    if (viewMode || (!isEditing && saved)) return;
+    if (viewMode || (!isEditing && saved)) {
+      setActiveId(null);
+      return;
+    }
     
     const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      setActiveId(null);
+      return;
+    }
 
     if (active.id !== over.id) {
       setRankedTeams((items) => {
@@ -97,8 +107,9 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
       });
       setSaved(false);
     }
-  };
 
+    setActiveId(null);
+  };
   const handleSave = async () => {
     if (viewMode) return;
     
@@ -151,7 +162,14 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
     setSaved(!!savedRanking);
   };
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const canDrag = !viewMode && (isEditing || !saved);
+
+  const activeTeam = rankedTeams.find(t => t.id === activeId);
+  const activeIndex = rankedTeams.findIndex(t => t.id === activeId);
 
   return (
     <Card className="group-card">
@@ -177,6 +195,7 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext
@@ -189,6 +208,21 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
               ))}
             </div>
           </SortableContext>
+
+          {/* ✅ Drag Overlay */}
+          <DragOverlay>
+            {activeTeam ? (
+              <div className="sortable-team overlay">
+                <span className="position-badge">
+                  {['🥇 1st', '🥈 2nd', '🥉 3rd', '4th'][activeIndex]}
+                </span>
+                <span className="team-flag">
+                  <FlagIcon fifaCode={activeTeam.fifa_code} size="normal" />
+                </span>
+                <span className="team-name">{t(activeTeam.fifa_code)}</span>
+              </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       ) : (
         <div className="teams-list">
@@ -207,8 +241,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
       {!viewMode && (
         <div className="card-actions">
           {saved && !isEditing ? (
-            <Button 
-              onClick={handleEdit} 
+            <Button
+              onClick={handleEdit}
               size="small"
               variant="outline"
               className="edit-btn"
@@ -217,8 +251,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
             </Button>
           ) : (
             <>
-              <Button 
-                onClick={handleSave} 
+              <Button
+                onClick={handleSave}
                 loading={saving}
                 disabled={saved && !isEditing}
                 size="small"
@@ -228,8 +262,8 @@ const GroupCard = ({ group, teams, onRankingChange, savedRanking, viewMode, save
                 💾 {t('pred.save')}
               </Button>
               {isEditing && (
-                <Button 
-                  onClick={handleCancel} 
+                <Button
+                  onClick={handleCancel}
                   size="small"
                   variant="outline"
                   className="cancel-btn"
