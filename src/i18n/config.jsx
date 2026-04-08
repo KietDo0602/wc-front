@@ -4762,7 +4762,7 @@ const resources = {
       "pred.thirdPlace.text1": "Chọn 8 đội trong số 12 đội xếp hạng ba sẽ vào vòng loại trực tiếp",
       "pred.thirdPlace.text2": "8 đội trong số 12 đội hạng ba được chọn tại đây sẽ vào vòng loại trực tiếp",
       "pred.thirdPlace.saved": "Đã lưu lựa chọn. Nhấn \"Chỉnh Sửa Lựa Chọn\" bên dưới để thay đổi.",
-      "pred.thirdPlace.teamSelected": "Đã chọn 8 đội",
+      "pred.thirdPlace.teamSelected": "8 đội",
       "pred.thirdPlace.editSelections": "Chỉnh Sửa Lựa Chọn",
       "pred.thirdPlace.saveSelections": "Lưu Lựa Chọn",
       "pred.thirdPlace.teamPositionLabel": "Hạng 3 Bảng {{group}}",

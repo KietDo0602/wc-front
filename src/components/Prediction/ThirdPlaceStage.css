@@ -211,6 +211,10 @@
 }
 
 @media (max-width: 768px) {
+  .third-place-stage {
+    padding: 0.5rem;
+  }
+
   .third-place-stage-footer {
     flex-direction: column;
   }
