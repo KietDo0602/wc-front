@@ -222,4 +222,17 @@
   .third-place-stage-footer button {
     width: 100%;
   }
+  .counter-number {
+    font-size: 1rem;
+  }
+  .counter-label {
+    font-size: 1rem;
+  }
+  .selection-hint {
+    font-size: 0.8rem;
+  }
+  .selection-info .card-content {
+    padding: 0.8rem;
+    gap: 1rem;
+  }
 }
