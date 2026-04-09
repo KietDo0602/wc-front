@@ -404,17 +404,42 @@ const KnockoutResults = ({ bracket, teams }) => {
     };
 
     // Get matches by ID
-    const getMatch = (id) => matches.find(m => m.match_id === id);
+    const getMatch = (id) => matches.find(m => m.match_id === id) || null;
+
+    const drawMatchSafe = (x, y, match, label, isFinal = false) => {
+      if (match) {
+        return drawMatch(x, y, match, label, isFinal);
+      }
+      // Draw empty TBD card
+      const h = 100;
+      ctx.fillStyle = isFinal ? 'rgba(245,158,11,0.15)' : (getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#ffffff');
+      ctx.strokeStyle = isFinal ? '#f59e0b' : '#d1d5db';
+      ctx.lineWidth = isFinal ? 3 : 2;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.roundRect(x, y, cardW, h, 8);
+      ctx.fill();
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = isFinal ? '#f59e0b' : '#667eea';
+      ctx.font = 'bold 16px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x + cardW / 2, y + 24);
+
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '16px Arial';
+      ctx.fillText('TBD', x + cardW / 2, y + 60);
+
+      return { x, y, w: cardW, h };
+    };
 
     // LEFT SIDE - R32 (Matches 1-8)
     let y = baseY;
     const r32LeftPos = [];
     for (let i = 1; i <= 8; i++) {
-      const match = getMatch(i);
-      if (match) {
-        drawMatch(baseX, y, match, `M${i}`);
-        r32LeftPos.push({ x: baseX + cardW, y: y + cardH / 2 });
-      }
+      drawMatchSafe(baseX, y, getMatch(i), `M${i}`);
+      r32LeftPos.push({ x: baseX + cardW, y: y + cardH / 2 });
       y += rowGap;
     }
 
@@ -422,161 +447,122 @@ const KnockoutResults = ({ bracket, teams }) => {
     y = baseY + rowGap / 2;
     const r16LeftPos = [];
     for (let i = 17; i <= 20; i++) {
-      const match = getMatch(i);
-      if (match) {
-        drawMatch(baseX + colGap, y, match, `M${i}`);
-        r16LeftPos.push({ x: baseX + colGap + cardW, y: y + cardH / 2 });
-      }
+      drawMatchSafe(baseX + colGap, y, getMatch(i), `M${i}`);
+      r16LeftPos.push({ x: baseX + colGap + cardW, y: y + cardH / 2 });
       y += rowGap * 2;
     }
 
     // Connections R32 -> R16 (left)
     for (let i = 0; i < 4; i++) {
-      if (r32LeftPos[i * 2] && r32LeftPos[i * 2 + 1] && r16LeftPos[i]) {
-        const p1 = r32LeftPos[i * 2];
-        const p2 = r32LeftPos[i * 2 + 1];
-        const target = r16LeftPos[i];
-        drawConnection(p1.x, p1.y, target.x - cardW, target.y);
-        drawConnection(p2.x, p2.y, target.x - cardW, target.y);
-      }
+      const p1 = r32LeftPos[i * 2];
+      const p2 = r32LeftPos[i * 2 + 1];
+      const target = r16LeftPos[i];
+      drawConnection(p1.x, p1.y, target.x - cardW, target.y);
+      drawConnection(p2.x, p2.y, target.x - cardW, target.y);
     }
 
     // LEFT - QF (Matches 25-26)
     y = baseY + rowGap * 1.5;
     const qfLeftPos = [];
     for (let i = 25; i <= 26; i++) {
-      const match = getMatch(i);
-      if (match) {
-        drawMatch(baseX + colGap * 2, y, match, `QF${i - 24}`);
-        qfLeftPos.push({ x: baseX + colGap * 2 + cardW, y: y + cardH / 2 });
-      }
+      drawMatchSafe(baseX + colGap * 2, y, getMatch(i), `QF${i - 24}`);
+      qfLeftPos.push({ x: baseX + colGap * 2 + cardW, y: y + cardH / 2 });
       y += rowGap * 4;
     }
 
     // Connections R16 -> QF (left)
     for (let i = 0; i < 2; i++) {
-      if (r16LeftPos[i * 2] && r16LeftPos[i * 2 + 1] && qfLeftPos[i]) {
-        const p1 = r16LeftPos[i * 2];
-        const p2 = r16LeftPos[i * 2 + 1];
-        const target = qfLeftPos[i];
-        drawConnection(p1.x, p1.y, target.x - cardW, target.y);
-        drawConnection(p2.x, p2.y, target.x - cardW, target.y);
-      }
+      const p1 = r16LeftPos[i * 2];
+      const p2 = r16LeftPos[i * 2 + 1];
+      const target = qfLeftPos[i];
+      drawConnection(p1.x, p1.y, target.x - cardW, target.y);
+      drawConnection(p2.x, p2.y, target.x - cardW, target.y);
     }
 
     // LEFT - SF (Match 29)
     const sf1Y = baseY + rowGap * 3.5;
-    const match29 = getMatch(29);
-    if (match29) {
-      drawMatch(baseX + colGap * 3, sf1Y, match29, 'SF1');
-      const sf1Pos = { x: baseX + colGap * 3 + cardW, y: sf1Y + cardH / 2 };
+    drawMatchSafe(baseX + colGap * 3, sf1Y, getMatch(29), 'SF1');
+    const sf1Pos = { x: baseX + colGap * 3 + cardW, y: sf1Y + cardH / 2 };
 
-      // Connections QF -> SF1
-      if (qfLeftPos[0] && qfLeftPos[1]) {
-        drawConnection(qfLeftPos[0].x, qfLeftPos[0].y, sf1Pos.x - cardW, sf1Pos.y);
-        drawConnection(qfLeftPos[1].x, qfLeftPos[1].y, sf1Pos.x - cardW, sf1Pos.y);
-      }
+    drawConnection(qfLeftPos[0].x, qfLeftPos[0].y, sf1Pos.x - cardW, sf1Pos.y);
+    drawConnection(qfLeftPos[1].x, qfLeftPos[1].y, sf1Pos.x - cardW, sf1Pos.y);
 
-      // CENTER - FINAL
-      const finalX = baseX + colGap * 4;
-      const finalY = baseY + rowGap * 3.5;
-      const match31 = getMatch(31);
+    // CENTER - FINAL
+    const finalX = baseX + colGap * 4;
+    const finalY = baseY + rowGap * 3.5;
+    const match31 = getMatch(31);
 
-      if (match31) {
-        const champion = teams.find(t => t.id === match31.winner_id);
-        
-        if (champion) {
-          ctx.fillStyle = '#f59e0b';
-          ctx.font = 'bold 24px Arial';
-          ctx.textAlign = 'center';
-          ctx.fillText('🏆 CHAMPION', finalX + cardW / 2, finalY - 45);
-          ctx.font = 'bold 20px Arial';
-          ctx.fillText(t(champion.fifa_code), finalX + cardW / 2, finalY - 18);
-        }
-
-        drawMatch(finalX, finalY, match31, 'FINAL', true);
-        const finalPos = { x: finalX + cardW, y: finalY + cardH / 2 };
-
-        // Connection SF1 -> Final
-        drawConnection(sf1Pos.x, sf1Pos.y, finalX, finalPos.y);
-
-        // RIGHT - SF2 (Match 30)
-        const match30 = getMatch(30);
-        if (match30) {
-          drawMatch(baseX + colGap * 5, sf1Y, match30, 'SF2');
-          const sf2Pos = { x: baseX + colGap * 5, y: sf1Y + cardH / 2 };
-
-          // Connection Final -> SF2
-          drawConnection(finalPos.x, finalPos.y, sf2Pos.x, sf2Pos.y);
-
-          // RIGHT - QF (Matches 27-28)
-          y = baseY + rowGap * 1.5;
-          const qfRightPos = [];
-          for (let i = 27; i <= 28; i++) {
-            const match = getMatch(i);
-            if (match) {
-              drawMatch(baseX + colGap * 6, y, match, `QF${i - 24}`);
-              qfRightPos.push({ x: baseX + colGap * 6, y: y + cardH / 2 });
-            }
-            y += rowGap * 4;
-          }
-
-          // Connections SF2 -> QF (right)
-          if (qfRightPos[0] && qfRightPos[1]) {
-            drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[0].x, qfRightPos[0].y);
-            drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[1].x, qfRightPos[1].y);
-          }
-
-          // RIGHT - R16 (Matches 21-24)
-          y = baseY + rowGap / 2;
-          const r16RightPos = [];
-          for (let i = 21; i <= 24; i++) {
-            const match = getMatch(i);
-            if (match) {
-              drawMatch(baseX + colGap * 7, y, match, `M${i}`);
-              r16RightPos.push({ x: baseX + colGap * 7, y: y + cardH / 2 });
-            }
-            y += rowGap * 2;
-          }
-
-          // Connections QF -> R16 (right)
-          for (let i = 0; i < 2; i++) {
-            if (r16RightPos[i * 2] && r16RightPos[i * 2 + 1] && qfRightPos[i]) {
-              const p1 = r16RightPos[i * 2];
-              const p2 = r16RightPos[i * 2 + 1];
-              const target = qfRightPos[i];
-              drawConnection(target.x + cardW, target.y, p1.x, p1.y);
-              drawConnection(target.x + cardW, target.y, p2.x, p2.y);
-            }
-          }
-
-          // RIGHT - R32 (Matches 9-16)
-          y = baseY;
-          const r32RightPos = [];
-          for (let i = 9; i <= 16; i++) {
-            const match = getMatch(i);
-            if (match) {
-              drawMatch(baseX + colGap * 8, y, match, `M${i}`);
-              r32RightPos.push({ x: baseX + colGap * 8, y: y + cardH / 2 });
-            }
-            y += rowGap;
-          }
-
-          // Connections R16 -> R32 (right)
-          for (let i = 0; i < 4; i++) {
-            if (r32RightPos[i * 2] && r32RightPos[i * 2 + 1] && r16RightPos[i]) {
-              const p1 = r32RightPos[i * 2];
-              const p2 = r32RightPos[i * 2 + 1];
-              const target = r16RightPos[i];
-              drawConnection(target.x + cardW, target.y, p1.x, p1.y);
-              drawConnection(target.x + cardW, target.y, p2.x, p2.y);
-            }
-          }
-        }
+    if (match31) {
+      const champion = teams.find(t => t.id === match31.winner_id);
+      if (champion) {
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('🏆 CHAMPION', finalX + cardW / 2, finalY - 45);
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText(t(champion.fifa_code), finalX + cardW / 2, finalY - 18);
       }
     }
 
+    drawMatchSafe(finalX, finalY, match31, 'FINAL', true);
+    const finalPos = { x: finalX + cardW, y: finalY + cardH / 2 };
+
+    drawConnection(sf1Pos.x, sf1Pos.y, finalX, finalPos.y);
+
+    // RIGHT - SF2 (Match 30)
+    drawMatchSafe(baseX + colGap * 5, sf1Y, getMatch(30), 'SF2');
+    const sf2Pos = { x: baseX + colGap * 5, y: sf1Y + cardH / 2 };
+
+    drawConnection(finalPos.x, finalPos.y, sf2Pos.x, sf2Pos.y);
+
+    // RIGHT - QF (Matches 27-28)
+    y = baseY + rowGap * 1.5;
+    const qfRightPos = [];
+    for (let i = 27; i <= 28; i++) {
+      drawMatchSafe(baseX + colGap * 6, y, getMatch(i), `QF${i - 24}`);
+      qfRightPos.push({ x: baseX + colGap * 6, y: y + cardH / 2 });
+      y += rowGap * 4;
+    }
+
+    drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[0].x, qfRightPos[0].y);
+    drawConnection(sf2Pos.x + cardW, sf2Pos.y, qfRightPos[1].x, qfRightPos[1].y);
+
+    // RIGHT - R16 (Matches 21-24)
+    y = baseY + rowGap / 2;
+    const r16RightPos = [];
+    for (let i = 21; i <= 24; i++) {
+      drawMatchSafe(baseX + colGap * 7, y, getMatch(i), `M${i}`);
+      r16RightPos.push({ x: baseX + colGap * 7, y: y + cardH / 2 });
+      y += rowGap * 2;
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const p1 = r16RightPos[i * 2];
+      const p2 = r16RightPos[i * 2 + 1];
+      const target = qfRightPos[i];
+      drawConnection(target.x + cardW, target.y, p1.x, p1.y);
+      drawConnection(target.x + cardW, target.y, p2.x, p2.y);
+    }
+
+    // RIGHT - R32 (Matches 9-16)
+    y = baseY;
+    const r32RightPos = [];
+    for (let i = 9; i <= 16; i++) {
+      drawMatchSafe(baseX + colGap * 8, y, getMatch(i), `M${i}`);
+      r32RightPos.push({ x: baseX + colGap * 8, y: y + cardH / 2 });
+      y += rowGap;
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const p1 = r32RightPos[i * 2];
+      const p2 = r32RightPos[i * 2 + 1];
+      const target = r16RightPos[i];
+      drawConnection(target.x + cardW, target.y, p1.x, p1.y);
+      drawConnection(target.x + cardW, target.y, p2.x, p2.y);
+    }
+
     ctx.restore();
+
   }, [camera, matches, teams, flagImages]);
 
   useEffect(() => {
