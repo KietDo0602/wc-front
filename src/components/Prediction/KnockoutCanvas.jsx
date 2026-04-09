@@ -827,16 +827,16 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       /* =============================
          Canvas
       ============================== */
-      const dpr = window.devicePixelRatio || 1;
+      const exportScale = Math.max(2, window.devicePixelRatio || 1);
       const baseW = 3000;
       const baseH = 1650;
 
       const canvas = document.createElement('canvas');
-      canvas.width = baseW * dpr;
-      canvas.height = baseH * dpr;
+      canvas.width = baseW * exportScale;
+      canvas.height = baseH * exportScale;
 
       const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
+      ctx.scale(exportScale, exportScale);
 
       ctx.fillStyle = '#f9fafb';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1137,11 +1137,32 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       /* =============================
          EXPORT
       ============================== */
-      canvas.toBlob((blob) => {
+      canvas.toBlob(async (blob) => {
+        const fileName = `worldcup-bracket-${Date.now()}.png`;
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile && navigator.canShare && navigator.share) {
+          const file = new File([blob], fileName, { type: 'image/png' });
+
+          if (navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: '🏆 World Cup Bracket',
+                text: t('pred.knockout.shareText') || 'My World Cup Bracket Predictions',
+              });
+              return;
+            } catch (err) {
+              if (err.name === 'AbortError') return;
+            }
+          }
+        }
+
+        // Desktop: regular download
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `worldcup-bracket-${Date.now()}.png`;
+        a.download = fileName;
         a.click();
         URL.revokeObjectURL(url);
       }, 'image/png');
