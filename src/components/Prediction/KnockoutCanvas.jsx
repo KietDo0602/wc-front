@@ -20,7 +20,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   const { t } = useTranslation();
 
   // Canvas state
-  const [camera, setCamera] = useState({ x: 0, y: 0, zoom: 1 });
+  const [camera, setCamera] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragDistance, setDragDistance] = useState(0);
@@ -271,6 +271,8 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
 
   // Canvas drawing
   const drawBracket = useCallback(() => {
+    if (!camera) return;
+
     const canvas = canvasRef.current;
     if (!canvas || roundOf32Teams.length === 0) return;
 
@@ -576,8 +578,18 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       const container = containerRef.current;
       if (!canvas || !container) return;
 
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
       drawBracket();
     };
 
@@ -585,6 +597,13 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [drawBracket]);
+
+  // Auto-fit on first load
+  useEffect(() => {
+    if (camera === null && containerRef.current) {
+      handleResetView();
+    }
+  }, [camera, loading]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -629,16 +648,18 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   const getMousePos = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
+    const c = camera || { x: 0, y: 0, zoom: 1 };
     return {
-      x: (e.clientX - rect.left - camera.x) / camera.zoom,
-      y: (e.clientY - rect.top - camera.y) / camera.zoom
+      x: (e.clientX - rect.left - c.x) / c.zoom,
+      y: (e.clientY - rect.top - c.y) / c.zoom
     };
   };
 
   const handleMouseDown = (e) => {
+    const c = camera || { x: 0, y: 0, zoom: 1 };
     setIsDragging(true);
     setDragDistance(0);
-    setDragStart({ x: e.clientX - camera.x, y: e.clientY - camera.y });
+    setDragStart({ x: e.clientX - c.x, y: e.clientY - c.y });
   };
 
   // Update handleMouseMove hover detection:
@@ -709,8 +730,41 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     setCamera(prev => ({ ...prev, zoom: Math.max(0.4, prev.zoom / 1.2) }));
   };
 
+  // Reset view
   const handleResetView = () => {
-    setCamera({ x: 0, y: 0, zoom: 1 });
+    const container = containerRef.current;
+    if (!container) {
+      setCamera({ x: 0, y: 0, zoom: 1 });
+      return;
+    }
+
+    // Bracket bounding box (matches the layout constants in drawBracket)
+    const baseX = 100;
+    const baseY = 100;
+    const cardW = 220;
+    const cardH = 140;
+    const colGap = 240;
+    const rowGap = 180;
+
+    const padding = 40;
+    const contentLeft = baseX - padding;
+    const contentTop = baseY - padding - 60; // extra for champion text
+    const contentRight = baseX + colGap * 8 + cardW + padding;
+    const contentBottom = baseY + rowGap * 7 + cardH + padding;
+
+    const contentW = contentRight - contentLeft;
+    const contentH = contentBottom - contentTop;
+
+    const viewW = container.clientWidth;
+    const viewH = container.clientHeight;
+
+    const zoom = Math.min(viewW / contentW, viewH / contentH);
+
+    // Center the content
+    const x = (viewW - contentW * zoom) / 2 - contentLeft * zoom;
+    const y = (viewH - contentH * zoom) / 2 - contentTop * zoom;
+
+    setCamera({ x, y, zoom });
   };
 
   const calculateProgress = () => {
@@ -773,11 +827,16 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       /* =============================
          Canvas
       ============================== */
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const baseW = 3000;
+      const baseH = 1650;
 
-      canvas.width = 3000;
-      canvas.height = 1650;
+      const canvas = document.createElement('canvas');
+      canvas.width = baseW * dpr;
+      canvas.height = baseH * dpr;
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
 
       ctx.fillStyle = '#f9fafb';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -824,6 +883,8 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         if (!img.naturalWidth) return;
 
         ctx.save();
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.beginPath();
         ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
         ctx.clip();
@@ -1083,7 +1144,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
         a.download = `worldcup-bracket-${Date.now()}.png`;
         a.click();
         URL.revokeObjectURL(url);
-      });
+      }, 'image/png');
 
     } catch (err) {
       console.error(err);
@@ -1261,7 +1322,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
           <button onClick={handleZoomIn} title={t("pred.zoomIn")}>+</button>
           <button onClick={handleZoomOut} title={t("pred.zoomOut")}>−</button>
           <button onClick={handleResetView} title={t("pred.resetView")}>⟲</button>
-          <span className="zoom-level">{Math.round(camera.zoom * 100)}%</span>
+          <span className="zoom-level">{Math.round((camera?.zoom ?? 1) * 100)}%</span>
         </div>
       </div>
 

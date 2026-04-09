@@ -239,7 +239,8 @@ const ThirdPlaceResults = ({ thirdPlaceResults, getTeamById }) => {
 const KnockoutResults = ({ bracket, teams }) => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const [camera, setCamera] = useState({ x: 0, y: 0, zoom: 1 });
+  const [camera, setCamera] = useState(null);
+
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [flagImages, setFlagImages] = useState({});
@@ -282,6 +283,8 @@ const KnockoutResults = ({ bracket, teams }) => {
   }, [teams]);
 
   const drawBracket = useCallback(() => {
+    if (!camera) return;
+
     const canvas = canvasRef.current;
     if (!canvas || matches.length === 0) return;
 
@@ -589,8 +592,18 @@ const KnockoutResults = ({ bracket, teams }) => {
       const container = containerRef.current;
       if (!canvas || !container) return;
 
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
       drawBracket();
     };
 
@@ -598,6 +611,13 @@ const KnockoutResults = ({ bracket, teams }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [drawBracket]);
+
+  // Auto-fit on first load
+  useEffect(() => {
+    if (camera === null && containerRef.current) {
+      handleResetView();
+    }
+  }, [camera, matches]);
 
   // Mouse handlers
   const handleMouseDown = (e) => {
@@ -656,7 +676,37 @@ const KnockoutResults = ({ bracket, teams }) => {
   };
 
   const handleResetView = () => {
-    setCamera({ x: 0, y: 0, zoom: 1 });
+    const container = containerRef.current;
+    if (!container) {
+      setCamera({ x: 0, y: 0, zoom: 1 });
+      return;
+    }
+
+    const baseX = 100;
+    const baseY = 100;
+    const cardW = 220;
+    const cardH = 140;
+    const colGap = 240;
+    const rowGap = 180;
+
+    const padding = 40;
+    const contentLeft = baseX - padding;
+    const contentTop = baseY - padding - 60;
+    const contentRight = baseX + colGap * 8 + cardW + padding;
+    const contentBottom = baseY + rowGap * 7 + cardH + padding;
+
+    const contentW = contentRight - contentLeft;
+    const contentH = contentBottom - contentTop;
+
+    const viewW = container.clientWidth;
+    const viewH = container.clientHeight;
+
+    const zoom = Math.min(viewW / contentW, viewH / contentH);
+
+    const x = (viewW - contentW * zoom) / 2 - contentLeft * zoom;
+    const y = (viewH - contentH * zoom) / 2 - contentTop * zoom;
+
+    setCamera({ x, y, zoom });
   };
 
   if (matches.length === 0) {
@@ -682,7 +732,7 @@ const KnockoutResults = ({ bracket, teams }) => {
           <button onClick={handleZoomIn} title={t('pred.zoomIn')}>+</button>
           <button onClick={handleZoomOut} title={t('pred.zoomOut')}>−</button>
           <button onClick={handleResetView} title={t('pred.resetView')}>⟲</button>
-          <span className="zoom-level">{Math.round(camera.zoom * 100)}%</span>
+          <span className="zoom-level">{Math.round((camera?.zoom ?? 1) * 100)}%</span>
         </div>
       </div>
     </div>
