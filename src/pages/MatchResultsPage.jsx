@@ -647,7 +647,7 @@ const KnockoutResults = ({ bracket, teams }) => {
     const handleWheel = (e) => {
       e.preventDefault();
       const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * delta));
+      const newZoom = Math.max(0.1, Math.min(3, camera.zoom * delta));
       
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -672,7 +672,7 @@ const KnockoutResults = ({ bracket, teams }) => {
   };
 
   const handleZoomOut = () => {
-    setCamera(prev => ({ ...prev, zoom: Math.max(0.4, prev.zoom / 1.2) }));
+    setCamera(prev => ({ ...prev, zoom: Math.max(0.1, prev.zoom / 1.2) }));
   };
 
   const handleResetView = () => {
@@ -701,7 +701,7 @@ const KnockoutResults = ({ bracket, teams }) => {
     const viewW = container.clientWidth;
     const viewH = container.clientHeight;
 
-    const zoom = Math.min(viewW / contentW, viewH / contentH);
+    const zoom = Math.max(0.1, Math.min(3, Math.min(viewW / contentW, viewH / contentH)));
 
     const x = (viewW - contentW * zoom) / 2 - contentLeft * zoom;
     const y = (viewH - contentH * zoom) / 2 - contentTop * zoom;

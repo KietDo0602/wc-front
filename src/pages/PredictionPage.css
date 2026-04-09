@@ -102,7 +102,7 @@
   }
 
   .prediction-container {
-    padding: 1rem;
+    padding: 0rem;
   }
 }
 
@@ -171,4 +171,23 @@
   color: var(--text);
   border-radius: 12px;
   margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .prediction-page {
+    min-height: 100dvh;
+  }
+
+  .prediction-header {
+    padding: 2rem 1rem;
+  }
+
+  .prediction-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .prediction-container {
+    max-width: 100%;
+    padding: 0;
+  }
 }

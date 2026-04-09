@@ -614,7 +614,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       e.stopPropagation();
       
       const delta = e.deltaY > 0 ? 0.9 : 1.1;
-      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * delta));
+      const newZoom = Math.max(0.1, Math.min(3, camera.zoom * delta));
       
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -727,7 +727,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
   };
 
   const handleZoomOut = () => {
-    setCamera(prev => ({ ...prev, zoom: Math.max(0.4, prev.zoom / 1.2) }));
+    setCamera(prev => ({ ...prev, zoom: Math.max(0.1, prev.zoom / 1.2) }));
   };
 
   // Reset view
@@ -758,7 +758,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
     const viewW = container.clientWidth;
     const viewH = container.clientHeight;
 
-    const zoom = Math.min(viewW / contentW, viewH / contentH);
+    const zoom = Math.max(0.1, Math.min(3, Math.min(viewW / contentW, viewH / contentH)));
 
     // Center the content
     const x = (viewW - contentW * zoom) / 2 - contentLeft * zoom;
@@ -1224,7 +1224,7 @@ export const KnockoutCanvas = ({ onBack, onSubmit, savedPredictions, viewMode, u
       const worldX = (zoomCenterX - camera.x) / camera.zoom;
       const worldY = (zoomCenterY - camera.y) / camera.zoom;
       
-      const newZoom = Math.max(0.4, Math.min(3, camera.zoom * scale));
+      const newZoom = Math.max(0.1, Math.min(3, camera.zoom * scale));
       
       setCamera({
         x: zoomCenterX - worldX * newZoom,
